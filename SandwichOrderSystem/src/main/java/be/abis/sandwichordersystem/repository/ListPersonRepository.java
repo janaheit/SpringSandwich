@@ -32,12 +32,11 @@ public class ListPersonRepository implements PersonRepository {
     @Override
     public Person findPersonByName(String name) throws PersonNotFoundException {
         return persons.stream()
-                .filter(person -> person instanceof Instructor
-                        && name.equals(person.getFirstName()+" "+person.getLastName()))
+                .filter(person -> name.equals(person.getFirstName()+" "+person.getLastName()))
                 .findAny()
                 .orElseThrow(() -> {
                     //log.error("FilePersonRepository (findInstructorByName), instructor does not exist " + name);
-                    return new PersonNotFoundException("This instructor does not exist.");
+                    return new PersonNotFoundException("This person does not exist");
                 });
 
     }
@@ -116,7 +115,11 @@ public class ListPersonRepository implements PersonRepository {
 
     @Override
     public void deletePerson(Person person) throws PersonNotFoundException {
-        persons.removeIf(p->p.equals(person));
+        if (persons.contains(person)) {
+            persons.remove(person);
+        } else {
+            throw new PersonNotFoundException("This person isn't found, so cannot be deleten");
+        }
     }
 
 
