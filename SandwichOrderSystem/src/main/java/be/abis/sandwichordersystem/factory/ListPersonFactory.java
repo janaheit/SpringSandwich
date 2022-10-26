@@ -17,7 +17,7 @@ public class ListPersonFactory implements PersonFactory {
         List<Person> persons = new ArrayList<>();
 
         persons.add(new Admin("VI", "P"));
-        persons.add(new Instructor("Sandy", "Schillenbeeckx"));
+        persons.add(new Instructor("Sandy", "Schillebeeckx"));
         persons.add(new Instructor("Japie", "Yolo"));
 
         persons.add(new Student("Kim", "Wauters"));

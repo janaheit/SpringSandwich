@@ -1,10 +1,13 @@
 package be.abis.sandwichordersystem.repository;
 
 import be.abis.sandwichordersystem.exception.SessionNotFoundException;
+import be.abis.sandwichordersystem.factory.SessionFactory;
 import be.abis.sandwichordersystem.model.Instructor;
 import be.abis.sandwichordersystem.model.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,8 +15,16 @@ import java.util.stream.Collectors;
 @Repository
 public class ListSessionRepository implements SessionRepository {
 
-    // Attributes
+    @Autowired private SessionFactory sessionFactory;
     private List<Session> sessions;
+
+    public ListSessionRepository() {
+    }
+
+    @PostConstruct
+    public void init(){
+        sessions = sessionFactory.createSessions();
+    }
 
     // Method implementations
     @Override
