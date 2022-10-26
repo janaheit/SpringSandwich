@@ -2,18 +2,12 @@ package be.abis.sandwichordersystem.repository;
 
 import be.abis.sandwichordersystem.factory.PersonFactory;
 import be.abis.sandwichordersystem.exception.PersonNotFoundException;
-import be.abis.sandwichordersystem.exception.SubTypePersonNotFoundException;
 import be.abis.sandwichordersystem.model.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import service.FileIOService;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +19,7 @@ public class FilePersonRepository implements PersonRepository {
     private String filename = "/temp/javacourses/sandwichpersons.txt";
 
     List<Person> persons = new ArrayList<>();
-    private Logger log = LogManager.getLogger("sandwichLogger");
+    //private Logger log = LogManager.getLogger("sandwichLogger");
 
     public FilePersonRepository() {
 
@@ -38,85 +32,20 @@ public class FilePersonRepository implements PersonRepository {
 
     // BUSINESS METHODS
 
-    public void readFromFile(){
-        try {
-            List<String> personStrings = Files.readAllLines(Paths.get(filename));
-            for(String s:personStrings){
-                persons.add(readPersonFromLine(s));
-            }
-        } catch (IOException | SubTypePersonNotFoundException e) {
-            log.error("FilePersonRepository (readFromFile) exception " + e.getMessage());
-            System.out.println("Could not read repository...");
-            System.out.println(e.getMessage());
-        }
+
+    // crud methods
+    @Override
+    public void addPerson(Person person){
+        // persons.add(person);
+        // atm, add person is not implemented, bc we have no write to File of person.. not important rn!
     }
 
-    public Person readPersonFromLine(String line) throws SubTypePersonNotFoundException {
-        String[] fields = line.split(";");
-
-        String type = fields[0];
-
-        int personNr = Integer.parseInt(fields[1]);
-        String firstName = fields[2];
-        String lastName = fields[3];
-
-        Person p;
-        if (type.equals("S")){
-            p = createStudent(fields, firstName, lastName, personNr);
-        } else if (type.equals("I")){
-            p = createInstructor(fields, firstName, lastName, personNr);
-        } else if (type.equals("A")) {
-            p = createAdmin(fields, firstName, lastName, personNr);
-        } else {
-            throw new SubTypePersonNotFoundException(type + " could not be found in subtypes");
-        }
-
-        return p;
+    @Override
+    public void deletePerson(Person person) throws PersonNotFoundException {
+        // atm, delete person is not implemented, bc we have no write to File of person.. not important rn!
     }
 
-    public Person createStudent(String[] fields, String firstName, String lastName, int personNr){
-
-        Student s = new Student(firstName, lastName);
-        s.setPersonNr(personNr);
-
-        if (!fields[4].equals("null")){
-            try {
-                s.setCurrentSession(ListSessionRepository.getInstance().findSessionByID(Integer.parseInt(fields[4])));
-            } catch (SessionNotFoundException e) {
-                System.out.println("Student "+ firstName + " was not added to session " + fields[4]);
-                System.out.println(e.getMessage());
-            }
-        }
-
-        return s;
-    }
-
-    public Person createInstructor(String[] fields, String firstName, String lastName, int personNr){
-
-        Instructor i = new Instructor(firstName, lastName);
-        i.setPersonNr(personNr);
-
-        if (!fields[4].equals("null")){
-            try {
-                i.teachSession(ListSessionRepository.getInstance().findSessionByID(Integer.parseInt(fields[4])));
-            } catch (SessionNotFoundException e) {
-                System.out.println("Instructor "+ firstName + " was not added to session " + fields[4]);
-                System.out.println(e.getMessage());
-            }
-        }
-
-        return i;
-    }
-
-    public Person createAdmin(String[] fields, String firstName, String lastName, int personNr){
-
-        Admin a = new Admin(firstName, lastName);
-        a.setPersonNr(personNr);
-
-        return a;
-    }
-
-
+    // find methods
     @Override
     public Person findPersonByName(String name) {
         return null;
@@ -129,7 +58,7 @@ public class FilePersonRepository implements PersonRepository {
                         && name.equals(person.getFirstName()+" "+person.getLastName()))
                 .findAny()
                 .orElseThrow(() -> {
-                    log.error("FilePersonRepository (findInstructorByName), instructor does not exist " + name);
+                    //log.error("FilePersonRepository (findInstructorByName), instructor does not exist " + name);
                     return new PersonNotFoundException("This instructor does not exist.");
                 });
     }
@@ -141,7 +70,7 @@ public class FilePersonRepository implements PersonRepository {
                         && name.equals(person.getFirstName()+" "+person.getLastName()))
                 .findAny()
                 .orElseThrow(() -> {
-                    log.error("FilePersonRepository (findStudentByName) student does not exist " + name);
+                    //log.error("FilePersonRepository (findStudentByName) student does not exist " + name);
                     return new PersonNotFoundException("This student does not exist.");
                 });
     }
@@ -153,10 +82,19 @@ public class FilePersonRepository implements PersonRepository {
                         && name.equals(person.getFirstName()+" "+person.getLastName()))
                 .findAny()
                 .orElseThrow(() -> {
-                    log.error("FilePersonRepository (findAdminByName) admin does not exist " + name);
+                    //log.error("FilePersonRepository (findAdminByName) admin does not exist " + name);
                     return new PersonNotFoundException("This Admin does not exist.");
                 });
     }
+
+    // FILE IO stuff
+
+    // add to file
+    // tbd.
+
+    // read from file
+    // tbd.
+
 
     // GETTERS AND SETTERS
 

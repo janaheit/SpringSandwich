@@ -1,109 +1,125 @@
 package be.abis.sandwichordersystem.repository;
 
-import exception.PersonNotFoundException;
-import model.CourseAdmin.*;
+import be.abis.sandwichordersystem.exception.PersonNotFoundException;
+import be.abis.sandwichordersystem.factory.PersonFactory;
+import be.abis.sandwichordersystem.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Repository
+@Primary
 public class ListPersonRepository implements PersonRepository {
 
-    private static ListPersonRepository personRepo = new ListPersonRepository();
+    @Autowired private PersonFactory personFactory;
+    private List<Person> persons = new ArrayList<>();
 
-    Admin admin;
-    List<Instructor> instructors = new ArrayList<Instructor>();
-    List<Student> students = new ArrayList<Student>();
-    List<Course> courses = new ArrayList<>();
-    List<Session> sessions = new ArrayList<Session>();
 
-    private ListPersonRepository() {
-        admin = new Admin("VI", "P");
-
-        instructors.add(new Instructor("Sandy", "Schillenbeeckx"));
-        instructors.add(new Instructor("Japie", "Yolo"));
-
-        students.add(new Student("Kim", "Wauters"));
-        students.add(new Student("Quentin", "Locht"));
-        students.add(new Student("Claudia", "Negrila"));
-        students.add(new Student("Jens", "Verheyden"));
-        students.add(new Student("Marcel", "van Hassel"));
-        students.add(new Student("Simon", "Hazevoets"));
-        students.add(new Student("Jana", "Heitkemper"));
-        students.add(new Student("Esben", "Six"));
-        students.add( new Student("Lisa", "Muller"));
-        students.add( new Student("Henk", "de Vries"));
-
-        courses.add(Course.INTERNET_ENABLING);
-        courses.add(Course.JAVA_ADVANCED);
-
-        sessions.add(new Session(courses.get(0), instructors.get(0), LocalDate.now(), LocalDate.now()));
-        sessions.add(new Session(courses.get(1), instructors.get(1),LocalDate.now(), LocalDate.now()));
-
-        sessions.get(0).setInstructor(instructors.get(0));
-        sessions.get(1).setInstructor(instructors.get(1));
-
-        students.get(0).setSession(sessions.get(0));
-        students.get(1).setSession(sessions.get(0));
-        students.get(2).setSession(sessions.get(0));
-        students.get(3).setSession(sessions.get(0));
-        students.get(4).setSession(sessions.get(0));
-        students.get(5).setSession(sessions.get(1));
-        students.get(6).setSession(sessions.get(1));
-        students.get(7).setSession(sessions.get(1));
-        students.get(8).setSession(sessions.get(1));
-        students.get(9).setSession(sessions.get(1));
-
+    public ListPersonRepository() {
+    }
+    
+    @PostConstruct
+    public void init(){
+        persons = personFactory.createPersons();
     }
 
-    public static ListPersonRepository getInstance(){
-        return personRepo;
-    }
-
-    public Admin getAdmin() {
-        return admin;
-    }
-
-    public List<Instructor> getInstructors() {
-        return instructors;
-    }
-
-    public List<Student> getStudents() {
-        return students;
-    }
-
-    public List<Session> getSessions() {
-        return sessions;
-    }
-
-
+    // find methods
     @Override
-    public Person findPersonByName(String firstName, String lastName) {
-        return null;
+    public Person findPersonByName(String name) throws PersonNotFoundException {
+        return persons.stream()
+                .filter(person -> person instanceof Instructor
+                        && name.equals(person.getFirstName()+" "+person.getLastName()))
+                .findAny()
+                .orElseThrow(() -> {
+                    //log.error("FilePersonRepository (findInstructorByName), instructor does not exist " + name);
+                    return new PersonNotFoundException("This instructor does not exist.");
+                });
+
     }
 
     @Override
     public Instructor findInstructorByName(String name) throws PersonNotFoundException {
-        return null;
+        return (Instructor)persons.stream()
+                .filter(person -> person instanceof Instructor
+                        && name.equals(person.getFirstName()+" "+person.getLastName()))
+                .findAny()
+                .orElseThrow(() -> {
+                    //log.error("FilePersonRepository (findInstructorByName), instructor does not exist " + name);
+                    return new PersonNotFoundException("This instructor does not exist.");
+                });
     }
 
     @Override
     public Student findStudentByName(String name) throws PersonNotFoundException {
-        return null;
+        return (Student)persons.stream()
+                .filter(person -> person instanceof Student
+                        && name.equals(person.getFirstName()+" "+person.getLastName()))
+                .findAny()
+                .orElseThrow(() -> {
+                    //log.error("FilePersonRepository (findStudentByName) student does not exist " + name);
+                    return new PersonNotFoundException("This student does not exist.");
+                });
     }
 
     @Override
     public Admin findAdminByName(String name) throws PersonNotFoundException {
-        return null;
+        return (Admin)persons.stream()
+                .filter(person -> person instanceof Admin
+                        && name.equals(person.getFirstName()+" "+person.getLastName()))
+                .findAny()
+                .orElseThrow(() -> {
+                    //log.error("FilePersonRepository (findAdminByName) admin does not exist " + name);
+                    return new PersonNotFoundException("This Admin does not exist.");
+                });
     }
+
+    // GETTER AND SETTER
 
     @Override
     public List<Person> getPersons() {
-        return null;
+        return this.persons;
     }
 
     @Override
     public List<Admin> getAdmins() {
-        return null;
+        return this.persons.stream()
+                .filter(p -> p instanceof Admin)
+                .map(p -> (Admin)p)
+                .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Instructor> getInstructors() {
+        return this.persons.stream()
+                .filter(p -> p instanceof Instructor)
+                .map(p -> (Instructor)p)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Student> getStudents() {
+        return this.persons.stream()
+                .filter(p -> p instanceof Student)
+                .map(p -> (Student)p)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void addPerson(Person person) {
+        persons.add(person);
+    }
+
+    @Override
+    public void deletePerson(Person person) throws PersonNotFoundException {
+        persons.removeIf(p->p.equals(person));
+    }
+
+
+
 }

@@ -1,16 +1,16 @@
 package be.abis.sandwichordersystem.repository;
 
-import exception.PersonNotFoundException;
-import model.CourseAdmin.Admin;
-import model.CourseAdmin.Instructor;
-import model.CourseAdmin.Person;
-import model.CourseAdmin.Student;
+import be.abis.sandwichordersystem.exception.PersonNotFoundException;
+import be.abis.sandwichordersystem.model.Admin;
+import be.abis.sandwichordersystem.model.Instructor;
+import be.abis.sandwichordersystem.model.Person;
+import be.abis.sandwichordersystem.model.Student;
 
 import java.util.List;
 
 public interface PersonRepository {
 
-    Person findPersonByName(String name);
+    Person findPersonByName(String name) throws PersonNotFoundException;
     Instructor findInstructorByName(String name) throws PersonNotFoundException;
     Student findStudentByName(String name) throws PersonNotFoundException;
     Admin findAdminByName(String name) throws PersonNotFoundException;
