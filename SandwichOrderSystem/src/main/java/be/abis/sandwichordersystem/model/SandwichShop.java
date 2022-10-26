@@ -3,7 +3,9 @@ package be.abis.sandwichordersystem.model;
 
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
+import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SandwichShop {
@@ -11,7 +13,7 @@ public class SandwichShop {
     // Attributes
 
     private String name;
-    private List<Sandwich> sandwiches;
+    private List<Sandwich> sandwiches = new ArrayList<>();
     private List<Options> options;
     private List<BreadType> breadTypes;
 
@@ -62,5 +64,13 @@ public class SandwichShop {
     // Business methods
     public void addSandwich(Sandwich sandwich){
         sandwiches.add(sandwich);
+    }
+
+    public void deleteSandwich(Sandwich sandwich) throws SandwichNotFoundException {
+        if(sandwiches.contains(sandwich)) {
+            sandwiches.remove(sandwich);
+        } else {
+            throw new SandwichNotFoundException("Cannot delete sandwich since it's not found in this sandwichshop");
+        }
     }
 }
