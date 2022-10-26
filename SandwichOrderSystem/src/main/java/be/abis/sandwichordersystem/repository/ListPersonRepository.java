@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-@Primary
 public class ListPersonRepository implements PersonRepository {
 
     @Autowired private PersonFactory personFactory;
@@ -23,7 +22,7 @@ public class ListPersonRepository implements PersonRepository {
 
     public ListPersonRepository() {
     }
-    
+
     @PostConstruct
     public void init(){
         persons = personFactory.createPersons();
