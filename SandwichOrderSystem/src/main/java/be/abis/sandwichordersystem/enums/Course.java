@@ -2,6 +2,8 @@ package be.abis.sandwichordersystem.enums;
 
 import be.abis.sandwichordersystem.exception.CourseNotFoundException;
 
+import be.abis.sandwichordersystem.exception.CourseNotFoundException;
+
 public enum Course {
     JAVA_PROGRAMMING("Java programming", 4, 375.0),
     JAVA_ADVANCED("Java SE advanced programming", 3, 45600.5),
