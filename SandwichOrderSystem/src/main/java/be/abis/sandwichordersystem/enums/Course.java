@@ -1,4 +1,4 @@
-package be.abis.sandwichordersystem.model;
+package be.abis.sandwichordersystem.enums;
 
 public enum Course {
     JAVA_PROGRAMMING("Java programming", 4, 375.0),

@@ -2,6 +2,10 @@ package be.abis.sandwichordersystem.model;
 
 
 
+import be.abis.sandwichordersystem.enums.BreadType;
+import be.abis.sandwichordersystem.enums.Options;
+import be.abis.sandwichordersystem.enums.OrderStatus;
+
 import java.util.List;
 
 public class Order implements Comparable<Order> {

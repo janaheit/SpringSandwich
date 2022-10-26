@@ -1,5 +1,7 @@
 package be.abis.sandwichordersystem.model;
 
+import be.abis.sandwichordersystem.enums.Course;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

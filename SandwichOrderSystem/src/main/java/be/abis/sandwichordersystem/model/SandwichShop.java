@@ -1,6 +1,9 @@
 package be.abis.sandwichordersystem.model;
 
 
+import be.abis.sandwichordersystem.enums.BreadType;
+import be.abis.sandwichordersystem.enums.Options;
+
 import java.util.List;
 
 public class SandwichShop {
