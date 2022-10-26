@@ -47,6 +47,10 @@ public class ListSandwichRepository implements SandwichRepository {
 
     @Override
     public void deleteSandwich(Sandwich sandwich) throws SandwichNotFoundException {
-        sandwiches.removeIf(sandwich1 -> sandwich1.equals(sandwich));
+        if(sandwiches.contains(sandwich)) {
+            sandwiches.remove(sandwich);
+        } else {
+            throw new SandwichNotFoundException("Sandwich cannot be deleten since it doesnt exist");
+        }
     }
 }
