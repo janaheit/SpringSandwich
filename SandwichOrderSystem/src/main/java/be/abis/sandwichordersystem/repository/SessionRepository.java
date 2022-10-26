@@ -1,9 +1,10 @@
 package be.abis.sandwichordersystem.repository;
 
 
-import exception.SessionNotFoundException;
-import model.CourseAdmin.Instructor;
-import model.CourseAdmin.Session;
+
+import be.abis.sandwichordersystem.exception.SessionNotFoundException;
+import be.abis.sandwichordersystem.model.Instructor;
+import be.abis.sandwichordersystem.model.Session;
 
 import java.time.LocalDate;
 import java.util.List;

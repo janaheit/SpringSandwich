@@ -1,8 +1,7 @@
 package be.abis.sandwichordersystem.repository;
 
 import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
-import exception.SandwichNotFoundException;
-import model.SandwichAdmin.Sandwich;
+import be.abis.sandwichordersystem.model.Sandwich;
 
 import java.util.List;
 
