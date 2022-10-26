@@ -120,6 +120,15 @@ public class PersonRepositoryTest {
         cut.deletePerson(person1);
     }
 
+    @Test
+    public void findPersonByNameWithRealData() throws PersonNotFoundException {
+        Person myFirstPerson = cut.getPersons().get(0);
+        StringBuilder fullName = new StringBuilder();
+        fullName.append(myFirstPerson.getFirstName()).append(" ").append(myFirstPerson.getLastName());
+        Person mySecondPerson = cut.findPersonByName(fullName.toString());
+        assertEquals(myFirstPerson, mySecondPerson);
+    }
+
     //TODO still have to test findAdmin/Student/Instructor by name methods
 
 }
