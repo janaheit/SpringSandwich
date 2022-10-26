@@ -6,6 +6,7 @@ import be.abis.sandwichordersystem.model.Session;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,10 @@ public class ListOrderRepository implements OrderRepository {
 
     // Attributes
     private List<Order> orders;
+
+    public ListOrderRepository() {
+        this.orders = new ArrayList<>();
+    }
 
     // Method implementations
     @Override
