@@ -15,5 +15,5 @@ public interface SessionRepository {
 
     List<Session> getSessions();
     void addSession(Session session);
-    void deleteSession(Session session);
+    void deleteSession(Session session) throws SessionNotFoundException;
 }

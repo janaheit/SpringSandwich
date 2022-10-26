@@ -59,9 +59,11 @@ public class ListSessionRepository implements SessionRepository {
     }
 
     @Override
-    public void deleteSession(Session session) {
+    public void deleteSession(Session session) throws SessionNotFoundException {
         if(this.sessions.contains(session)) {
             this.sessions.remove(session);
+        } else {
+            throw new SessionNotFoundException(session.getCourse().getTitle() + " could not be found and therefore could not be deleted.");
         }
     }
 }

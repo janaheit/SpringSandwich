@@ -1,5 +1,6 @@
 package be.abis.sandwichordersystem.repository;
 
+import be.abis.sandwichordersystem.exception.OrderNotFoundException;
 import be.abis.sandwichordersystem.model.Order;
 import be.abis.sandwichordersystem.model.Session;
 import org.springframework.stereotype.Repository;
@@ -21,9 +22,11 @@ public class ListOrderRepository implements OrderRepository {
     }
 
     @Override
-    public void deleteOrder(Order order) {
+    public void deleteOrder(Order order) throws OrderNotFoundException {
         if(orders.contains(order)) {
             orders.remove(order);
+        } else {
+            throw new OrderNotFoundException("This order was not found and therefore could not be deleted.");
         }
     }
 
