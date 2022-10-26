@@ -44,7 +44,7 @@ public class ListSessionRepository implements SessionRepository {
 
     @Override
     public List<Session> findSessionsByDate(LocalDate date) {
-        List<Session> output = this.sessions.stream().filter(session -> session.getStartDate().isBefore(date.plusDays(1))).filter(session -> session.getEndDate().isBefore(date.plusDays(1))).collect(Collectors.toList());
+        List<Session> output = this.sessions.stream().filter(session -> session.getStartDate().isBefore(date.plusDays(1))).filter(session -> session.getEndDate().isAfter(date.minusDays(1))).collect(Collectors.toList());
         return output;
     }
 

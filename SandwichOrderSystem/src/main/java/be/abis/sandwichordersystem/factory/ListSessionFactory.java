@@ -27,6 +27,7 @@ public class ListSessionFactory implements SessionFactory {
 
         sessions.add(new Session(Course.JAVA_ADVANCED, instructors.get(0),
                 LocalDate.of(2020, 9, 1), LocalDate.of(2022, 12, 31) ));
+
         sessions.add(new Session(Course.INTERNET_ENABLING, instructors.get(1),
                 LocalDate.of(2020, 9, 1), LocalDate.of(2022, 12, 31) ));
 

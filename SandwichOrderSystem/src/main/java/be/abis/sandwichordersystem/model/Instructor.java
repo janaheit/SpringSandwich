@@ -20,4 +20,13 @@ public class Instructor extends Person{
     public void setCurrentSession(Session currentSession) {
         this.currentSession = currentSession;
     }
+
+    @Override
+    public String toString() {
+        return "Instructor{" +
+                "id=" + getPersonNr() + ", " +
+                "name=" + getFirstName() + " " + getLastName() + ", " +
+                "currentSession=" + currentSession +
+                '}';
+    }
 }

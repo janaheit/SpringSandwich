@@ -88,4 +88,16 @@ public class Session {
     public int hashCode() {
         return Objects.hash(course, instructor, sessionNumber);
     }
+
+    @Override
+    public String toString() {
+        return "Session{" +
+                "course=" + course +
+                ", instructor=" + instructor +
+                ", students=" + students +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", sessionNumber=" + sessionNumber +
+                '}';
+    }
 }
