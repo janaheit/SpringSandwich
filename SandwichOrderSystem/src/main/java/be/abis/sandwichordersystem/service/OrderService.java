@@ -3,17 +3,20 @@ package be.abis.sandwichordersystem.service;
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.exception.IngredientNotAvailableException;
+import be.abis.sandwichordersystem.exception.OrderNotFoundException;
+import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
 import be.abis.sandwichordersystem.model.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
 public interface OrderService {
 
     public void addOrder(Order order);
-    public void deleteOrder(Order order);
+    public void deleteOrder(Order order) throws OrderNotFoundException;
 
-    public void createOrdersForEveryoneToday();
+    public void createOrdersForEveryoneToday() throws SandwichShopNotFoundException;
     public void createOrder(Person person);
 
     public void handleOrder(Order order, Boolean noSandwich);
@@ -28,7 +31,7 @@ public interface OrderService {
     public List<Order> findAllUnfilledOrders();
     public List<Person> getAllPersonsFromListOfOrders(List<Order> orders);
 
-    public void generateOrderFile();
+    public void generateOrderFile() throws IOException;
 
     public void setTodaysSandwichShop(SandwichShop sandwichShop);
 
