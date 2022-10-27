@@ -12,7 +12,7 @@ public interface OrderRepository {
 
     public void addOrder(Order order);
     public void deleteOrder(Order order) throws OrderNotFoundException;
-    public List<Order> getAllOrders();
+    public List<Order> getOrders();
     public List<Order> findOrdersByDate(LocalDate date);
     public List<Order> findOrdersBySession(Session session);
     public List<Order> findOrdersByDates(LocalDate startDate, LocalDate endDate);

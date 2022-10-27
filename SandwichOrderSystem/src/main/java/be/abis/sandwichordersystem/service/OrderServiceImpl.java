@@ -120,12 +120,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findAllUnhandeledOrders() {
-        return orderRepository.getAllOrders().stream().filter(order -> order.getOrderStatus() != OrderStatus.HANDELED).collect(Collectors.toList());
+        return orderRepository.getOrders().stream().filter(order -> order.getOrderStatus() != OrderStatus.HANDELED).collect(Collectors.toList());
     }
 
     @Override
     public List<Order> findAllUnfilledOrders() {
-        return orderRepository.getAllOrders().stream().filter(order -> order.getOrderStatus() == OrderStatus.UNFILLED).collect(Collectors.toList());
+        return orderRepository.getOrders().stream().filter(order -> order.getOrderStatus() == OrderStatus.UNFILLED).collect(Collectors.toList());
     }
 
     @Override

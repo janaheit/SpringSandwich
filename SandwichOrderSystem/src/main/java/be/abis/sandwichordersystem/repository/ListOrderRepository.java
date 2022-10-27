@@ -36,7 +36,7 @@ public class ListOrderRepository implements OrderRepository {
     }
 
     @Override
-    public List<Order> getAllOrders() {
+    public List<Order> getOrders() {
         return orders;
     }
 

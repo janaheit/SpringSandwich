@@ -1,23 +1,45 @@
 package be.abis.sandwichordersystem;
 
-import be.abis.sandwichordersystem.enums.BreadType;
-import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.exception.IngredientNotAvailableException;
 import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
 import be.abis.sandwichordersystem.model.*;
+import be.abis.sandwichordersystem.repository.OrderRepository;
 import be.abis.sandwichordersystem.service.OrderService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class OrderServiceTest {
 
     @Autowired OrderService orderService;
+
+    @Mock OrderRepository orderRepository;
+
+    @Mock Order o1;
+    @Mock Order o2;
+    @Mock Order o3;
+    @Mock Order o4;
+
+
+    @BeforeEach
+    void setUp(){
+        List<Order> orders = new ArrayList<>();
+        orders.add(o1);
+        orders.add(o2);
+        orders.add(o3);
+        orders.add(o4);
+
+        when(orderRepository.getOrders()).thenReturn(orders);
+    }
 
     @Test
     void addOrderWorks(){

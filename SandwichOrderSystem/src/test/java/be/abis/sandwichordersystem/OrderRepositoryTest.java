@@ -31,8 +31,8 @@ class OrderRepositoryTest {
     @org.junit.jupiter.api.Order(1)
     public void addOrderWorks(){
         orderRepository.addOrder(order1);
-        assertTrue(orderRepository.getAllOrders().contains(order1));
-        orderRepository.getAllOrders().remove(order1);
+        assertTrue(orderRepository.getOrders().contains(order1));
+        orderRepository.getOrders().remove(order1);
     }
 
     @Test
@@ -40,7 +40,7 @@ class OrderRepositoryTest {
     public void deleteOrderWorks() throws OrderNotFoundException {
         orderRepository.addOrder(order1);
         orderRepository.deleteOrder(order1);
-        assertFalse(orderRepository.getAllOrders().contains(order1));
+        assertFalse(orderRepository.getOrders().contains(order1));
     }
 
     @Test
