@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,14 +62,19 @@ public class ListSessionRepository implements SessionRepository {
         }
 
         // TODO check for doubles
-        return personsFollowingSessionOnDate;
+        HashSet<Person> personHashSet = new HashSet<>(personsFollowingSessionOnDate);
+        
+        return new ArrayList<>(personHashSet);
     }
 
     @Override
     public List<Person> findAllPersonsFollowingSession(Session session) {
 
-        //TODO implement
-        return null;
+        List<Person> personsFollowingSession = new ArrayList<>();
+        personsFollowingSession.addAll(session.getStudents());
+        personsFollowingSession.add(session.getInstructor());
+
+        return personsFollowingSession;
     }
 
     @Override

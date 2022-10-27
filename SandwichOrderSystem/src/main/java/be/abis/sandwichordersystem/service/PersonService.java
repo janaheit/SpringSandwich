@@ -6,6 +6,8 @@ import be.abis.sandwichordersystem.model.Instructor;
 import be.abis.sandwichordersystem.model.Person;
 import be.abis.sandwichordersystem.model.Student;
 
+import java.util.List;
+
 public interface PersonService {
 
     Person findPersonByName(String name) throws PersonNotFoundException;
@@ -17,4 +19,11 @@ public interface PersonService {
     Instructor findInstructorByID(int id) throws PersonNotFoundException;
     Student findStudentByID(int id) throws PersonNotFoundException;
     Admin findAdminByID(int id) throws PersonNotFoundException;
+
+    List<Person> getPersons();
+    List<Admin> getAdmins();
+    List<Instructor> getInstructors();
+    List<Student> getStudents();
+    void addPerson(Person person);
+    void deletePerson(Person person) throws PersonNotFoundException;
 }

@@ -11,8 +11,8 @@ import java.util.List;
 public interface SessionService {
 
     List<Person> findAllPersonsFollowingSession(Session session);
-    List<Person> findAllPersonsFollowingASessionToday();
-    List<Person> findAllPersonsFollowingASessionOnDate(LocalDate date);
+    List<Person> findAllPersonsFollowingSessionToday();
+    List<Person> findAllPersonsFollowingSessionOnDate(LocalDate date);
 
     List<Session> findSessionsToday();
     List<Session> findSessionsOnDate(LocalDate date);

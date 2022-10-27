@@ -9,6 +9,8 @@ import be.abis.sandwichordersystem.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PersonServiceImpl implements PersonService {
 
@@ -55,5 +57,35 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Admin findAdminByID(int id) throws PersonNotFoundException {
         return personRepository.findAdminByID(id);
+    }
+
+    @Override
+    public List<Person> getPersons() {
+        return personRepository.getPersons();
+    }
+
+    @Override
+    public List<Admin> getAdmins() {
+        return personRepository.getAdmins();
+    }
+
+    @Override
+    public List<Instructor> getInstructors() {
+        return personRepository.getInstructors();
+    }
+
+    @Override
+    public List<Student> getStudents() {
+        return personRepository.getStudents();
+    }
+
+    @Override
+    public void addPerson(Person person) {
+        personRepository.addPerson(person);
+    }
+
+    @Override
+    public void deletePerson(Person person) throws PersonNotFoundException {
+        personRepository.deletePerson(person);
     }
 }
