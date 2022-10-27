@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -165,11 +165,113 @@ public class SessionServiceTest {
     }
 
     // findSessionsToday
+    @Test
+    public void findSessionsTodayWithOneSessionsTodayWorks() throws SessionNotFoundException {
+        when(mockSession1.getStartDate()).thenReturn(LocalDate.now().minusDays(1));
+        when(mockSession1.getEndDate()).thenReturn(LocalDate.now().plusDays(1));
+        when(mockSession2.getStartDate()).thenReturn(LocalDate.now().minusDays(10));
+        when(mockSession2.getEndDate()).thenReturn(LocalDate.now().minusDays(1));
+        cut.addSession(mockSession1);
+        cut.addSession(mockSession2);
+        List<Session> outputList = cut.findSessionsToday();
+        assertTrue(outputList.contains(mockSession1) && !outputList.contains(mockSession2));
+
+        cut.deleteSession(mockSession1);
+        cut.deleteSession(mockSession2);
+    }
+
+    @Test
+    public void findSessionsTodayWithTwoSessionsTodayWorks() throws SessionNotFoundException {
+        when(mockSession1.getStartDate()).thenReturn(LocalDate.now().minusDays(1));
+        when(mockSession1.getEndDate()).thenReturn(LocalDate.now().plusDays(1));
+        when(mockSession2.getStartDate()).thenReturn(LocalDate.now().minusDays(10));
+        when(mockSession2.getEndDate()).thenReturn(LocalDate.now().plusDays(1));
+        cut.addSession(mockSession1);
+        cut.addSession(mockSession2);
+        List<Session> outputList = cut.findSessionsToday();
+        assertTrue(outputList.contains(mockSession1) && outputList.contains(mockSession2));
+
+        cut.deleteSession(mockSession1);
+        cut.deleteSession(mockSession2);
+    }
 
     // findSessionsOnDate
+    @Test
+    public void findSessionsOnDateWithOneSessionsOnDateWorks() throws SessionNotFoundException {
+        when(mockSession1.getStartDate()).thenReturn(LocalDate.now().minusDays(1));
+        when(mockSession1.getEndDate()).thenReturn(LocalDate.now().plusDays(1));
+        when(mockSession2.getStartDate()).thenReturn(LocalDate.now().minusDays(10));
+        when(mockSession2.getEndDate()).thenReturn(LocalDate.now().minusDays(1));
+        cut.addSession(mockSession1);
+        cut.addSession(mockSession2);
+        List<Session> outputList = cut.findSessionsOnDate(LocalDate.now());
+        assertTrue(outputList.contains(mockSession1) && !outputList.contains(mockSession2));
+
+        cut.deleteSession(mockSession1);
+        cut.deleteSession(mockSession2);
+    }
+
+    @Test
+    public void findSessionsOnDateWithTwoSessionsOnDateWorks() throws SessionNotFoundException {
+        when(mockSession1.getStartDate()).thenReturn(LocalDate.now().minusDays(1));
+        when(mockSession1.getEndDate()).thenReturn(LocalDate.now().plusDays(1));
+        when(mockSession2.getStartDate()).thenReturn(LocalDate.now().minusDays(10));
+        when(mockSession2.getEndDate()).thenReturn(LocalDate.now().plusDays(1));
+        cut.addSession(mockSession1);
+        cut.addSession(mockSession2);
+        List<Session> outputList = cut.findSessionsToday();
+        assertTrue(outputList.contains(mockSession1) && outputList.contains(mockSession2));
+
+        cut.deleteSession(mockSession1);
+        cut.deleteSession(mockSession2);
+    }
 
     // findSessionsByInstructor
+    @Test
+    public void findSessionsByInstructorWithOneSessionWorks() throws SessionNotFoundException {
+        when(mockSession1.getInstructor()).thenReturn(mockInstructor1);
+        when(mockSession2.getInstructor()).thenReturn(mockInstructor2);
+        cut.addSession(mockSession1);
+        cut.addSession(mockSession2);
+        List<Session> outputList = cut.findSessionsByInstructor(mockInstructor1);
+
+        assertTrue(outputList.contains(mockSession1) && !outputList.contains(mockSession2));
+
+        cut.deleteSession(mockSession1);
+        cut.deleteSession(mockSession2);
+    }
+
+    @Test
+    public void findSessionsByInstructorWithTwoSessionsWorks() throws SessionNotFoundException {
+        when(mockSession1.getInstructor()).thenReturn(mockInstructor1);
+        when(mockSession2.getInstructor()).thenReturn(mockInstructor1);
+        cut.addSession(mockSession1);
+        cut.addSession(mockSession2);
+        List<Session> outputList = cut.findSessionsByInstructor(mockInstructor1);
+
+        assertTrue(outputList.contains(mockSession1) && outputList.contains(mockSession2));
+
+        cut.deleteSession(mockSession1);
+        cut.deleteSession(mockSession2);
+    }
 
     // findSessionById (Throws sessionnotfoundexception)
+
+    @Test
+    public void findSessionByIdWorks() throws SessionNotFoundException {
+        int sId = cut.getSessions().size()+123;
+        when(mockSession1.getSessionNumber()).thenReturn(sId);
+        cut.addSession(mockSession1);
+
+        assertEquals(mockSession1, cut.findSessionByID(sId));
+
+        cut.deleteSession(mockSession1);
+    }
+
+    @Test
+    public void findSessionByIdThrowsException() {
+        int sId = cut.getSessions().size()+178773;
+        assertThrows(SessionNotFoundException.class, () -> cut.findSessionByID(sId));
+    }
 
 }
