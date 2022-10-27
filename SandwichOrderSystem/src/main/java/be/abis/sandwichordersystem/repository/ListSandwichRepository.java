@@ -1,6 +1,7 @@
 package be.abis.sandwichordersystem.repository;
 
 import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
+import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
 import be.abis.sandwichordersystem.factory.SandwichFactory;
 import be.abis.sandwichordersystem.model.Sandwich;
 import be.abis.sandwichordersystem.model.SandwichShop;
@@ -33,6 +34,11 @@ public class ListSandwichRepository implements SandwichRepository {
                 .filter(s -> s.getSandwichNr()==id)
                 .findAny()
                 .orElseThrow(() -> new SandwichNotFoundException("This sandwich does not exist"));
+    }
+
+    @Override
+    public Sandwich findSandwichByName(String name) throws SandwichNotFoundException {
+        return this.sandwiches.stream().filter(s -> s.getName().equalsIgnoreCase(name)).findAny().orElseThrow(() -> new SandwichNotFoundException(" No sandwich found"));
     }
 
     // GETTERS AND SETTERS

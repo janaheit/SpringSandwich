@@ -3,6 +3,7 @@ package be.abis.sandwichordersystem.service;
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
+import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
 import be.abis.sandwichordersystem.model.Sandwich;
 import be.abis.sandwichordersystem.model.SandwichShop;
 import be.abis.sandwichordersystem.repository.SandwichShopRepository;
@@ -24,5 +25,7 @@ public interface SandwichShopService {
 
     Sandwich findSandwichByName(String name) throws SandwichNotFoundException;
     Sandwich findSandwichById(int id) throws SandwichNotFoundException;
+
+    SandwichShop findShopForSandwich(Sandwich sandwich) throws SandwichShopNotFoundException;
 
 }
