@@ -42,6 +42,7 @@ public class SandwichShopServiceTest {
     public void deleteSandwichMockWorks() throws SandwichNotFoundException {
         SandwichShop shop = sandwichShopService.getSandwichShopRepository().getShops().get(0);
         shop.getSandwiches().add(sandwich);
+        sandwichRepository.getSandwiches().add(sandwich);
         sandwichShopService.deleteSandwich(sandwich);
 
         assertFalse(shop.getSandwiches().contains(sandwich));
@@ -69,10 +70,10 @@ public class SandwichShopServiceTest {
     @Test
     public void findExistingSandwichByIDReturnsSandwich() throws SandwichNotFoundException {
 
-        when(sandwich3.getSandwichNr()).thenReturn(95687456);
-        sandwichShopService.getSandwichShopRepository().getShops().get(1).getSandwiches().add(sandwich3);
-        assertEquals(sandwich3, sandwichShopService.findSandwichById(95687456));
-        sandwichShopService.getSandwichShopRepository().getShops().get(1).getSandwiches().remove(sandwich3);
+        when(sandwich3.getSandwichNr()).thenReturn(9568);
+        sandwichRepository.getSandwiches().add(sandwich3);
+        assertEquals(sandwich3, sandwichShopService.findSandwichById(9568));
+        sandwichRepository.getSandwiches().remove(sandwich3);
     }
 
     @Test
@@ -84,7 +85,10 @@ public class SandwichShopServiceTest {
     @Test
     public void findExistingSandwichByNameReturnsSandwich() throws SandwichNotFoundException {
         when(sandwich3.getName()).thenReturn("745632");
+        sandwichRepository.getSandwiches().add(sandwich3);
         assertEquals(sandwich3, sandwichShopService.findSandwichByName("745632"));
+        sandwichRepository.getSandwiches().remove(sandwich3);
+
     }
 
     @Test
@@ -109,8 +113,9 @@ public class SandwichShopServiceTest {
 
         List<Options> overlap = new ArrayList<>();
 
-        overlap.add(Options.NO_BUTTER);
         overlap.add(Options.CLUB);
+        overlap.add(Options.NO_BUTTER);
+
 
         when(shop.getOptions()).thenReturn(actualOptions);
         sandwichShopService.getSandwichShopRepository().addShop(shop);

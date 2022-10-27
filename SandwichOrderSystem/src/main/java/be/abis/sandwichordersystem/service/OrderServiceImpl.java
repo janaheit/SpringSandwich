@@ -141,9 +141,7 @@ public class OrderServiceImpl implements OrderService {
         PrintWriter out = new PrintWriter(new FileWriter(filename));
         out.print(todaysOrdersForShop());
         out.close();
-
     }
-
 
     @Override
     public void setTodaysSandwichShop(SandwichShop sandwichShop) {
@@ -167,7 +165,11 @@ public class OrderServiceImpl implements OrderService {
     // Other helper methods
     public String todaysOrdersForShop() {
         StringBuilder output = new StringBuilder();
-        List<Order> todaysOrders = this.findOrdersByDate(LocalDate.now()).stream().filter(o -> o.getOrderStatus() == OrderStatus.ORDERED).sorted(Comparator.comparing(o -> o.getPerson().getFirstName())).sorted(Comparator.comparing(o -> o.getSession().getSessionNumber())).collect(Collectors.toList());
+        List<Order> todaysOrders = this.findOrdersByDate(LocalDate.now()).stream()
+                .filter(o -> o.getOrderStatus() == OrderStatus.ORDERED)
+                .sorted(Comparator.comparing(o -> o.getPerson().getFirstName()))
+                .sorted(Comparator.comparing(o -> o.getSession().getSessionNumber()))
+                .collect(Collectors.toList());
 
         String currentSession = "";
         for (Order order : todaysOrders) {
