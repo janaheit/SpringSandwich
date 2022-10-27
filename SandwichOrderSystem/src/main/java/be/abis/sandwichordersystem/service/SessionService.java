@@ -19,4 +19,9 @@ public interface SessionService {
     List<Session> findSessionsByInstructor(Instructor instructor);
 
     Session findSessionByID(int id) throws SessionNotFoundException;
+
+    // Basic methods
+    void addSession(Session session);
+    List<Session> getSessions();
+    void deleteSession(Session session) throws SessionNotFoundException;
 }
