@@ -53,4 +53,20 @@ public class SessionServiceImpl implements SessionService {
     public Session findSessionByID(int id) throws SessionNotFoundException {
         return sessionRepository.findSessionByID(id);
     }
+
+    // Basic method implementations
+    @Override
+    public void addSession(Session session) {
+        this.sessionRepository.addSession(session);
+    }
+
+    @Override
+    public List<Session> getSessions() {
+        return this.sessionRepository.getSessions();
+    }
+
+    @Override
+    public void deleteSession(Session session) throws SessionNotFoundException {
+        this.sessionRepository.deleteSession(session);
+    }
 }
