@@ -5,7 +5,8 @@ public enum OrderStatus {
     // Options
     UNFILLED("Hasn't ordered yet"),
     ORDERED("Has ordered"),
-    NOSANDWICH("Doesn't want a sandwich");
+    NOSANDWICH("Doesn't want a sandwich"),
+    HANDELED("Already eaten");
 
     private String message;
 
