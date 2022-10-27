@@ -13,27 +13,26 @@ import java.util.List;
 
 public interface OrderService {
 
-    public void addOrder(Order order);
-    public void deleteOrder(Order order) throws OrderNotFoundException;
+    void addOrder(Order order);
+    void deleteOrder(Order order) throws OrderNotFoundException;
+    void createOrdersForEveryoneToday() throws SandwichShopNotFoundException;
+    void createOrder(Person person);
 
-    public void createOrdersForEveryoneToday() throws SandwichShopNotFoundException;
-    public void createOrder(Person person);
+    void handleOrder(Order order, Boolean noSandwich);
+    void handleOrder(Order order, Boolean noSandwich, String remark);
+    void handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException;
 
-    public void handleOrder(Order order, Boolean noSandwich);
-    public void handleOrder(Order order, Boolean noSandwich, String remark);
-    public void handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException;
+    List<Order> findOrdersByDate(LocalDate date);
+    List<Order> findOrdersByDates(LocalDate startDate, LocalDate endDate);
+    List<Order> findOrdersBySession(Session session);
+    List<Order> findTodaysOrdersForPerson(Person person);
+    List<Order> findAllUnhandeledOrders();
+    List<Order> findAllUnfilledOrders();
+    List<Person> getAllPersonsFromListOfOrders(List<Order> orders);
 
-    public List<Order> findOrdersByDate(LocalDate date);
-    public List<Order> findOrdersByDates(LocalDate startDate, LocalDate endDate);
-    public List<Order> findOrdersBySession(Session session);
-    public List<Order> findTodaysOrdersForPerson(Person person);
-    public List<Order> findAllUnhandeledOrders();
-    public List<Order> findAllUnfilledOrders();
-    public List<Person> getAllPersonsFromListOfOrders(List<Order> orders);
+    void generateOrderFile() throws IOException;
 
-    public void generateOrderFile() throws IOException;
-
-    public void setTodaysSandwichShop(SandwichShop sandwichShop);
+    void setTodaysSandwichShop(SandwichShop sandwichShop);
 
 
 }
