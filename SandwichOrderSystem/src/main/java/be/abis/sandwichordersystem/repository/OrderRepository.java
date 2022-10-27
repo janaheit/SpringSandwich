@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface OrderRepository {
 
-    public void addOrder(Order order);
-    public void deleteOrder(Order order) throws OrderNotFoundException;
+    public boolean addOrder(Order order);
+    public boolean deleteOrder(Order order) throws OrderNotFoundException;
     public List<Order> getOrders();
     public List<Order> findOrdersByDate(LocalDate date);
     public List<Order> findOrdersBySession(Session session);

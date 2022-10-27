@@ -6,6 +6,7 @@ import be.abis.sandwichordersystem.exception.IngredientNotAvailableException;
 import be.abis.sandwichordersystem.exception.OrderNotFoundException;
 import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
 import be.abis.sandwichordersystem.model.*;
+import be.abis.sandwichordersystem.repository.OrderRepository;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -13,8 +14,8 @@ import java.util.List;
 
 public interface OrderService {
 
-    void addOrder(Order order);
-    void deleteOrder(Order order) throws OrderNotFoundException;
+    boolean addOrder(Order order);
+    boolean deleteOrder(Order order) throws OrderNotFoundException;
     void createOrdersForEveryoneToday() throws SandwichShopNotFoundException;
     void createOrder(Person person);
 
@@ -33,6 +34,9 @@ public interface OrderService {
     void generateOrderFile() throws IOException;
 
     void setTodaysSandwichShop(SandwichShop sandwichShop);
+
+    OrderRepository getOrderRepository();
+    void setOrderRepository(OrderRepository orderRepository);
 
 
 }

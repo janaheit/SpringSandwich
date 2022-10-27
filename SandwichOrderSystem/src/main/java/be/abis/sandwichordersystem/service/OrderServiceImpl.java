@@ -42,13 +42,13 @@ public class OrderServiceImpl implements OrderService {
     // Method implementations
 
     @Override
-    public void addOrder(Order order) {
-        orderRepository.addOrder(order);
+    public boolean addOrder(Order order) {
+        return orderRepository.addOrder(order);
     }
 
     @Override
-    public void deleteOrder(Order order) throws OrderNotFoundException {
-        orderRepository.deleteOrder(order);
+    public boolean deleteOrder(Order order) throws OrderNotFoundException {
+        return orderRepository.deleteOrder(order);
     }
 
     @Override
@@ -156,6 +156,15 @@ public class OrderServiceImpl implements OrderService {
     // Simple getters and setters
     public DayOrder getDayOrder() {
         return dayOrder;
+    }
+
+    public OrderRepository getOrderRepository(){
+        return this.orderRepository;
+    }
+
+    @Override
+    public void setOrderRepository(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
     }
 
     public void setDayOrder(DayOrder dayOrder) {

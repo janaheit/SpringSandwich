@@ -22,14 +22,14 @@ public class ListOrderRepository implements OrderRepository {
 
     // Method implementations
     @Override
-    public void addOrder(Order order) {
-        orders.add(order);
+    public boolean addOrder(Order order) {
+        return orders.add(order);
     }
 
     @Override
-    public void deleteOrder(Order order) throws OrderNotFoundException {
+    public boolean deleteOrder(Order order) throws OrderNotFoundException {
         if(orders.contains(order)) {
-            orders.remove(order);
+            return orders.remove(order);
         } else {
             throw new OrderNotFoundException("This order was not found and therefore could not be deleted.");
         }

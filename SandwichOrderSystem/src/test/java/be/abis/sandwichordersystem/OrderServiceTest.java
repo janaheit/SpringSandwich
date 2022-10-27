@@ -1,10 +1,12 @@
 package be.abis.sandwichordersystem;
 
 import be.abis.sandwichordersystem.exception.IngredientNotAvailableException;
+import be.abis.sandwichordersystem.exception.OrderNotFoundException;
 import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
 import be.abis.sandwichordersystem.model.*;
 import be.abis.sandwichordersystem.repository.OrderRepository;
 import be.abis.sandwichordersystem.service.OrderService;
+import be.abis.sandwichordersystem.service.SessionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -15,6 +17,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -22,33 +27,29 @@ public class OrderServiceTest {
 
     @Autowired OrderService orderService;
 
+    @Mock SessionService sessionService;
     @Mock OrderRepository orderRepository;
 
-    @Mock Order o1;
-    @Mock Order o2;
-    @Mock Order o3;
-    @Mock Order o4;
+    @Mock Order o5;
 
 
     @BeforeEach
     void setUp(){
-        List<Order> orders = new ArrayList<>();
-        orders.add(o1);
-        orders.add(o2);
-        orders.add(o3);
-        orders.add(o4);
-
-        when(orderRepository.getOrders()).thenReturn(orders);
+        orderService.setOrderRepository(orderRepository);
     }
 
     @Test
     void addOrderWorks(){
-
+        when(orderRepository.addOrder(o5)).thenReturn(true);
+        assertTrue(orderService.addOrder(o5));
+        verify(orderRepository).addOrder(o5);
+        //System.out.println(orderService.getOrderRepository().getOrders());
     }
 
     @Test
-    void deleteOrderWorks(){
-
+    void deleteOrderWorks() throws OrderNotFoundException {
+        when(orderRepository.deleteOrder(o5)).thenReturn(true);
+        assertTrue(orderService.deleteOrder(o5));
     }
 
     @Test
@@ -67,7 +68,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    void handleOrderNoSandwichWithRemark(Order order, Boolean noSandwich, String remark){
+    void handleOrderNoSandwichWithRemark(){
 
     }
 
@@ -87,11 +88,11 @@ public class OrderServiceTest {
     }
 
     @Test
-    void findOrdersBySession(Session session){
+    void findOrdersBySession(){
 
     }
     @Test
-    void findTodaysOrdersForPerson(Person person){
+    void findTodaysOrdersForPerson(){
 
     }
 
@@ -106,7 +107,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    void getAllPersonsFromListOfOrders(List<Order> orders){
+    void getAllPersonsFromListOfOrders(){
 
     }
 
@@ -116,7 +117,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    void setTodaysSandwichShop(SandwichShop sandwichShop){
+    void setTodaysSandwichShop(){
 
     }
 
