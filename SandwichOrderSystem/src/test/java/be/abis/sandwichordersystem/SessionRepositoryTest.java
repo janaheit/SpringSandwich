@@ -2,7 +2,6 @@ package be.abis.sandwichordersystem;
 
 import be.abis.sandwichordersystem.exception.SessionNotFoundException;
 import be.abis.sandwichordersystem.model.Instructor;
-import be.abis.sandwichordersystem.model.Person;
 import be.abis.sandwichordersystem.model.Session;
 import be.abis.sandwichordersystem.repository.PersonRepository;
 import be.abis.sandwichordersystem.repository.SessionRepository;
@@ -14,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class SessionRepositoryTest {
@@ -38,12 +36,12 @@ public class SessionRepositoryTest {
 
     @Test
     public void findSessionsOf26_10_2022(){
-        assertEquals(2,sessionRepository.findSessionsByDate(LocalDate.of(2022,10,26)).size());
+        assertEquals(2,sessionRepository.findSessionsOnDate(LocalDate.of(2022,10,26)).size());
     }
 
     @Test
     public void findSessionsWithNonExistingDateReturnsEmptyList(){
-        assertEquals(2,sessionRepository.findSessionsByDate(LocalDate.now().plusDays(1)).size());
+        assertEquals(2,sessionRepository.findSessionsOnDate(LocalDate.now().plusDays(1)).size());
     }
 
     @Test

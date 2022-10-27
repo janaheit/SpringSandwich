@@ -77,6 +77,50 @@ public class ListPersonRepository implements PersonRepository {
                 });
     }
 
+    @Override
+    public Person findPersonByID(int id) throws PersonNotFoundException {
+        return persons.stream()
+                .filter(person -> id == person.getPersonNr())
+                .findAny()
+                .orElseThrow(() -> {
+                    //log.error("FilePersonRepository (findInstructorByName), instructor does not exist " + name);
+                    return new PersonNotFoundException("This person does not exist");
+                });
+    }
+
+    @Override
+    public Instructor findInstructorByID(int id) throws PersonNotFoundException {
+        return (Instructor)persons.stream()
+                .filter(person -> person instanceof Instructor
+                        && id == person.getPersonNr())
+                .findAny()
+                .orElseThrow(() -> {
+                    return new PersonNotFoundException("This Instructor does not exist.");
+                });
+    }
+
+    @Override
+    public Student findStudentByID(int id) throws PersonNotFoundException {
+        return (Student)persons.stream()
+                .filter(person -> person instanceof Admin
+                        && id == person.getPersonNr())
+                .findAny()
+                .orElseThrow(() -> {
+                    return new PersonNotFoundException("This Student does not exist.");
+                });
+    }
+
+    @Override
+    public Admin findAdminByID(int id) throws PersonNotFoundException {
+        return (Admin)persons.stream()
+                .filter(person -> person instanceof Admin
+                        && id == person.getPersonNr())
+                .findAny()
+                .orElseThrow(() -> {
+                    return new PersonNotFoundException("This Admin does not exist.");
+                });
+    }
+
     // GETTER AND SETTER
 
     @Override
