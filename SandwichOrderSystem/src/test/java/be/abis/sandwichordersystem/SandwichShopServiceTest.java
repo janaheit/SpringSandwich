@@ -86,6 +86,7 @@ public class SandwichShopServiceTest {
     public void findExistingSandwichByNameReturnsSandwich() throws SandwichNotFoundException {
         when(sandwich3.getName()).thenReturn("745632");
         sandwichRepository.getSandwiches().add(sandwich3);
+        System.out.println(sandwichRepository.getSandwiches());
         assertEquals(sandwich3, sandwichShopService.findSandwichByName("745632"));
         sandwichRepository.getSandwiches().remove(sandwich3);
 
@@ -93,7 +94,7 @@ public class SandwichShopServiceTest {
 
     @Test
     public void findNonExistingSandwichByNameThrowsException(){
-        assertThrows(SandwichNotFoundException.class, () -> sandwichShopService.findSandwichByName("7854962"));
+        assertThrows(SandwichNotFoundException.class, () -> sandwichShopService.findSandwichByName("74962"));
     }
 
     @Mock SandwichShop shop;

@@ -54,6 +54,7 @@ public class SandwichRepositoryTest {
         cut.addSandwich(sandwich1);
         Sandwich mySandwich = cut.findSandwichByID(sandwichID);
         assertEquals(sandwich1, mySandwich);
+        cut.getSandwiches().remove(sandwich1);
     }
 
     @Test
