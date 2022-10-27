@@ -61,9 +61,7 @@ public class ListSessionRepository implements SessionRepository {
             personsFollowingSessionOnDate.add(s.getInstructor());
         }
 
-        // TODO check for doubles
         HashSet<Person> personHashSet = new HashSet<>(personsFollowingSessionOnDate);
-        
         return new ArrayList<>(personHashSet);
     }
 
