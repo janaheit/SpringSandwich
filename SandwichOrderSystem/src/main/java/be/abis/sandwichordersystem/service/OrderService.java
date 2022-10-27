@@ -3,10 +3,7 @@ package be.abis.sandwichordersystem.service;
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.exception.IngredientNotAvailableException;
-import be.abis.sandwichordersystem.model.Order;
-import be.abis.sandwichordersystem.model.Person;
-import be.abis.sandwichordersystem.model.Sandwich;
-import be.abis.sandwichordersystem.model.Session;
+import be.abis.sandwichordersystem.model.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,6 +29,8 @@ public interface OrderService {
     public List<Person> getAllPersonsFromListOfOrders(List<Order> orders);
 
     public void generateOrderFile();
+
+    public void setTodaysSandwichShop(SandwichShop sandwichShop);
 
 
 }
