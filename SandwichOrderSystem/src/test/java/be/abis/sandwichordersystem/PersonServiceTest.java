@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -225,9 +224,5 @@ public class PersonServiceTest {
     public void deletePersonThrowsException() {
         assertThrows(PersonNotFoundException.class, () -> cut.deletePerson(mockPerson1));
     }
-
-
-
-
 
 }

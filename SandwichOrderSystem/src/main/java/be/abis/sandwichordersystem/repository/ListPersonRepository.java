@@ -102,7 +102,7 @@ public class ListPersonRepository implements PersonRepository {
     @Override
     public Student findStudentByID(int id) throws PersonNotFoundException {
         return (Student)persons.stream()
-                .filter(person -> person instanceof Admin
+                .filter(person -> person instanceof Student
                         && id == person.getPersonNr())
                 .findAny()
                 .orElseThrow(() -> {

@@ -36,17 +36,17 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Admin findAdminByName(String name) throws PersonNotFoundException {
-        return findAdminByName(name);
+        return personRepository.findAdminByName(name);
     }
 
     @Override
     public Person findPersonByID(int id) throws PersonNotFoundException {
-        return findPersonByID(id);
+        return personRepository.findPersonByID(id);
     }
 
     @Override
     public Instructor findInstructorByID(int id) throws PersonNotFoundException {
-        return findInstructorByID(id);
+        return personRepository.findInstructorByID(id);
     }
 
     @Override
