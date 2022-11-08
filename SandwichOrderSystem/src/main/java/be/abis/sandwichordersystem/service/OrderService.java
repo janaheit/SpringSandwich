@@ -2,10 +2,7 @@ package be.abis.sandwichordersystem.service;
 
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
-import be.abis.sandwichordersystem.exception.IngredientNotAvailableException;
-import be.abis.sandwichordersystem.exception.OrderNotFoundException;
-import be.abis.sandwichordersystem.exception.PersonNotFoundException;
-import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
+import be.abis.sandwichordersystem.exception.*;
 import be.abis.sandwichordersystem.model.*;
 import be.abis.sandwichordersystem.repository.OrderRepository;
 
@@ -21,7 +18,7 @@ public interface OrderService {
     Order createOrder(Person person);
 
     void handleOrder(Order order, String remark);
-    void handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException;
+    void handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException;
 
     List<Order> findOrdersByDate(LocalDate date);
     List<Order> findOrdersByDates(LocalDate startDate, LocalDate endDate);
@@ -40,6 +37,8 @@ public interface OrderService {
     OrderRepository getOrderRepository();
     void setOrderRepository(OrderRepository orderRepository);
     void setSessionService(SessionService sessionService);
+    void setDayOrder(DayOrder dayOrder);
+    DayOrder getDayOrder();
 
     Order findTodaysOrderByName(String name) throws PersonNotFoundException;
 
