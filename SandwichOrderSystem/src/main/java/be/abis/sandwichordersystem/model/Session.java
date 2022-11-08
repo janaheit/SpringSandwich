@@ -1,6 +1,7 @@
 package be.abis.sandwichordersystem.model;
 
 import be.abis.sandwichordersystem.enums.Course;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Objects;
 public class Session {
     private Course course;
     private Instructor instructor;
+    @JsonIgnore
     private List<Student> students = new ArrayList<>();
     private LocalDate startDate;
     private LocalDate endDate;

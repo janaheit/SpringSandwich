@@ -2,6 +2,7 @@ package be.abis.sandwichordersystem.advice;
 
 import be.abis.sandwichordersystem.error.ApiError;
 import be.abis.sandwichordersystem.exception.PersonNotFoundException;
+import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
 import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,15 @@ public class OrderResponseEntityExceptionHandler extends ResponseEntityException
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("content-type", MediaType.APPLICATION_PROBLEM_JSON_VALUE);
         return new ResponseEntity<ApiError>(err, responseHeaders, status);
+    }
+
+    @ExceptionHandler(SandwichNotFoundException.class)
+    public ResponseEntity<? extends Object> handleSandWichNotFoundException(SandwichNotFoundException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ApiError ae = new ApiError("Sandwich not found!", status.value(), ex.getMessage());
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("content-type", MediaType.APPLICATION_PROBLEM_JSON_VALUE);
+        return new ResponseEntity<ApiError>(ae, responseHeaders, status);
     }
 
 
