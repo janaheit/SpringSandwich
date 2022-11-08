@@ -22,6 +22,7 @@ public class Order implements Comparable<Order> {
     private BreadType breadType;
     private String remark;
     private List<Options> options;
+    @JsonIgnore
     private Session session;
     @JsonIgnore
     private DayOrder dayOrder;

@@ -6,9 +6,10 @@ import be.abis.sandwichordersystem.model.Session;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 @Repository
 public class ListOrderRepository implements OrderRepository {
@@ -43,6 +44,13 @@ public class ListOrderRepository implements OrderRepository {
     @Override
     public List<Order> findOrdersByDate(LocalDate date) {
         List<Order> output = this.orders.stream().filter(order -> order.getDayOrder().getDate().isEqual(date)).collect(Collectors.toList());
+        return output;
+    }
+
+    public Map<Session, List<Order>> findOrdersByDateBySession(LocalDate date){
+        Map<Session, List<Order>> output = this.orders.stream()
+                .filter(order -> order.getDayOrder().getDate().isEqual(date))
+                .collect(groupingBy(Order::getSession));
         return output;
     }
 
