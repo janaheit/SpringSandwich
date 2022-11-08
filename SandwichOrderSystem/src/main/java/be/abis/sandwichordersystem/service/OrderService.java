@@ -40,6 +40,7 @@ public interface OrderService {
 
     OrderRepository getOrderRepository();
     void setOrderRepository(OrderRepository orderRepository);
+    void setSessionService(SessionService sessionService);
 
     Order findTodaysOrderByName(String name) throws PersonNotFoundException;
 

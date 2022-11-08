@@ -17,8 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,10 +31,23 @@ public class OrderServiceTest {
 
     @Mock Order o5;
 
+    Person p1;
+    Person p2;
+    List<Person> people = new ArrayList<>();
+
 
     @BeforeEach
     void setUp(){
         orderService.setOrderRepository(orderRepository);
+        orderService.setSessionService(sessionService);
+
+        // Setup of sessionServiceMock
+        p1 = new Person("p1", "lastname");
+        p2 = new Person("p2", "lastname");
+        people.add(p1);
+        people.add(p2);
+        when(sessionService.findAllPersonsFollowingSessionToday()).thenReturn(people);
+
     }
 
     @Test
@@ -52,14 +64,20 @@ public class OrderServiceTest {
         assertTrue(orderService.deleteOrder(o5));
     }
 
+
+    @Test
+    void createOrdersForEveryoneTodayThrowsExceptionIfNoSandwichShopIsSetTest() {
+        assertThrows(SandwichShopNotFoundException.class, () -> orderService.createOrdersForEveryoneToday());
+    }
+
     @Test
     void createOrdersForEveryoneToday() throws SandwichShopNotFoundException {
-
+        //TODO should be implemented
     }
 
     @Test
     void createOrderForPerson(){
-
+        int amountOfOrdersBeforeTest;
     }
 
     @Test
@@ -118,6 +136,16 @@ public class OrderServiceTest {
 
     @Test
     void setTodaysSandwichShop(){
+
+    }
+
+    @Test
+    void getTodaysSandwichShop() {
+
+    }
+
+    @Test
+    public void findTodaysOrderByNameTest() {
 
     }
 
