@@ -15,6 +15,7 @@ import be.abis.sandwichordersystem.service.SandwichShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -40,6 +41,12 @@ public class ManagementController {
     @GetMapping()
     public List<Order> getAllOrdersToday() {
         return orderService.findOrdersByDate(LocalDate.now());
+    }
+
+    // quick and dirty testing
+    @GetMapping("orderfile")
+    public void makeFile() throws IOException {
+        orderService.generateOrderFile();
     }
 
 

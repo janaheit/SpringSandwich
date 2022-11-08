@@ -6,6 +6,7 @@ import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.exception.IngredientNotAvailableException;
 import be.abis.sandwichordersystem.exception.PersonNotFoundException;
+import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
 import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
 import be.abis.sandwichordersystem.model.Order;
 import be.abis.sandwichordersystem.model.Sandwich;
@@ -54,7 +55,7 @@ public class OrderController {
 
 
     @PostMapping("{firstName}")
-    public void handleOrder(@PathVariable String firstName, @RequestBody OrderModel orderModel) throws PersonNotFoundException, IngredientNotAvailableException {
+    public void handleOrder(@PathVariable String firstName, @RequestBody OrderModel orderModel) throws PersonNotFoundException, IngredientNotAvailableException, SandwichNotFoundException {
 
         String fullName = orderModel.getPerson().getFirstName() + " " + orderModel.getPerson().getLastName();
         Order personOrder = orderService.findTodaysOrderByName(fullName);
