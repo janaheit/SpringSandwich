@@ -53,9 +53,13 @@ public class OrderServiceImpl implements OrderService {
         if (this.dayOrder == null || this.dayOrder.getCurrentSandwichShop() == null) {
             throw new SandwichShopNotFoundException("No sandwichshop selected for this day");
         } else {
-            List<Person> peopleOfToday = sessionService.findAllPersonsFollowingSessionToday();
-            for (Person p : peopleOfToday) {
-                this.createOrder(p);
+            List<Session> sessionsOfToday = sessionService.findSessionsToday();
+            for (Session s : sessionsOfToday) {
+                List<Person> personsOfSession = sessionService.findAllPersonsFollowingSession(s);
+                for (Person p : personsOfSession) {
+                    Order o = this.createOrder(p);
+                    o.setSession(s);
+                }
             }
         }
     }
@@ -223,5 +227,7 @@ public class OrderServiceImpl implements OrderService {
         this.sessionService = sessionService;
     }
 
-
+    public String getFilePath() {
+        return filePath;
+    }
 }
