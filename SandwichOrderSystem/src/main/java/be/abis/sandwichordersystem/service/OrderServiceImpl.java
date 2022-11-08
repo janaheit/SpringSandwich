@@ -74,10 +74,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException {
+    public void handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException {
         SandwichShop mySandwichShop = order.getDayOrder().getCurrentSandwichShop();
         if(!sandwichShopService.checkSandwich(sandwich, mySandwichShop)) {
-            throw new IngredientNotAvailableException("Sandwich" + sandwich.getName() + " not available at " + mySandwichShop.getName());
+            throw new SandwichNotFoundException("Sandwich" + sandwich.getName() + " not available at " + mySandwichShop.getName());
         }
         order.setSandwich(sandwich);
         if(!sandwichShopService.checkBreadType(breadType, mySandwichShop)) {
@@ -86,9 +86,10 @@ public class OrderServiceImpl implements OrderService {
         order.setBreadType(breadType);
         order.setOptions(sandwichShopService.checkOptions(options, mySandwichShop));
         if(order.getOptions().size() != options.size()) {
-            throw new OptionNotAvailableRuntimeException("Not all options were available!");
+            throw new IngredientNotAvailableException("Not all options were available!");
         }
         order.setRemark(remark);
+        order.setOrderStatus(OrderStatus.ORDERED);
     }
 
     @Override
@@ -221,4 +222,6 @@ public class OrderServiceImpl implements OrderService {
     public void setSessionService(SessionService sessionService) {
         this.sessionService = sessionService;
     }
+
+
 }

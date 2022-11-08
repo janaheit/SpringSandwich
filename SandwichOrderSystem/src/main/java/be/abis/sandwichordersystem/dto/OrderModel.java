@@ -4,7 +4,6 @@ import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.model.Person;
 import be.abis.sandwichordersystem.model.Sandwich;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 

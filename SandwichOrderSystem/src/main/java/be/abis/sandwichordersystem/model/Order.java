@@ -8,10 +8,14 @@ import be.abis.sandwichordersystem.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Order implements Comparable<Order> {
 
     // Attributes
+    private static int orderCounter=0;
+
+    private int orderNum;
     private OrderStatus orderStatus = OrderStatus.UNFILLED;
     private Person person;
     private Sandwich sandwich;
@@ -22,8 +26,14 @@ public class Order implements Comparable<Order> {
     @JsonIgnore
     private DayOrder dayOrder;
 
-    // Constructor
+    // Constructors
+    public Order() {
+        this.orderNum = orderCounter;
+        orderCounter += 1;
+    }
+
     public Order(Person person, DayOrder dayOrder) {
+        this();
         this.person = person;
         this.dayOrder = dayOrder;
     }
@@ -99,9 +109,28 @@ public class Order implements Comparable<Order> {
         this.dayOrder = dayOrder;
     }
 
+    public int getOrderNum() {
+        return orderNum;
+    }
+
     // Compares
+    // TODO No one knows why this is here!
     @Override
     public int compareTo(Order o) {
         return 0;
+    }
+
+    // Equals and hashcode
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return orderNum == order.orderNum && person.equals(order.person) && Objects.equals(sandwich, order.sandwich) && Objects.equals(dayOrder, order.dayOrder);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderNum, person, sandwich, dayOrder);
     }
 }
