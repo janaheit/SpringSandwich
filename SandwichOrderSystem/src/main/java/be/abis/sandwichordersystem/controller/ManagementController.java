@@ -43,6 +43,11 @@ public class ManagementController {
         return orderService.findOrdersByDate(LocalDate.now());
     }
 
+    @GetMapping()
+    public void ed(){
+
+    }
+
     // quick and dirty testing
     @GetMapping("orderfile")
     public void makeFile() throws IOException {
