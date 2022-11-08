@@ -68,12 +68,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void handleOrder(Order order, Boolean noSandwich) {
-        order.setOrderStatus(OrderStatus.NOSANDWICH);
-    }
-
-    @Override
-    public void handleOrder(Order order, Boolean noSandwich, String remark) {
+    public void handleOrder(Order order, String remark) {
         order.setOrderStatus(OrderStatus.NOSANDWICH);
         order.setRemark(remark);
     }
@@ -207,7 +202,7 @@ public class OrderServiceImpl implements OrderService {
             for (Options option : order.getOptions()) {
                 options.append(option.getOption()).append(" ");
             }
-            output.append(String.format("%1$-10s%2$-40s%3$-8s%4$-15s\n",order.getPerson().getFirstName(), Integer.toString(order.getAmount()) + " " + order.getSandwich().getName(), order.getBreadType().getBreadType().toUpperCase(), options));
+            output.append(String.format("%1$-10s%2$-40s%3$-8s%4$-15s\n",order.getPerson().getFirstName(), order.getSandwich().getName(), order.getBreadType().getBreadType().toUpperCase(), options));
             if (order.getRemark().length() > 0) {
                 output.append(String.format("%2$-10s%1$-7s\n", order.getRemark().toUpperCase(), ""));
             }

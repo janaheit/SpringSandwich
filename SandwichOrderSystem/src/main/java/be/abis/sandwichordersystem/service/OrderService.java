@@ -20,8 +20,7 @@ public interface OrderService {
     void createOrdersForEveryoneToday() throws SandwichShopNotFoundException;
     Order createOrder(Person person);
 
-    void handleOrder(Order order, Boolean noSandwich);
-    void handleOrder(Order order, Boolean noSandwich, String remark);
+    void handleOrder(Order order, String remark);
     void handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException;
 
     List<Order> findOrdersByDate(LocalDate date);

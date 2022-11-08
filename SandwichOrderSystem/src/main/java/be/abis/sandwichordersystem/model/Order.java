@@ -14,7 +14,6 @@ public class Order implements Comparable<Order> {
     private OrderStatus orderStatus = OrderStatus.UNFILLED;
     private Person person;
     private Sandwich sandwich;
-    private int amount;
     private BreadType breadType;
     private String remark;
     private List<Options> options;
@@ -48,14 +47,6 @@ public class Order implements Comparable<Order> {
 
     public void setSandwich(Sandwich sandwich) {
         this.sandwich = sandwich;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
     }
 
     public BreadType getBreadType() {
