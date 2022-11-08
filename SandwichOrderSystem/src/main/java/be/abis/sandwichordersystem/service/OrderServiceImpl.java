@@ -212,4 +212,13 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+
+    // Other methods for mock testing
+    public SessionService getSessionService() {
+        return sessionService;
+    }
+
+    public void setSessionService(SessionService sessionService) {
+        this.sessionService = sessionService;
+    }
 }
