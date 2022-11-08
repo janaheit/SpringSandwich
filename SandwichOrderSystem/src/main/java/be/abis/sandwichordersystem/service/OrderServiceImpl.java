@@ -3,10 +3,7 @@ package be.abis.sandwichordersystem.service;
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.enums.OrderStatus;
-import be.abis.sandwichordersystem.exception.IngredientNotAvailableException;
-import be.abis.sandwichordersystem.exception.OptionNotAvailableRuntimeException;
-import be.abis.sandwichordersystem.exception.OrderNotFoundException;
-import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
+import be.abis.sandwichordersystem.exception.*;
 import be.abis.sandwichordersystem.model.*;
 import be.abis.sandwichordersystem.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,9 +61,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void createOrder(Person person) {
+    public Order createOrder(Person person) {
         Order thisOrder = new Order(person, this.dayOrder);
         addOrder(thisOrder);
+        return thisOrder;
     }
 
     @Override
@@ -150,6 +148,25 @@ public class OrderServiceImpl implements OrderService {
         }
         else {
             this.dayOrder.setCurrentSandwichShop(sandwichShop);
+        }
+    }
+
+    @Override
+    public SandwichShop getTodaysSandwichShop() {
+        return this.dayOrder.getCurrentSandwichShop();
+    }
+
+    @Override
+    public Order findTodaysOrderByName(String name) throws PersonNotFoundException {
+        List<Order> myOrderList = orderRepository.findOrdersByDate(LocalDate.now()).stream().filter(order -> (order.getPerson().getFirstName() + " " + order.getPerson().getLastName()).equals(name)).collect(Collectors.toList());
+        if (myOrderList.size()==0) {
+            throw new PersonNotFoundException("This person was not found in a session today");
+        } else {
+            if (myOrderList.get(myOrderList.size()-1).getOrderStatus()==OrderStatus.UNFILLED) {
+                return myOrderList.get(myOrderList.size()-1);
+            } else {
+                return createOrder(myOrderList.get(myOrderList.size()-1).getPerson());
+            }
         }
     }
 
