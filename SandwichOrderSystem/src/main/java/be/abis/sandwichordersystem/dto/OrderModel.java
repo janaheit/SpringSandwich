@@ -2,10 +2,9 @@ package be.abis.sandwichordersystem.dto;
 
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
-import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.model.Person;
 import be.abis.sandwichordersystem.model.Sandwich;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
@@ -14,6 +13,7 @@ public class OrderModel {
     private boolean noSandwich;
     private Person person;
     private Sandwich sandwich;
+
     private BreadType breadType;
     private String remark;
     private List<Options> options;

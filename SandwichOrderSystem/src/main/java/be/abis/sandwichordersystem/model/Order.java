@@ -5,6 +5,7 @@ package be.abis.sandwichordersystem.model;
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.enums.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class Order implements Comparable<Order> {
     private String remark;
     private List<Options> options;
     private Session session;
+    @JsonIgnore
     private DayOrder dayOrder;
 
     // Constructor

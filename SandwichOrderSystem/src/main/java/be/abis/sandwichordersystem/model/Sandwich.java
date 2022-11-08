@@ -2,6 +2,7 @@ package be.abis.sandwichordersystem.model;
 
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Sandwich {
 
@@ -14,9 +15,14 @@ public class Sandwich {
     private String category;
 
     // Constructor
-    public Sandwich(String name) {
-        this.name = name;
+
+    public Sandwich() {
         this.sandwichNr = ++COUNT;
+    }
+
+    public Sandwich(String name) {
+        this();
+        this.name = name;
     }
 
     public Sandwich(String name, String category) {
@@ -30,6 +36,20 @@ public class Sandwich {
     }
 
     // BUSINESS METHODS
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Sandwich sandwich = (Sandwich) o;
+        return sandwichNr == sandwich.sandwichNr && Double.compare(sandwich.price, price) == 0 && name.equals(sandwich.name) && Objects.equals(description, sandwich.description) && category.equals(sandwich.category);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sandwichNr, name, price, description, category);
+    }
 
     @Override
     public String toString() {

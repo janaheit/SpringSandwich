@@ -1,8 +1,14 @@
 package be.abis.sandwichordersystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Instructor extends Person{
 
+    @JsonIgnore
     private Session currentSession;
+
+    public Instructor() {
+    }
 
     public Instructor(String firstName, String lastName) {
         super(firstName, lastName);
