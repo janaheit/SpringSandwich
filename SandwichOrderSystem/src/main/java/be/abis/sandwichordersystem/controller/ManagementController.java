@@ -42,11 +42,7 @@ public class ManagementController {
     public List<Order> getAllOrdersToday() {
         return orderService.findOrdersByDate(LocalDate.now());
     }
-
-    @GetMapping()
-    public void ed(){
-
-    }
+    
 
     // quick and dirty testing
     @GetMapping("orderfile")
