@@ -4,6 +4,7 @@ import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.exception.IngredientNotAvailableException;
 import be.abis.sandwichordersystem.exception.OrderNotFoundException;
+import be.abis.sandwichordersystem.exception.PersonNotFoundException;
 import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
 import be.abis.sandwichordersystem.model.*;
 import be.abis.sandwichordersystem.repository.OrderRepository;
@@ -17,7 +18,7 @@ public interface OrderService {
     boolean addOrder(Order order);
     boolean deleteOrder(Order order) throws OrderNotFoundException;
     void createOrdersForEveryoneToday() throws SandwichShopNotFoundException;
-    void createOrder(Person person);
+    Order createOrder(Person person);
 
     void handleOrder(Order order, Boolean noSandwich);
     void handleOrder(Order order, Boolean noSandwich, String remark);
@@ -35,8 +36,12 @@ public interface OrderService {
 
     void setTodaysSandwichShop(SandwichShop sandwichShop);
 
+    SandwichShop getTodaysSandwichShop();
+
     OrderRepository getOrderRepository();
     void setOrderRepository(OrderRepository orderRepository);
+
+    Order findTodaysOrderByName(String name) throws PersonNotFoundException;
 
 
 }
