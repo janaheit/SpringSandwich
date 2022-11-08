@@ -223,5 +223,7 @@ public class OrderServiceImpl implements OrderService {
         this.sessionService = sessionService;
     }
 
-
+    public String getFilePath() {
+        return filePath;
+    }
 }
