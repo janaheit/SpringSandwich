@@ -27,6 +27,10 @@ public class Order implements Comparable<Order> {
     private Session session;
     @JsonIgnore
     private DayOrder dayOrder;
+    @JsonIgnore
+    private double price;
+
+
 
     // Constructors
     public Order() {
@@ -41,6 +45,13 @@ public class Order implements Comparable<Order> {
     }
 
     // Getters and setters
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
     public void setNoSandwich(){
         this.orderStatus = OrderStatus.NOSANDWICH;
         this.sandwich = null;
@@ -61,6 +72,8 @@ public class Order implements Comparable<Order> {
 
     public void setSandwich(Sandwich sandwich) {
         this.sandwich = sandwich;
+        this.price = sandwich.getPrice();
+        //TODO later with proper prices, we can add prices of sandwich and options?
     }
 
     public BreadType getBreadType() {
