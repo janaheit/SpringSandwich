@@ -37,8 +37,7 @@ public class ManagementController {
         System.out.println("SandwichShop set to: "+ orderService.getTodaysSandwichShop().getName());
         orderService.createOrdersForEveryoneToday();
     }
-
-
+    
     // only get filled orders (excluding noSandwich)
     // today
     @GetMapping("/today")
