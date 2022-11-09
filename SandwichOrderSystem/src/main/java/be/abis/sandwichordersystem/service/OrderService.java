@@ -26,6 +26,7 @@ public interface OrderService {
     List<Order> findTodaysOrdersForPerson(Person person);
     List<Order> findAllUnhandeledOrders();
     List<Order> findAllUnfilledOrders();
+    List<Order> findAllClosedOrdersForDates(LocalDate startDate, LocalDate endDate) throws OrderNotFoundException;
     List<Person> getAllPersonsFromListOfOrders(List<Order> orders);
 
     void generateOrderFile() throws IOException;

@@ -101,7 +101,9 @@ public class OrderServiceTest {
     @Test
     void createOrderForPerson(){
         when(orderRepository.addOrder(any())).thenReturn(true);
+        //System.out.println(cut.getDayOrder());
         Order myOrder = cut.createOrder(p1);
+        //System.out.println(myOrder.getDayOrder());
         assertEquals(p1, myOrder.getPerson());
         verify(orderRepository).addOrder(myOrder);
     }
@@ -288,6 +290,13 @@ public class OrderServiceTest {
         when(orderRepository.findOrdersByDate(LocalDate.now())).thenReturn(littleOrderList);
         assertTrue(cut.findTodaysOrderByName("p1 lastname").getOrderStatus().equals(OrderStatus.UNFILLED));
         verify(orderRepository).findOrdersByDate(LocalDate.now());
+    }
+
+    @Test
+    public void findClosedOrdersByDatesWorks() throws OrderNotFoundException {
+        when(orderRepository.findOrdersByStatusAndDates(any(), any(), any())).thenReturn(new ArrayList<Order>());
+        cut.findAllClosedOrdersForDates(LocalDate.now().minusDays(1), LocalDate.now());
+        verify(orderRepository).findOrdersByStatusAndDates(any(), any(), any());
     }
 
 
