@@ -59,6 +59,10 @@ public class FinancialServiceTest {
         when(orderService.findAllClosedOrdersForDates(any(), any())).thenReturn(mockOrders);
         double price= financialService.calculateTotalPriceForPeriod(LocalDate.now(), LocalDate.now());
         assertEquals(9.0, price);
+
+        verify(o1).getPrice();
+        verify(o2).getPrice();
+        verify(orderService).findAllClosedOrdersForDates(any(), any());
     }
 
     @Test
@@ -66,6 +70,7 @@ public class FinancialServiceTest {
         when(orderService.findAllClosedOrdersForDates(any(), any())).thenThrow(new OrderNotFoundException("No Orders found"));
 
         assertThrows(OrderNotFoundException.class, () -> financialService.calculateTotalPriceForPeriod(LocalDate.now(), LocalDate.now()));
+        verify(orderService).findAllClosedOrdersForDates(any(), any());
     }
 
     @Test
@@ -83,6 +88,9 @@ public class FinancialServiceTest {
         when(orderService.findOrdersByStatusAndSession(OrderStatus.HANDELED, s1)).thenReturn(mockOrders);
         double price = financialService.calculateTotalPriceForSession(s1);
         assertEquals(90.0, price);
+
+        verify(o1).getPrice();
+        verify(o2).getPrice();
         verify(orderService).findOrdersByStatusAndSession(OrderStatus.HANDELED, s1);
     }
 
@@ -117,6 +125,12 @@ public class FinancialServiceTest {
         assertEquals(90.0, pricesPerSession.get(s1));
         assertEquals(20.0, pricesPerSession.get(s2));
 
+        verify(o1).getPrice();
+        verify(o2).getPrice();
+        verify(o3).getPrice();
+        verify(o1).getSession();
+        verify(o2).getSession();
+        verify(o3).getSession();
         verify(orderService).findAllClosedOrdersForDates(any(), any());
     }
 
@@ -141,6 +155,12 @@ public class FinancialServiceTest {
         assertEquals(80.0, pricesPerSession.get(s1));
         assertEquals(20.0, pricesPerSession.get(s2));
 
+        verify(o1).getPrice();
+        verify(o2).getPrice();
+        verify(o3).getPrice();
+        verify(o1).getSession();
+        verify(o2).getSession();
+        verify(o3).getSession();
         verify(orderService).findAllClosedOrdersForDates(any(), any());
     }
 }
