@@ -2,6 +2,7 @@ package be.abis.sandwichordersystem.service;
 
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
+import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.*;
 import be.abis.sandwichordersystem.model.*;
 import be.abis.sandwichordersystem.repository.OrderRepository;
@@ -28,6 +29,7 @@ public interface OrderService {
     List<Order> findAllUnfilledOrders();
     List<Order> findAllClosedOrdersForDates(LocalDate startDate, LocalDate endDate) throws OrderNotFoundException;
     List<Person> getAllPersonsFromListOfOrders(List<Order> orders);
+    List<Order> findOrdersByStatusAndSession(OrderStatus status, Session session) throws OrderNotFoundException;
 
     List<Person> findWhoStillHasToOrderToday();
 

@@ -1,5 +1,6 @@
 package be.abis.sandwichordersystem;
 
+import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.OrderNotFoundException;
 import be.abis.sandwichordersystem.model.Order;
 import be.abis.sandwichordersystem.model.Session;
@@ -16,9 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -57,44 +58,46 @@ public class FinancialServiceTest {
         when(o2.getPrice()).thenReturn(5.0);
 
         when(orderService.findAllClosedOrdersForDates(any(), any())).thenReturn(mockOrders);
-        double price= financialService.getTotalPriceForPeriod(LocalDate.now(), LocalDate.now());
+        double price= financialService.calculateTotalPriceForPeriod(LocalDate.now(), LocalDate.now());
         assertEquals(9.0, price);
     }
 
     @Test
-    void getTotalPriceForTodayWithoutAnyOrdersForTodayThrowsException(){
-        when(orderService.findAllClosedOrdersForDates(any(), any()))
+    void getTotalPriceForTodayWithoutAnyOrdersForTodayThrowsException() throws OrderNotFoundException {
+        when(orderService.findAllClosedOrdersForDates(any(), any())).thenThrow(new OrderNotFoundException("No Orders found"));
 
-        // TODO implement the Exception handling here
+        assertThrows(OrderNotFoundException.class, () -> financialService.calculateTotalPriceForPeriod(LocalDate.now(), LocalDate.now()));
     }
 
     @Test
     void getTotalPriceForFutureDateThrowsException(){
         fail();
-        // TODO implement the Exception handling here
+        // TODO needed?
     }
 
     // we need to remove the orders with no sandwich
     @Test
-    void getTotalPriceForSession(){
+    void getTotalPriceForSession() throws OrderNotFoundException {
         when(o1.getPrice()).thenReturn(40.0);
         when(o2.getPrice()).thenReturn(50.0);
 
-        when(orderService.findOrdersBySession(s1)).thenReturn(mockOrders);
-        double price = financialService.getTotalPriceForSession(s1);
+        when(orderService.findOrdersByStatusAndSession(OrderStatus.HANDELED, s1)).thenReturn(mockOrders);
+        double price = financialService.calculateTotalPriceForSession(s1);
         assertEquals(90.0, price);
+        verify(orderService).findOrdersByStatusAndSession(OrderStatus.HANDELED, s1);
     }
 
+    @Mock Session s3;
     @Test
-    void getTotalPriceForNonExistingSession(){
+    void getTotalPriceForNonExistingSession() throws OrderNotFoundException {
+
         fail();
+        // first test method in orderRepo && orderservice
         // TODO implement the Exception handling here
         // when(orderService.findOrdersBySession(s1)).thenThrow(() -> );
     }
 
-
-
-    // tests both getPricesPerSessionOnDate and getPricesPerSessionForPeriod (using same code)
+    // tests both calculatePricesPerSessionOnDate and calculatePricesPerSessionForPeriod (using same code)
     @Test
     void getPricesPerSessionOnDateWorks() throws OrderNotFoundException {
         when(o1.getPrice()).thenReturn(40.0);
@@ -110,7 +113,7 @@ public class FinancialServiceTest {
         when(orderService.findAllClosedOrdersForDates(LocalDate.of(2022,11,9),
                 LocalDate.of(2022,11,9))).thenReturn(mockOrders);
 
-        Map<Session, Double> pricesPerSession = financialService.getPricesPerSessionOnDate(LocalDate.of(2022, 11, 9));
+        Map<Session, Double> pricesPerSession = financialService.calculatePricesPerSessionOnDate(LocalDate.of(2022, 11, 9));
 
         assertEquals(90.0, pricesPerSession.get(s1));
         assertEquals(20.0, pricesPerSession.get(s2));

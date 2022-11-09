@@ -85,4 +85,17 @@ public class ListOrderRepository implements OrderRepository {
         }
         return output;
     }
+
+    @Override
+    public List<Order> findOrdersByStatusAndSession(OrderStatus status, Session session) throws OrderNotFoundException {
+        List<Order> output = this.orders.stream()
+                .filter(order -> order.getOrderStatus() == status && order.getSession().equals(session))
+                .collect(Collectors.toList());
+        System.out.println("in repo : "+ output.size() + " - " + output);
+        if (output.size()==0) {
+            throw new OrderNotFoundException("No orders where found of session " + session.getCourse().getTitle()
+                    + " with session number " + session.getSessionNumber());
+        }
+        return output;
+    }
 }
