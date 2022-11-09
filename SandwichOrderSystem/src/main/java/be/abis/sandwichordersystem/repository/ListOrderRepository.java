@@ -3,6 +3,7 @@ package be.abis.sandwichordersystem.repository;
 import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.OrderNotFoundException;
 import be.abis.sandwichordersystem.model.Order;
+import be.abis.sandwichordersystem.model.Person;
 import be.abis.sandwichordersystem.model.Session;
 import org.springframework.stereotype.Repository;
 
@@ -72,6 +73,15 @@ public class ListOrderRepository implements OrderRepository {
         List<Order> output = this.orders.stream().filter(order -> order.getDayOrder().getDate().isAfter(startDate.minusDays(1))).filter(order -> order.getDayOrder().getDate().isBefore(endDate.plusDays(1))).filter(order -> order.getOrderStatus().equals(status)).collect(Collectors.toList());
         if (output.size()==0) {
             throw new OrderNotFoundException("No orders where found with status: " + status + ", between dates " + startDate + " and " + endDate);
+        }
+        return output;
+    }
+
+    @Override
+    public List<Order> findOrdersByPersonAndDates(Person person, LocalDate startDate, LocalDate endDate) throws OrderNotFoundException {
+        List<Order> output = this.orders.stream().filter(order -> order.getDayOrder().getDate().isAfter(startDate.minusDays(1))).filter(order -> order.getDayOrder().getDate().isBefore(endDate.plusDays(1))).filter(order -> order.getPerson().equals(person)).collect(Collectors.toList());
+        if (output.size()==0) {
+            throw new OrderNotFoundException("No orders where found with person: " + person + ", between dates " + startDate + " and " + endDate);
         }
         return output;
     }

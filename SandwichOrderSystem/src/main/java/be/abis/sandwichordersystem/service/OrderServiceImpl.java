@@ -15,8 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -242,6 +241,32 @@ public class OrderServiceImpl implements OrderService {
         for (Order order : myOrderList) {
             orderRepository.deleteOrder(order);
         }
+    }
+
+    @Override
+    public List<Person> findWhoStillHasToOrderToday(){
+        try {
+            List<Person> unfilledOrders = orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now()).stream().map(order -> order.getPerson()).collect(Collectors.toList());
+            List<Person> output = new ArrayList<>();
+            for (Person p : unfilledOrders) {
+                List<Order> personsOrderOfToday = orderRepository.findOrdersByPersonAndDates(p, LocalDate.now(), LocalDate.now());
+                if (personsOrderOfToday.size()==1) {
+                    output.add(p);
+                } else {
+                    for (Order o : personsOrderOfToday) {
+                        if (o.getOrderStatus()!=OrderStatus.UNFILLED) {
+                            break;
+                        } else {
+                            output.add(p);
+                        }
+                    }
+                }
+            }
+
+        } catch (OrderNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 
     // Other methods for mock testing
