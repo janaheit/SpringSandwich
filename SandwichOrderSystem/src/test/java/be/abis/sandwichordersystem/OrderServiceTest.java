@@ -299,5 +299,30 @@ public class OrderServiceTest {
         verify(orderRepository).findOrdersByStatusAndDates(any(), any(), any());
     }
 
+    @Test
+    public void setTodaysFilledOrdersToHandledTest() throws OrderNotFoundException, NothingToHandleException {
+        List<Order> ol = new ArrayList<>();
+        ol.add(o5);
+        o5.setOrderStatus(OrderStatus.ORDERED);
+        when(orderRepository.findOrdersByStatusAndDates(any(), any(), any())).thenReturn(ol);
+        cut.setTodaysFilledOrdersToHandeled();
+        verify(o5).setOrderStatus(OrderStatus.HANDELED);
+    }
+
+    @Test
+    public void setTodaysFilledOrdersToHandledThrowsException() throws OrderNotFoundException {
+        when(orderRepository.findOrdersByStatusAndDates(any(), any(), any())).thenThrow(OrderNotFoundException.class);
+        assertThrows(NothingToHandleException.class, () -> cut.setTodaysFilledOrdersToHandeled());
+    }
+
+    @Test
+    public void deleteAllUnfilledOrdersOfTheDayWorks() throws OrderNotFoundException {
+        List<Order> ol = new ArrayList<>();
+        ol.add(o5);
+        when(orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now())).thenReturn(ol);
+        cut.deleteAllUnfilledOrdersOfDay(LocalDate.now());
+        verify(orderRepository).deleteOrder(o5);
+    }
+
 
 }

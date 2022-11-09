@@ -43,5 +43,8 @@ public interface OrderService {
 
     Order findTodaysOrderByName(String name) throws PersonNotFoundException;
 
+    public void setTodaysFilledOrdersToHandeled() throws NothingToHandleException;
+    public void deleteAllUnfilledOrdersOfDay(LocalDate date) throws OrderNotFoundException;
+
 
 }

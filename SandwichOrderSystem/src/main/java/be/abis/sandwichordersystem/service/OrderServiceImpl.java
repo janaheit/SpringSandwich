@@ -224,6 +224,26 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findOrdersByStatusAndDates(OrderStatus.HANDELED, startDate, endDate);
     }
 
+    @Override
+    public void setTodaysFilledOrdersToHandeled() throws NothingToHandleException {
+        try {
+            List<Order> myOrderList = orderRepository.findOrdersByStatusAndDates(OrderStatus.ORDERED, LocalDate.now(), LocalDate.now());
+            for (Order order : myOrderList) {
+                order.setOrderStatus(OrderStatus.HANDELED);
+            }
+        } catch(OrderNotFoundException ex) {
+            throw new NothingToHandleException("No orders were found that could be handled today");
+        }
+    }
+
+    @Override
+    public void deleteAllUnfilledOrdersOfDay(LocalDate date) throws OrderNotFoundException {
+        List<Order> myOrderList = orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED, date, date);
+        for (Order order : myOrderList) {
+            orderRepository.deleteOrder(order);
+        }
+    }
+
     // Other methods for mock testing
     public SessionService getSessionService() {
         return sessionService;
