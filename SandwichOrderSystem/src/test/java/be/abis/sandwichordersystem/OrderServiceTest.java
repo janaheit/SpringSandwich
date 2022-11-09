@@ -88,7 +88,13 @@ public class OrderServiceTest {
         //TODO should be implemented
         cut.setTodaysSandwichShop(sandwichShopRepository.getShops().get(0));
         when(orderRepository.addOrder(any())).thenReturn(true);
+        List<Session> locoSession = new ArrayList<Session>();
+        locoSession.add(mockSession);
+        when(sessionService.findSessionsToday()).thenReturn(locoSession);
+        when(sessionService.findAllPersonsFollowingSession(any())).thenReturn(people);
         cut.createOrdersForEveryoneToday();
+        verify(sessionService).findSessionsToday();
+        verify(sessionService).findAllPersonsFollowingSession(any());
         verify(orderRepository, times(people.size())).addOrder(any());
     }
 

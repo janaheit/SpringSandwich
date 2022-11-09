@@ -22,7 +22,8 @@ public class Order implements Comparable<Order> {
     private BreadType breadType;
     private String remark;
     private List<Options> options;
-    @JsonIgnore
+    //@JsonIgnore
+    // You actually want to retrieve the session data in the api, just not all the students, but at least the name of the session
     private Session session;
     @JsonIgnore
     private DayOrder dayOrder;
