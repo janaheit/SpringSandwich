@@ -143,4 +143,79 @@ class OrderRepositoryTest {
         orderRepository.deleteOrder(order2);
     }
 
+    @Test
+    public void findOrdersByStatusAndSessionHappyCase1() throws OrderNotFoundException {
+        when(order1.getOrderStatus()).thenReturn(OrderStatus.UNFILLED);
+        when(order1.getSession()).thenReturn(session1);
+        when(order2.getOrderStatus()).thenReturn(OrderStatus.ORDERED);
+        when(order2.getSession()).thenReturn(session1);
+
+
+        orderRepository.addOrder(order1);
+        orderRepository.addOrder(order2);
+
+        // Assert here
+        List<Order> myTestList = orderRepository.findOrdersByStatusAndSession(OrderStatus.UNFILLED, session1);
+        assertTrue(myTestList.contains(order1) && !myTestList.contains(order2));
+
+        orderRepository.deleteOrder(order1);
+        orderRepository.deleteOrder(order2);
+    }
+
+    @Test
+    public void findOrdersByStatusAndSessionHappyCase2() throws OrderNotFoundException {
+        when(order1.getOrderStatus()).thenReturn(OrderStatus.UNFILLED);
+        when(order1.getSession()).thenReturn(session1);
+        when(order2.getOrderStatus()).thenReturn(OrderStatus.UNFILLED);
+        when(order2.getSession()).thenReturn(session2);
+
+
+        orderRepository.addOrder(order1);
+        orderRepository.addOrder(order2);
+
+        // Assert here
+        List<Order> myTestList = orderRepository.findOrdersByStatusAndSession(OrderStatus.UNFILLED, session1);
+        assertTrue(myTestList.contains(order1) && !myTestList.contains(order2));
+
+        orderRepository.deleteOrder(order1);
+        orderRepository.deleteOrder(order2);
+    }
+
+    @Test
+    public void findOrdersByStatusAndSessionHappyCase3() throws OrderNotFoundException {
+        when(order1.getOrderStatus()).thenReturn(OrderStatus.UNFILLED);
+        when(order1.getSession()).thenReturn(session1);
+        when(order2.getOrderStatus()).thenReturn(OrderStatus.UNFILLED);
+        when(order2.getSession()).thenReturn(session1);
+
+
+        orderRepository.addOrder(order1);
+        orderRepository.addOrder(order2);
+
+        // Assert here
+        List<Order> myTestList = orderRepository.findOrdersByStatusAndSession(OrderStatus.UNFILLED, session1);
+        assertTrue(myTestList.contains(order1) && myTestList.contains(order2));
+
+        orderRepository.deleteOrder(order1);
+        orderRepository.deleteOrder(order2);
+    }
+
+    @Test
+    public void findOrdersByStatusAndSessionNoOrdersFound() throws OrderNotFoundException {
+        when(order1.getOrderStatus()).thenReturn(OrderStatus.UNFILLED);
+        when(order1.getSession()).thenReturn(session2);
+        when(order2.getOrderStatus()).thenReturn(OrderStatus.ORDERED);
+        when(order2.getSession()).thenReturn(session1);
+
+
+        orderRepository.addOrder(order1);
+        orderRepository.addOrder(order2);
+
+        // Assert here
+        assertThrows(OrderNotFoundException.class, () -> orderRepository.findOrdersByStatusAndSession(OrderStatus.UNFILLED, session1));
+
+        orderRepository.deleteOrder(order1);
+        orderRepository.deleteOrder(order2);
+    }
+
 }

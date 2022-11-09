@@ -89,12 +89,22 @@ public class ListOrderRepository implements OrderRepository {
     @Override
     public List<Order> findOrdersByStatusAndSession(OrderStatus status, Session session) throws OrderNotFoundException {
         List<Order> output = this.orders.stream()
-                .filter(order -> order.getOrderStatus() == status && order.getSession().equals(session))
+                .filter(order -> order.getOrderStatus().equals(status) && order.getSession().equals(session))
                 .collect(Collectors.toList());
-        System.out.println("in repo : "+ output.size() + " - " + output);
+        //System.out.println("in repo : "+ output.size() + " - " + output);
         if (output.size()==0) {
-            throw new OrderNotFoundException("No orders where found of session " + session.getCourse().getTitle()
-                    + " with session number " + session.getSessionNumber());
+            String errorMessage = "";
+            if(session.getCourse()==null || status==null || session.getSessionNumber()==0) {
+                errorMessage = "No orders were found because of faulty inputs";
+            } else {
+                if(session.getCourse().getTitle()!= null) {
+                    errorMessage = "No orders where found of session " + session.getCourse().getTitle()
+                            + " with session number " + session.getSessionNumber();
+                } else {
+                    errorMessage = "Something really weird went wrong: ListOrderRepository line 104";
+                }
+            }
+            throw new OrderNotFoundException(errorMessage);
         }
         return output;
     }
