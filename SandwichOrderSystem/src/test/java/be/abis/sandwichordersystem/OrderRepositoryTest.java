@@ -4,6 +4,7 @@ import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.OrderNotFoundException;
 import be.abis.sandwichordersystem.model.DayOrder;
 import be.abis.sandwichordersystem.model.Order;
+import be.abis.sandwichordersystem.model.Person;
 import be.abis.sandwichordersystem.model.Session;
 import be.abis.sandwichordersystem.repository.OrderRepository;
 import org.junit.jupiter.api.MethodOrderer;
@@ -33,6 +34,8 @@ class OrderRepositoryTest {
     @Mock private Session session1;
     @Mock private Session session2;
     @Mock private DayOrder mockDayOrder;
+    @Mock Person p1;
+    @Mock Person p2;
 
     @Test
     @org.junit.jupiter.api.Order(1)
@@ -99,6 +102,45 @@ class OrderRepositoryTest {
     @Test
     public void findOrderByStatusAndDatesThrowsException() {
         assertThrows(OrderNotFoundException.class, () -> orderRepository.findOrdersByStatusAndDates(OrderStatus.HANDELED, LocalDate.now().minusYears(10), LocalDate.now().minusYears(9)));
+    }
+
+    @Test
+    public void findOrderByPersonAndDatesReturnsCorrectOrder() throws OrderNotFoundException {
+        when(order1.getDayOrder()).thenReturn(mockDayOrder);
+        when(mockDayOrder.getDate()).thenReturn(LocalDate.now());
+        when(order1.getPerson()).thenReturn(p1);
+        when(order2.getDayOrder()).thenReturn(mockDayOrder);
+        when(mockDayOrder.getDate()).thenReturn(LocalDate.now());
+        when(order2.getPerson()).thenReturn(p2);
+
+        orderRepository.addOrder(order1);
+        orderRepository.addOrder(order2);
+
+        List<Order> myReturnList = orderRepository.findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now());
+
+        assertTrue(myReturnList.contains(order1) && !myReturnList.contains(order2));
+
+        orderRepository.deleteOrder(order1);
+        orderRepository.deleteOrder(order2);
+
+    }
+
+    @Test
+    public void findOrdersByPersonAndDatesThrowsException() throws OrderNotFoundException {
+        when(order1.getDayOrder()).thenReturn(mockDayOrder);
+        when(mockDayOrder.getDate()).thenReturn(LocalDate.now());
+        when(order1.getPerson()).thenReturn(p2);
+        when(order2.getDayOrder()).thenReturn(mockDayOrder);
+        when(mockDayOrder.getDate()).thenReturn(LocalDate.now());
+        when(order2.getPerson()).thenReturn(p2);
+
+        orderRepository.addOrder(order1);
+        orderRepository.addOrder(order2);
+
+        assertThrows(OrderNotFoundException.class, () -> orderRepository.findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now()));
+
+        orderRepository.deleteOrder(order1);
+        orderRepository.deleteOrder(order2);
     }
 
 }
