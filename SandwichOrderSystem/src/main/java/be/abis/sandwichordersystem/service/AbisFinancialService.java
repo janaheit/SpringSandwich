@@ -1,5 +1,6 @@
 package be.abis.sandwichordersystem.service;
 
+import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.OrderNotFoundException;
 import be.abis.sandwichordersystem.model.Order;
 import be.abis.sandwichordersystem.model.Session;
@@ -21,7 +22,7 @@ public class AbisFinancialService implements FinancialService {
     }
 
     @Override
-    public double getTotalPriceForPeriod(LocalDate start, LocalDate end) throws OrderNotFoundException {
+    public double calculateTotalPriceForPeriod(LocalDate start, LocalDate end) throws OrderNotFoundException {
 
         List<Order> ordersForPeriod = orderService.findAllClosedOrdersForDates(start, end);
 
@@ -29,8 +30,8 @@ public class AbisFinancialService implements FinancialService {
     }
 
     @Override
-    public double getTotalPriceForSession(Session session) {
-        List<Order> ordersForSession = orderService.findOrdersBySession(session);
+    public double calculateTotalPriceForSession(Session session) throws OrderNotFoundException {
+        List<Order> ordersForSession = orderService.findOrdersByStatusAndSession(OrderStatus.HANDELED, session);
 
         return getTotalPriceFromListOfOrders(ordersForSession);
     }
@@ -43,12 +44,12 @@ public class AbisFinancialService implements FinancialService {
     }
 
     @Override
-    public Map<Session, Double> getPricesPerSessionOnDate(LocalDate date) throws OrderNotFoundException {
-        return getPricesPerSessionForPeriod(date, date);
+    public Map<Session, Double> calculatePricesPerSessionOnDate(LocalDate date) throws OrderNotFoundException {
+        return calculatePricesPerSessionForPeriod(date, date);
     }
 
     @Override
-    public Map<Session, Double> getPricesPerSessionForPeriod(LocalDate start, LocalDate end) throws OrderNotFoundException {
+    public Map<Session, Double> calculatePricesPerSessionForPeriod(LocalDate start, LocalDate end) throws OrderNotFoundException {
         List<Order> ordersForDate = orderService.findAllClosedOrdersForDates(start, end);
         Map<Session, List<Order>> groupedBySession = ordersForDate.stream()
                 .collect(Collectors.groupingBy(Order::getSession));

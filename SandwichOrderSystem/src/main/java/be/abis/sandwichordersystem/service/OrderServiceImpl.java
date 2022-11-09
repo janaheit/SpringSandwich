@@ -127,6 +127,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> findOrdersByStatusAndSession(OrderStatus status, Session session) throws OrderNotFoundException {
+        return orderRepository.findOrdersByStatusAndSession(status, session);
+    }
+
+    @Override
     public List<Person> getAllPersonsFromListOfOrders(List<Order> orders) {
         return orders.stream().map(order -> order.getPerson()).collect(Collectors.toList());
     }
