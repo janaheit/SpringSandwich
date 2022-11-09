@@ -1,6 +1,8 @@
 package be.abis.sandwichordersystem;
 
+import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.OrderNotFoundException;
+import be.abis.sandwichordersystem.model.DayOrder;
 import be.abis.sandwichordersystem.model.Order;
 import be.abis.sandwichordersystem.model.Session;
 import be.abis.sandwichordersystem.repository.OrderRepository;
@@ -10,6 +12,10 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -26,6 +32,7 @@ class OrderRepositoryTest {
     @Mock private Session session;
     @Mock private Session session1;
     @Mock private Session session2;
+    @Mock private DayOrder mockDayOrder;
 
     @Test
     @org.junit.jupiter.api.Order(1)
@@ -66,6 +73,32 @@ class OrderRepositoryTest {
         orderRepository.deleteOrder(order2);
         orderRepository.deleteOrder(order3);
 
+    }
+
+    @Test
+    public void findOrderByStatusAndDatesReturnsCorrectOrder() throws OrderNotFoundException {
+        when(order1.getDayOrder()).thenReturn(mockDayOrder);
+        when(mockDayOrder.getDate()).thenReturn(LocalDate.now());
+        when(order1.getOrderStatus()).thenReturn(OrderStatus.ORDERED);
+        when(order2.getDayOrder()).thenReturn(mockDayOrder);
+        when(mockDayOrder.getDate()).thenReturn(LocalDate.now());
+        when(order2.getOrderStatus()).thenReturn(OrderStatus.UNFILLED);
+
+        orderRepository.addOrder(order1);
+        orderRepository.addOrder(order2);
+
+        List<Order> myReturnList = orderRepository.findOrdersByStatusAndDates(OrderStatus.ORDERED, LocalDate.now(), LocalDate.now());
+
+        assertTrue(myReturnList.contains(order1) && !myReturnList.contains(order2));
+
+        orderRepository.deleteOrder(order1);
+        orderRepository.deleteOrder(order2);
+
+    }
+
+    @Test
+    public void findOrderByStatusAndDatesThrowsException() {
+        assertThrows(OrderNotFoundException.class, () -> orderRepository.findOrdersByStatusAndDates(OrderStatus.HANDELED, LocalDate.now().minusYears(10), LocalDate.now().minusYears(9)));
     }
 
 }

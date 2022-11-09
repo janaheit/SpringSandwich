@@ -219,6 +219,10 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    @Override
+    public List<Order> findAllClosedOrdersForDates(LocalDate startDate, LocalDate endDate) throws OrderNotFoundException {
+        return orderRepository.findOrdersByStatusAndDates(OrderStatus.HANDELED, startDate, endDate);
+    }
 
     // Other methods for mock testing
     public SessionService getSessionService() {
