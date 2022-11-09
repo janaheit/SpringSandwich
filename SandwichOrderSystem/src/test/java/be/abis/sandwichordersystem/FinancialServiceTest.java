@@ -19,8 +19,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class FinancialServiceTest {
@@ -117,5 +116,31 @@ public class FinancialServiceTest {
 
         assertEquals(90.0, pricesPerSession.get(s1));
         assertEquals(20.0, pricesPerSession.get(s2));
+
+        verify(orderService).findAllClosedOrdersForDates(any(), any());
+    }
+
+    @Test
+    void getPricesPerSessionForPeriodWorks() throws OrderNotFoundException {
+        when(o1.getPrice()).thenReturn(30.0);
+        when(o2.getPrice()).thenReturn(50.0);
+        when(o3.getPrice()).thenReturn(20.0);
+
+        when(o1.getSession()).thenReturn(s1);
+        when(o2.getSession()).thenReturn(s1);
+        when(o3.getSession()).thenReturn(s2);
+
+        mockOrders.add(o3);
+        
+        when(orderService.findAllClosedOrdersForDates(LocalDate.of(2022,11,9),
+                LocalDate.of(2022,11,15))).thenReturn(mockOrders);
+
+        Map<Session, Double> pricesPerSession = financialService.calculatePricesPerSessionForPeriod(
+                LocalDate.of(2022, 11, 9), LocalDate.of(2022, 11, 15));
+
+        assertEquals(80.0, pricesPerSession.get(s1));
+        assertEquals(20.0, pricesPerSession.get(s2));
+
+        verify(orderService).findAllClosedOrdersForDates(any(), any());
     }
 }

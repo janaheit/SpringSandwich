@@ -39,8 +39,7 @@ public class ManagementController {
     }
 
 
-    // group by session
-    // only get filled orders
+    // only get filled orders (excluding noSandwich)
     // today
     @GetMapping("/today")
     public List<Order> getAllOrdersToday() {
