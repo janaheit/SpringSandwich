@@ -29,7 +29,7 @@ public interface OrderService {
     List<Order> findAllClosedOrdersForDates(LocalDate startDate, LocalDate endDate) throws OrderNotFoundException;
     List<Person> getAllPersonsFromListOfOrders(List<Order> orders);
 
-    List<Person> findWhoStillHasToOrderToday();
+    List<Person> findWhoStillHasToOrderToday() throws PersonNotFoundException;
 
     void generateOrderFile() throws IOException;
 

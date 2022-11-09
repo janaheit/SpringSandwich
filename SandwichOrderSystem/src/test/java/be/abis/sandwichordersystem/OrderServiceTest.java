@@ -8,6 +8,7 @@ import be.abis.sandwichordersystem.repository.OrderRepository;
 import be.abis.sandwichordersystem.repository.SandwichShopRepository;
 import be.abis.sandwichordersystem.service.OrderService;
 import be.abis.sandwichordersystem.service.SessionService;
+import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -35,6 +36,7 @@ public class OrderServiceTest {
     @Mock OrderRepository orderRepository;
 
     @Mock Order o5;
+    @Mock Order mockOrder2;
 
     @Mock Session mockSession;
 
@@ -322,6 +324,114 @@ public class OrderServiceTest {
         when(orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now())).thenReturn(ol);
         cut.deleteAllUnfilledOrdersOfDay(LocalDate.now());
         verify(orderRepository).deleteOrder(o5);
+    }
+
+    @Test
+    public void deleteAllUnfilledOrdersOfTheDayWorksForNoSandwich() throws OrderNotFoundException {
+        List<Order> ol = new ArrayList<>();
+        ol.add(o5);
+        when(orderRepository.findOrdersByStatusAndDates(OrderStatus.NOSANDWICH, LocalDate.now(), LocalDate.now())).thenReturn(ol);
+        cut.deleteAllUnfilledOrdersOfDay(LocalDate.now());
+        verify(orderRepository).deleteOrder(o5);
+    }
+
+    @Test
+    public void findWhoStillHasToOrderTodayHappyCase() throws OrderNotFoundException, PersonNotFoundException {
+        List<Order> olBig = new ArrayList<>();
+        List<Order> olSmall = new ArrayList<>();
+        olBig.add(o5);
+        olBig.add(mockOrder2);
+        olSmall.add(o5);
+        when(o5.getPerson()).thenReturn(p1);
+        when(mockOrder2.getPerson()).thenReturn(p1);
+        when(o5.getOrderStatus()).thenReturn(OrderStatus.UNFILLED);
+        when(mockOrder2.getOrderStatus()).thenReturn(OrderStatus.ORDERED);
+        when(orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now())).thenReturn(olSmall);
+        when(orderRepository.findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now())).thenReturn(olBig);
+        List<Person> check = cut.findWhoStillHasToOrderToday();
+        //System.out.println(check);
+        assertFalse(check.contains(p1));
+        verify(orderRepository).findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now());
+        verify(orderRepository).findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now());
+    }
+
+    @Test
+    public void findWhoStillHasToOrderTodayHappyCaseNoDoubleOrders() throws OrderNotFoundException, PersonNotFoundException {
+        List<Order> olBig = new ArrayList<>();
+        List<Order> olSmall = new ArrayList<>();
+        olBig.add(o5);
+        olBig.add(mockOrder2);
+        olSmall.add(o5);
+        when(o5.getPerson()).thenReturn(p1);
+        when(mockOrder2.getPerson()).thenReturn(p2);
+        when(o5.getOrderStatus()).thenReturn(OrderStatus.UNFILLED);
+        when(mockOrder2.getOrderStatus()).thenReturn(OrderStatus.ORDERED);
+        when(orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now())).thenReturn(olSmall);
+        when(orderRepository.findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now())).thenReturn(olSmall);
+        List<Person> check = cut.findWhoStillHasToOrderToday();
+        //System.out.println(check);
+        assertTrue(check.contains(p1));
+        verify(orderRepository).findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now());
+        verify(orderRepository).findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now());
+    }
+
+    @Test
+    public void findWhoStillHasToOrderTodayHappyCaseDoubleEmptyOrder() throws OrderNotFoundException, PersonNotFoundException {
+        List<Order> olBig = new ArrayList<>();
+        List<Order> olSmall = new ArrayList<>();
+        olBig.add(o5);
+        olBig.add(mockOrder2);
+        olSmall.add(o5);
+        when(o5.getPerson()).thenReturn(p1);
+        when(mockOrder2.getPerson()).thenReturn(p1);
+        when(o5.getOrderStatus()).thenReturn(OrderStatus.UNFILLED);
+        when(mockOrder2.getOrderStatus()).thenReturn(OrderStatus.UNFILLED);
+        when(orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now())).thenReturn(olBig);
+        when(orderRepository.findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now())).thenReturn(olBig);
+        List<Person> check = cut.findWhoStillHasToOrderToday();
+        //System.out.println(check);
+        assertTrue(check.contains(p1));
+        verify(orderRepository).findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now());
+        verify(orderRepository).findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now());
+    }
+
+    @Test
+    public void findWhoStillHasToOrderTodayHappyCaseNoOneHasToOrder() throws OrderNotFoundException {
+        List<Order> olBig = new ArrayList<>();
+        List<Order> olSmall = new ArrayList<>();
+        olBig.add(o5);
+        olBig.add(mockOrder2);
+        olSmall.add(o5);
+        when(o5.getPerson()).thenReturn(p1);
+        when(mockOrder2.getPerson()).thenReturn(p1);
+        when(o5.getOrderStatus()).thenReturn(OrderStatus.ORDERED);
+        when(mockOrder2.getOrderStatus()).thenReturn(OrderStatus.ORDERED);
+        when(orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now())).thenThrow(OrderNotFoundException.class);
+        when(orderRepository.findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now())).thenReturn(olBig);
+
+        assertThrows(PersonNotFoundException.class, () -> cut.findWhoStillHasToOrderToday());
+
+        verify(orderRepository).findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now());
+    }
+
+    @Test
+    public void findWhoStillHasToOrderTodaySomethingGoesReallyWrong() throws OrderNotFoundException, PersonNotFoundException {
+        List<Order> olBig = new ArrayList<>();
+        List<Order> olSmall = new ArrayList<>();
+        olBig.add(o5);
+        olBig.add(mockOrder2);
+        olSmall.add(o5);
+        when(o5.getPerson()).thenReturn(p1);
+        when(mockOrder2.getPerson()).thenReturn(p1);
+        when(o5.getOrderStatus()).thenReturn(OrderStatus.UNFILLED);
+        when(mockOrder2.getOrderStatus()).thenReturn(OrderStatus.ORDERED);
+        when(orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now())).thenReturn(olSmall);
+        when(orderRepository.findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now())).thenThrow(OrderNotFoundException.class);
+
+        assertThrows(PersonNotFoundException.class, () -> cut.findWhoStillHasToOrderToday());
+
+        verify(orderRepository).findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now());
+        verify(orderRepository).findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now());
     }
 
 

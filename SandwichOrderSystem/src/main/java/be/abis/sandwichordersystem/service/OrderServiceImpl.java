@@ -241,32 +241,46 @@ public class OrderServiceImpl implements OrderService {
         for (Order order : myOrderList) {
             orderRepository.deleteOrder(order);
         }
+        List<Order> noSandwichList = orderRepository.findOrdersByStatusAndDates(OrderStatus.NOSANDWICH, date, date);
+        for (Order order : noSandwichList) {
+            orderRepository.deleteOrder(order);
+        }
     }
 
     @Override
-    public List<Person> findWhoStillHasToOrderToday(){
+    public List<Person> findWhoStillHasToOrderToday() throws PersonNotFoundException {
         try {
-            List<Person> unfilledOrders = orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now()).stream().map(order -> order.getPerson()).collect(Collectors.toList());
+            List<Person> unfilledOrders = orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now()).stream().map(order -> order.getPerson()).distinct().collect(Collectors.toList());
             List<Person> output = new ArrayList<>();
+            // Check for double orders
             for (Person p : unfilledOrders) {
-                List<Order> personsOrderOfToday = orderRepository.findOrdersByPersonAndDates(p, LocalDate.now(), LocalDate.now());
-                if (personsOrderOfToday.size()==1) {
-                    output.add(p);
-                } else {
-                    for (Order o : personsOrderOfToday) {
-                        if (o.getOrderStatus()!=OrderStatus.UNFILLED) {
-                            break;
-                        } else {
+                try {
+                    List<Order> personsOrderOfToday = orderRepository.findOrdersByPersonAndDates(p, LocalDate.now(), LocalDate.now());
+                    //System.out.println(personsOrderOfToday.size());
+                    if (personsOrderOfToday.size() == 1) {
+                        output.add(p);
+                    } else {
+                        boolean stat = true;
+                        for (Order o : personsOrderOfToday) {
+                            if (o.getOrderStatus() != OrderStatus.UNFILLED) {
+                                stat = false;
+                                break;
+                            }
+                        }
+                        if(stat) {
                             output.add(p);
                         }
                     }
+                } catch (OrderNotFoundException e) {
+                    // Doesn't work, just throws PersonNotFoundException below. But nvm
+                    throw new OrderNotFoundException("Something went wrong in checking for double orders: " + e.getMessage());
                 }
             }
-
+            return output;
         } catch (OrderNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new PersonNotFoundException("No Persons found that still have to order today!");
         }
-        return null;
+
     }
 
     // Other methods for mock testing
