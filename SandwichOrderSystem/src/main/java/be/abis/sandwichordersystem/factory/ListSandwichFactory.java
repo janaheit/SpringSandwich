@@ -98,7 +98,29 @@ public class ListSandwichFactory implements SandwichFactory {
         sandwiches.stream()
                 .filter(s -> s.getCategory().equals("Vlees"))
                 .forEach(s-> s.setPrice(4.0));
+
+        sandwiches.stream()
+                .filter(s -> s.getCategory().equals("Vis"))
+                .forEach(s-> s.setPrice(4.5));
+
+        sandwiches.stream()
+                .filter(s -> s.getCategory().equals("Specials") || s.getCategory().equals("Specialiteiten"))
+                .forEach(s-> s.setPrice(5.0));
+
+        sandwiches.stream()
+                .filter(s -> s.getCategory().equals("Vegan"))
+                .forEach(s-> s.setPrice(3.5));
+
+        sandwiches.stream()
+                .filter(s -> s.getCategory().equals("Veggie"))
+                .forEach(s-> s.setPrice(3.75));
+
+        sandwiches.stream()
+                .filter(s -> s.getCategory().equals("Kip"))
+                .forEach(s-> s.setPrice(4.25));
+
+        sandwiches.stream()
+                .filter(s -> s.getCategory().equals("Kaas"))
+                .forEach(s-> s.setPrice(4.1));
     }
-
-
 }
