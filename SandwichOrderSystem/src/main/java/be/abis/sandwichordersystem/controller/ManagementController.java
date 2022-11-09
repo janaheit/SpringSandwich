@@ -38,7 +38,10 @@ public class ManagementController {
     }
 
 
-    @GetMapping()
+    // group by session
+    // only get filled orders
+    // today
+    @GetMapping("/today")
     public List<Order> getAllOrdersToday() {
         return orderService.findOrdersByDate(LocalDate.now());
     }

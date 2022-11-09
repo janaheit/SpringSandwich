@@ -8,7 +8,7 @@ public class Sandwich {
 
     // Attributes
     private static int COUNT=0;
-    private int sandwichNr;
+    private int sandwichID;
     private String name;
     private double price;
     private String description;
@@ -17,7 +17,7 @@ public class Sandwich {
     // Constructor
 
     public Sandwich() {
-        this.sandwichNr = ++COUNT;
+        this.sandwichID = ++COUNT;
     }
 
     public Sandwich(String name) {
@@ -43,12 +43,12 @@ public class Sandwich {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Sandwich sandwich = (Sandwich) o;
-        return sandwichNr == sandwich.sandwichNr && Double.compare(sandwich.price, price) == 0 && name.equals(sandwich.name) && Objects.equals(description, sandwich.description) && category.equals(sandwich.category);
+        return sandwichID == sandwich.sandwichID && Double.compare(sandwich.price, price) == 0 && name.equals(sandwich.name) && Objects.equals(description, sandwich.description) && category.equals(sandwich.category);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sandwichNr, name, price, description, category);
+        return Objects.hash(sandwichID, name, price, description, category);
     }
 
     @Override
@@ -63,12 +63,12 @@ public class Sandwich {
 
     // Getters and Setters
 
-    public int getSandwichNr() {
-        return sandwichNr;
+    public int getSandwichID() {
+        return sandwichID;
     }
 
-    public void setSandwichNr(int sandwichNr) {
-        this.sandwichNr = sandwichNr;
+    public void setSandwichID(int sandwichID) {
+        this.sandwichID = sandwichID;
     }
 
     public String getName() {

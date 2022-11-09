@@ -16,19 +16,35 @@ public class SandwichShop {
     private List<Sandwich> sandwiches = new ArrayList<>();
     private List<Options> options;
     private List<BreadType> breadTypes;
+    private static int COUNT=0;
+    private int sandwichShopID;
 
     // Constructors
+
+    public SandwichShop() {
+        this.sandwichShopID = ++COUNT;
+    }
+
     public SandwichShop(String name) {
+        this();
     }
     public SandwichShop(String name, List<Sandwich> sandwiches, List<Options> options, List<BreadType> breadTypes) {
-        super();
-        this.name = name;
+        this(name);
         this.sandwiches = sandwiches;
         this.options = options;
         this.breadTypes = breadTypes;
     }
 
     // Getters and Setters
+
+    public int getSandwichShopID() {
+        return sandwichShopID;
+    }
+
+    public void setSandwichShopID(int sandwichShopID) {
+        this.sandwichShopID = sandwichShopID;
+    }
+
     public String getName() {
         return name;
     }

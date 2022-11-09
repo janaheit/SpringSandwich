@@ -48,8 +48,8 @@ public class SandwichRepositoryTest {
 
     @Test
     public void findSandwichByIdWorks() throws SandwichNotFoundException {
-        when(sandwich1.getSandwichNr()).thenReturn(cut.getSandwiches().size()+10);
-        int sandwichID = sandwich1.getSandwichNr();
+        when(sandwich1.getSandwichID()).thenReturn(cut.getSandwiches().size()+10);
+        int sandwichID = sandwich1.getSandwichID();
         //System.out.println(sandwichID);
         cut.addSandwich(sandwich1);
         Sandwich mySandwich = cut.findSandwichByID(sandwichID);
@@ -66,7 +66,7 @@ public class SandwichRepositoryTest {
     @Test
     public void findSandwichWithRealSandwich() throws SandwichNotFoundException {
         Sandwich mySandwich = cut.getSandwiches().get(0);
-        Sandwich mySandwich2 = cut.findSandwichByID(mySandwich.getSandwichNr());
+        Sandwich mySandwich2 = cut.findSandwichByID(mySandwich.getSandwichID());
         assertEquals(mySandwich, mySandwich2);
     }
 

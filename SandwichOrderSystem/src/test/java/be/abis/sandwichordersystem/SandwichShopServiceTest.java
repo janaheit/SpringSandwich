@@ -6,7 +6,6 @@ import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
 import be.abis.sandwichordersystem.model.Sandwich;
 import be.abis.sandwichordersystem.model.SandwichShop;
 import be.abis.sandwichordersystem.repository.SandwichRepository;
-import be.abis.sandwichordersystem.repository.SandwichShopRepository;
 import be.abis.sandwichordersystem.service.SandwichShopService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -70,7 +69,7 @@ public class SandwichShopServiceTest {
     @Test
     public void findExistingSandwichByIDReturnsSandwich() throws SandwichNotFoundException {
 
-        when(sandwich3.getSandwichNr()).thenReturn(9568);
+        when(sandwich3.getSandwichID()).thenReturn(9568);
         sandwichRepository.getSandwiches().add(sandwich3);
         assertEquals(sandwich3, sandwichShopService.findSandwichById(9568));
         sandwichRepository.getSandwiches().remove(sandwich3);
