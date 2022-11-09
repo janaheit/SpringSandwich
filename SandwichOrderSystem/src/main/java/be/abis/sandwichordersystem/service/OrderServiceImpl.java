@@ -146,6 +146,7 @@ public class OrderServiceImpl implements OrderService {
     public void setTodaysSandwichShop(SandwichShop sandwichShop) {
         if (this.dayOrder == null || !this.dayOrder.getDate().equals(LocalDate.now())) {
             this.dayOrder = new DayOrder(sandwichShop, LocalDate.now());
+
         }
         else {
             this.dayOrder.setCurrentSandwichShop(sandwichShop);

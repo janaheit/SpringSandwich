@@ -89,6 +89,11 @@ public class SandwichShopServiceImpl implements SandwichShopService {
     }
 
     @Override
+    public SandwichShop findShopByName(String name) throws SandwichShopNotFoundException {
+        return sandwichShopRepository.findSandwichShopByName(name);
+    }
+
+    @Override
     public void deleteSandwich(Sandwich sandwich) throws SandwichNotFoundException {
         // delete first from SandwichShop
         SandwichShop foundSandwichShop;

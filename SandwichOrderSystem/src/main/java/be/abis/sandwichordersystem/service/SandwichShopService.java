@@ -27,5 +27,6 @@ public interface SandwichShopService {
     Sandwich findSandwichById(int id) throws SandwichNotFoundException;
 
     SandwichShop findShopForSandwich(Sandwich sandwich) throws SandwichShopNotFoundException;
+    SandwichShop findShopByName(String name) throws SandwichShopNotFoundException;
 
 }

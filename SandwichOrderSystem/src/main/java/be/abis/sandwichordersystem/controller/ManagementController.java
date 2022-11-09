@@ -33,7 +33,8 @@ public class ManagementController {
     @GetMapping("startup")
     public void startDay() throws SandwichShopNotFoundException {
         // set Vleugels as currentSandwichShop
-        orderService.setTodaysSandwichShop(sandwichShopService.getSandwichShopRepository().getShops().get(0));
+        orderService.setTodaysSandwichShop(sandwichShopService.findShopByName("Vleugels"));
+        System.out.println("SandwichShop set to: "+ orderService.getTodaysSandwichShop().getName());
         orderService.createOrdersForEveryoneToday();
     }
 

@@ -27,6 +27,7 @@ public class SandwichShop {
 
     public SandwichShop(String name) {
         this();
+        this.name = name;
     }
     public SandwichShop(String name, List<Sandwich> sandwiches, List<Options> options, List<BreadType> breadTypes) {
         this(name);

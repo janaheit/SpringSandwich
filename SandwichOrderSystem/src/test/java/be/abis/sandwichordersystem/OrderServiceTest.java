@@ -278,6 +278,7 @@ public class OrderServiceTest {
 
     @Test
     public void findTodaysOrderByNameMakesSecondOrder() throws PersonNotFoundException {
+        System.out.println(cut.getDayOrder());
         List<Order> littleOrderList = new ArrayList<>();
         Order thirdTestOrder = new Order(p1, cut.getDayOrder());
         thirdTestOrder.setOrderStatus(OrderStatus.ORDERED);
