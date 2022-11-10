@@ -160,9 +160,47 @@ public class ManagementController {
     }
 
     //TODO POST /orders/shops/{shopID}/sandwiches → add sandwich to sandwichshop
+    @PostMapping("shops/{id}/sandwiches")
+    public ResponseEntity<? extends Object> addSandwichToShop(@PathVariable("id") int id, @RequestBody Sandwich sandwich) throws SandwichShopNotFoundException {
+        SandwichShop shop = sandwichShopService.getSandwichShopRepository().findSandwichShopById(id);
+        sandwichShopService.addSandwich(sandwich, shop);
+        return new ResponseEntity<String>("Added", HttpStatus.OK);
+    }
 
-    //TODO DELETE /orders/shops/{shopID}/sandwiches/{sandwichID} → add sandwich to sandwichshop
+    //TODO DELETE /orders/shops/{shopID}/sandwiches/{sandwichID} → delete sandwich from sandwichshop
+    @DeleteMapping("shops/{shopID}/sandwiches/{sandwichID}")
+    public ResponseEntity<? extends Object> deleteSandwichFromShop(@PathVariable("shopID") int shopID, @PathVariable("sandwichID") int sandwichID) throws SandwichShopNotFoundException, SandwichNotFoundException, OperationNotAllowedException {
+        SandwichShop shop = sandwichShopService.getSandwichShopRepository().findSandwichShopById(shopID);
+        Sandwich sandwich = sandwichShopService.findSandwichById(sandwichID);
+        SandwichShop findShop = sandwichShopService.findShopForSandwich(sandwich);
+        if(findShop!=shop) {
+            throw new OperationNotAllowedException("This Sandwich does not belong to this sandwichshop!");
+        }
+        sandwichShopService.deleteSandwich(sandwich);
+        return new ResponseEntity<String>("Deleten", HttpStatus.OK);
+    }
 
     //TODO PUT /orders/shops/{shopID}/sandwiches/{sandwichID} → update sandwich at sandwichshop (generic update)
-
+    @PutMapping("shops/{shopID}/sandwiches/{sandwichID}")
+    public ResponseEntity<? extends Object> updateSandwichInShop(@PathVariable("shopID") int shopID, @PathVariable("sandwichID") int sandwichID, @RequestBody Sandwich sandwich) throws OperationNotAllowedException, SandwichNotFoundException, SandwichShopNotFoundException {
+        SandwichShop shop = sandwichShopService.getSandwichShopRepository().findSandwichShopById(shopID);
+        Sandwich sandwichToUpdate = sandwichShopService.findSandwichById(sandwichID);
+        SandwichShop findShop = sandwichShopService.findShopForSandwich(sandwichToUpdate);
+        if(findShop!=shop) {
+            throw new OperationNotAllowedException("This Sandwich does not belong to this sandwichshop!");
+        }
+        if (sandwich.getName() != null) {
+            sandwichToUpdate.setName(sandwich.getName());
+        }
+        if (sandwich.getCategory() != null) {
+            sandwichToUpdate.setCategory(sandwich.getCategory());
+        }
+        if (sandwich.getDescription() != null) {
+            sandwichToUpdate.setDescription(sandwich.getDescription());
+        }
+        if (sandwich.getPrice() != null) {
+            sandwichToUpdate.setPrice(sandwich.getPrice());
+        }
+        return new ResponseEntity<String>("All good in the hood", HttpStatus.OK);
+    }
 }

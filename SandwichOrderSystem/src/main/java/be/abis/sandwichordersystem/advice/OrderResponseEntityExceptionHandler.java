@@ -70,6 +70,15 @@ public class OrderResponseEntityExceptionHandler extends ResponseEntityException
         return new ResponseEntity<ApiError>(ae, responseHeaders, status);
     }
 
+    @ExceptionHandler(OperationNotAllowedException.class)
+    public ResponseEntity<? extends Object> handleNothingToHandleException(OperationNotAllowedException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ApiError ae = new ApiError("nothing to handle", status.value(), ex.getMessage());
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("content-type", MediaType.APPLICATION_PROBLEM_JSON_VALUE);
+        return new ResponseEntity<ApiError>(ae, responseHeaders, status);
+    }
+
 
 
 
