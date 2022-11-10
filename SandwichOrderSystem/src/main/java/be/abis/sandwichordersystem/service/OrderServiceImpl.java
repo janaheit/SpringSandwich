@@ -176,6 +176,11 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
+    public List<Order> findAllFilledOrdersForToday() throws OrderNotFoundException {
+        return orderRepository.findOrdersByStatusAndDates(OrderStatus.ORDERED, LocalDate.now(), LocalDate.now());
+    }
+
     // Simple getters and setters
     public DayOrder getDayOrder() {
         return dayOrder;

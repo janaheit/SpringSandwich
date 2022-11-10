@@ -434,5 +434,11 @@ public class OrderServiceTest {
         verify(orderRepository).findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now());
     }
 
+    @Test
+    public void findAllFilledOrdersForTodayTest() {
+        //TODO still have to implement this test!
+        fail();
+    }
+
 
 }
