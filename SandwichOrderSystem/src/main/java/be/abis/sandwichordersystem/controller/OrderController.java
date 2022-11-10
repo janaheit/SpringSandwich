@@ -4,12 +4,15 @@ import be.abis.sandwichordersystem.dto.OrderModel;
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.exception.IngredientNotAvailableException;
+import be.abis.sandwichordersystem.exception.OrderNotFoundException;
 import be.abis.sandwichordersystem.exception.PersonNotFoundException;
 import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
 import be.abis.sandwichordersystem.model.Order;
+import be.abis.sandwichordersystem.model.Person;
 import be.abis.sandwichordersystem.model.Sandwich;
 import be.abis.sandwichordersystem.model.SandwichShop;
 import be.abis.sandwichordersystem.service.OrderService;
+import be.abis.sandwichordersystem.service.PersonService;
 import be.abis.sandwichordersystem.service.SandwichShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +27,20 @@ public class OrderController {
     OrderService orderService;
     @Autowired
     SandwichShopService sandwichShopService;
+    @Autowired
+    PersonService personService;
 
     // when a person tries to order, they will get back always a new unfilled order in their name,
     // so that they can order twice
-    @GetMapping("query")
+    @GetMapping("/unfilled/query")
     public Order findTodaysUnfilledOrderByName(@RequestParam String name) throws PersonNotFoundException {
         return orderService.findTodaysUnfilledOrderByName(name);
+    }
+
+    @GetMapping("/filled/query")
+    public List<Order> findTodaysFilledOrdersByName(@RequestParam String name) throws OrderNotFoundException, PersonNotFoundException {
+        Person p = personService.findPersonByName(name);
+        return orderService.findTodaysFilledOrdersForPerson(p);
     }
 
     @GetMapping("shop")

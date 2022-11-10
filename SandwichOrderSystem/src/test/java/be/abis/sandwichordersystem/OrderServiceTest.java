@@ -85,7 +85,6 @@ public class OrderServiceTest {
 
     @Test
     void createOrdersForEveryoneToday() throws SandwichShopNotFoundException {
-        //TODO should be implemented
         cut.setTodaysSandwichShop(sandwichShopRepository.getShops().get(0));
         when(orderRepository.addOrder(any())).thenReturn(true);
         List<Session> locoSession = new ArrayList<Session>();

@@ -56,15 +56,6 @@ public class OrderServiceImpl implements OrderService {
             for (Person p : personsFollowingSessionToday) {
                 this.createOrder(p);
             }
-
-            /*
-            List<Session> sessionsOfToday = sessionService.findSessionsToday();
-            for (Session s : sessionsOfToday) {
-                List<Person> personsOfSession = sessionService.findAllPersonsFollowingSession(s);
-                for (Person p : personsOfSession) {
-                    this.createOrder(p);
-                }
-            }*/
         }
     }
 
@@ -73,7 +64,6 @@ public class OrderServiceImpl implements OrderService {
     public Order createOrder(Person person) {
         Order thisOrder = new Order(person, this.dayOrder);
         addOrder(thisOrder);
-
 
         // set session on order
         List<Session> sessionsToday = sessionService.findSessionsToday();
@@ -96,14 +86,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException {
         SandwichShop mySandwichShop = order.getDayOrder().getCurrentSandwichShop();
-        //System.out.println("sandwich ordered: " + sandwich);
-        //System.out.println("sandwichshop today: "+mySandwichShop);
 
         if(!sandwichShopService.checkSandwich(sandwich, mySandwichShop)) {
             throw new SandwichNotFoundException("Sandwich " + sandwich.getName() + " not available at " + mySandwichShop.getName());
         }
         order.setSandwich(sandwich);
-        System.out.println("setting sandwich: "+order.getSandwich());
 
         if(!sandwichShopService.checkBreadType(breadType, mySandwichShop)) {
             throw new IngredientNotAvailableException("Breadtype " + breadType.getBreadType() + " not available at " + mySandwichShop.getName());
@@ -151,6 +138,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> findOrdersByStatusAndSession(OrderStatus status, Session session) throws OrderNotFoundException {
         return orderRepository.findOrdersByStatusAndSession(status, session);
+    }
+
+    @Override
+    public List<Order> findTodaysFilledOrdersForPerson(Person person) throws OrderNotFoundException {
+        return orderRepository.findOrdersByPersonAndDates(person, LocalDate.now(), LocalDate.now()).stream()
+                .filter(o -> o.getOrderStatus().equals(OrderStatus.ORDERED) || o.getOrderStatus().equals(OrderStatus.NOSANDWICH))
+                .collect(Collectors.toList());
     }
 
     @Override
