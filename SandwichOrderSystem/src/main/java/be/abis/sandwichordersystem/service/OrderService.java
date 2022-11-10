@@ -30,6 +30,7 @@ public interface OrderService {
     List<Order> findAllClosedOrdersForDates(LocalDate startDate, LocalDate endDate) throws OrderNotFoundException;
     List<Person> getAllPersonsFromListOfOrders(List<Order> orders);
     List<Order> findOrdersByStatusAndSession(OrderStatus status, Session session) throws OrderNotFoundException;
+    List<Order> findAllFilledOrdersForToday() throws OrderNotFoundException;
 
     List<Person> findWhoStillHasToOrderToday() throws PersonNotFoundException;
 

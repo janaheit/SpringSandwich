@@ -1,6 +1,7 @@
 package be.abis.sandwichordersystem.advice;
 
 import be.abis.sandwichordersystem.error.ApiError;
+import be.abis.sandwichordersystem.exception.OrderNotFoundException;
 import be.abis.sandwichordersystem.exception.PersonNotFoundException;
 import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
 import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
@@ -40,6 +41,15 @@ public class OrderResponseEntityExceptionHandler extends ResponseEntityException
     public ResponseEntity<? extends Object> handleSandWichNotFoundException(SandwichNotFoundException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         ApiError ae = new ApiError("sandwich not found", status.value(), ex.getMessage());
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("content-type", MediaType.APPLICATION_PROBLEM_JSON_VALUE);
+        return new ResponseEntity<ApiError>(ae, responseHeaders, status);
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<? extends Object> handleOrderNotFoundException(OrderNotFoundException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ApiError ae = new ApiError("Order not found!", status.value(), ex.getMessage());
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("content-type", MediaType.APPLICATION_PROBLEM_JSON_VALUE);
         return new ResponseEntity<ApiError>(ae, responseHeaders, status);
