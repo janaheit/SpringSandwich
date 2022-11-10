@@ -45,7 +45,8 @@ public class ListPersonRepository implements PersonRepository {
     public Instructor findInstructorByName(String name) throws PersonNotFoundException {
         return (Instructor)persons.stream()
                 .filter(person -> person instanceof Instructor
-                        && name.equals(person.getFirstName()+" "+person.getLastName()))
+                       // && name.equals(person.getFirstName()+" "+person.getLastName())
+                        && (person.getFirstName()+" "+person.getLastName()).toUpperCase().startsWith(name.toUpperCase()))
                 .findAny()
                 .orElseThrow(() -> {
                     //log.error("FilePersonRepository (findInstructorByName), instructor does not exist " + name);

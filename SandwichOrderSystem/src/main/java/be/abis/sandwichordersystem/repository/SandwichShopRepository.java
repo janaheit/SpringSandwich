@@ -12,4 +12,6 @@ public interface SandwichShopRepository {
     List<SandwichShop> getShops();
     void addShop(SandwichShop sandwichShop);
     void deleteShop(SandwichShop sandwichShop) throws SandwichShopNotFoundException;
+
+    public SandwichShop findSandwichShopById(int id) throws SandwichShopNotFoundException;
 }
