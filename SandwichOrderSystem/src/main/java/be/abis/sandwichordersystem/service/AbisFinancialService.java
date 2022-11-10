@@ -3,6 +3,7 @@ package be.abis.sandwichordersystem.service;
 import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.OrderNotFoundException;
 import be.abis.sandwichordersystem.model.Order;
+import be.abis.sandwichordersystem.model.Sandwich;
 import be.abis.sandwichordersystem.model.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,8 +65,12 @@ public class AbisFinancialService implements FinancialService {
         return pricesPerSession;
     }
 
-    // getter and setter
+    @Override
+    public Map<Sandwich, Integer> getPopularityOfSandwichesByDates(LocalDate start, LocalDate end) {
+        return null;
+    }
 
+    // getter and setter
 
     @Override
     public OrderService getOrderService() {

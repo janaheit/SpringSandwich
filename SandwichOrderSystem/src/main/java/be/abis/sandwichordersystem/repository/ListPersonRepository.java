@@ -32,7 +32,7 @@ public class ListPersonRepository implements PersonRepository {
     @Override
     public Person findPersonByName(String name) throws PersonNotFoundException {
         return persons.stream()
-                .filter(person -> name.equals(person.getFirstName()+" "+person.getLastName()))
+                .filter(person -> name.equalsIgnoreCase(person.getFirstName()+" "+person.getLastName()))
                 .findAny()
                 .orElseThrow(() -> {
                     //log.error("FilePersonRepository (findInstructorByName), instructor does not exist " + name);
