@@ -51,6 +51,7 @@ public interface OrderService {
     public void setTodaysFilledOrdersToHandeled() throws NothingToHandleException;
     public void deleteAllUnfilledOrdersOfDay(LocalDate date) throws OrderNotFoundException;
     List<Order> findTodaysFilledOrdersForPerson(Person person) throws OrderNotFoundException;
+    List<Order> findOrdersByStatusAndDates(OrderStatus status, LocalDate startDate, LocalDate endDate) throws OrderNotFoundException;
 
 
 }

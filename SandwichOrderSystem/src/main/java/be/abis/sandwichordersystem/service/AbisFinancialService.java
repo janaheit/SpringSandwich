@@ -4,6 +4,7 @@ import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.OrderNotFoundException;
 import be.abis.sandwichordersystem.model.Order;
 import be.abis.sandwichordersystem.model.Sandwich;
+import be.abis.sandwichordersystem.model.SandwichShop;
 import be.abis.sandwichordersystem.model.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class AbisFinancialService implements FinancialService {
 
     @Autowired OrderService orderService;
+    @Autowired SandwichShopService sandwichShopService;
 
     public AbisFinancialService() {
     }
@@ -66,8 +68,25 @@ public class AbisFinancialService implements FinancialService {
     }
 
     @Override
-    public Map<Sandwich, Integer> getPopularityOfSandwichesByDates(LocalDate start, LocalDate end) {
-        return null;
+    public Map<Sandwich, Integer> getPopularityOfSandwichesByDates(LocalDate startDate, LocalDate endDate) throws OrderNotFoundException {
+        List<Order> orders = orderService.findOrdersByStatusAndDates(OrderStatus.HANDELED, startDate, endDate);
+
+        // initialise the Map with all Sandwiches
+        Map<Sandwich, Integer> popularity = new HashMap<>();
+        for (SandwichShop shop:sandwichShopService.getSandwichShopRepository().getShops()){
+            for (Sandwich sandwich:shop.getSandwiches()){
+                popularity.put(sandwich, 0);
+            }
+        }
+
+        // fill the map with actual data
+        for (Order o:orders){
+            Sandwich s = o.getSandwich();
+            if (popularity.containsKey(s)) popularity.merge(s, 1, Integer::sum);
+            else popularity.put(s, 1);
+        }
+
+        return popularity;
     }
 
     // getter and setter
@@ -80,5 +99,10 @@ public class AbisFinancialService implements FinancialService {
     @Override
     public void setOrderService(OrderService orderService) {
         this.orderService = orderService;
+    }
+
+    @Override
+    public void setSandwichShopService(SandwichShopService sandwichShopService) {
+        this.sandwichShopService = sandwichShopService;
     }
 }
