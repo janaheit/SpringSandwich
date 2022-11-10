@@ -47,6 +47,11 @@ public class ListSandwichShopRepository implements SandwichShopRepository {
         }
     }
 
+    @Override
+    public SandwichShop findSandwichShopById(int id) throws SandwichShopNotFoundException {
+        return this.shops.stream().filter(shop -> shop.getSandwichShopID() == id).findAny().orElseThrow(() -> new SandwichShopNotFoundException("Shop with id " + id + " not found!"));
+    }
+
     // GETTERS AND SETTERS
     public List<SandwichShop> getShops() {
         return shops;

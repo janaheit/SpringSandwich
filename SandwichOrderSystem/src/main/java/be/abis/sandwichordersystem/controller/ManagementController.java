@@ -2,12 +2,14 @@ package be.abis.sandwichordersystem.controller;
 
 import be.abis.sandwichordersystem.dto.NameModel;
 import be.abis.sandwichordersystem.dto.OrderModel;
+import be.abis.sandwichordersystem.dto.SandwichShopDTOModel;
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.*;
 import be.abis.sandwichordersystem.model.*;
 import be.abis.sandwichordersystem.service.OrderService;
+import be.abis.sandwichordersystem.service.PersonService;
 import be.abis.sandwichordersystem.service.SandwichShopService;
 import be.abis.sandwichordersystem.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,8 @@ public class ManagementController {
     SandwichShopService sandwichShopService;
     @Autowired
     SessionService sessionService;
+    @Autowired
+    PersonService personService;
 
 
     // Old methods copied from ordercontroller, see below for new
@@ -59,21 +63,21 @@ public class ManagementController {
      */
 
 
-    //TODO GET /orders/today -> all filled orders for today (grouped by session)
+    //GET /orders/today -> all filled orders for today (grouped by session)
     @GetMapping("today")
     public ResponseEntity<? extends Object> findAllFilledOrdersToday() throws OrderNotFoundException {
         List<Order> orderList = orderService.findAllFilledOrdersForToday();
         return new ResponseEntity<List<Order>>(orderList, HttpStatus.OK);
     }
 
-    //TODO GET /orders/missing -> get all unfilled orders / who still has to order
+    // GET /orders/missing -> get all unfilled orders / who still has to order
     @GetMapping("missing")
     public ResponseEntity<? extends Object> findWhoStillHasToOrder() throws PersonNotFoundException {
         List<Person> personList = orderService.findWhoStillHasToOrderToday();
         return new ResponseEntity<List<Person>>(personList, HttpStatus.OK);
     }
 
-    //TODO GET /orders/period?start=12-12-2022&end=30-12-2022 → get all closed orders for period grouped by session
+    // GET /orders/period?start=12-12-2022&end=30-12-2022 → get all closed orders for period grouped by session
     @GetMapping("period")
     public ResponseEntity<? extends Object> getClosedOrdersPerPeriod(@RequestParam("start") @DateTimeFormat(pattern="d-M-yyyy") LocalDate startDate, @RequestParam("end") @DateTimeFormat(pattern="d-M-yyyy")LocalDate endDate) throws OrderNotFoundException {
         List<Order> orderlist = orderService.findAllClosedOrdersForDates(startDate, endDate);
@@ -81,7 +85,7 @@ public class ManagementController {
     }
 
 
-    //TODO GET /orders/session?id={id} → get all orders for session
+    // GET /orders/session?id={id} → get all orders for session
     @GetMapping("session")
     public ResponseEntity<? extends Object> getAllClosedOrdersForSessionId(@RequestParam("id") int id) throws SessionNotFoundException, OrderNotFoundException {
         Session mySession = sessionService.findSessionByID(id);
@@ -89,8 +93,7 @@ public class ManagementController {
         return new ResponseEntity<List<Order>>(orderList, HttpStatus.OK);
     }
 
-    //TODO GET /orders/query?date={date} → get all orders for date grouped by session
-
+    // GET /orders/query?date={date} → get all orders for date grouped by session
     @GetMapping("query")
     public ResponseEntity<? extends Object> getAllClosedOrdersForDate(@RequestParam("date") @DateTimeFormat(pattern="d-M-yyyy") LocalDate date) throws OrderNotFoundException {
         List<Order> orderList = orderService.findAllClosedOrdersForDates(date, date);
@@ -98,7 +101,7 @@ public class ManagementController {
     }
 
 
-    //TODO GET /orders/sessions/period?start=12-12-2022&end=30-12-2022 → get all sessions during period
+    // GET /orders/sessions/period?start=12-12-2022&end=30-12-2022 → get all sessions during period
     @GetMapping("sessions/period")
     public ResponseEntity<? extends Object> getAllSessionsDuringPeriod(@RequestParam("start") @DateTimeFormat(pattern="d-M-yyyy") LocalDate startDate, @RequestParam("end") @DateTimeFormat(pattern="d-M-yyyy")LocalDate endDate) {
         List<Session> sessionList = sessionService.findSessionsByPeriod(startDate, endDate);
@@ -106,7 +109,12 @@ public class ManagementController {
     }
 
     //TODO GET /orders/sessions/instructor?name=Sandy → get all sessions taught by sandy
-
+    @GetMapping("sessions/instructor")
+    public ResponseEntity<? extends Object> getAllSessionsOfInstructor(@RequestParam("name") String fullName) throws PersonNotFoundException {
+        Instructor myInstructor = personService.findInstructorByName(fullName);
+        List<Session> sessionList = sessionService.findSessionsByInstructor(myInstructor);
+        return new ResponseEntity<List<Session>>(sessionList, HttpStatus.OK);
+    }
     //TODO POST /orders/startup → start day with selecting shop (param); creating orders for everyone
 
     //TODO POST /orders/close → close all orders // when you ordered
@@ -120,10 +128,36 @@ public class ManagementController {
     }
 
     //TODO GET /orders/shops → get all sandwich shops
+    @GetMapping("shops")
+    public ResponseEntity<? extends Object> getAllSandwichShops() {
+        List<SandwichShop> myList = sandwichShopService.getSandwichShopRepository().getShops();
+        return new ResponseEntity<List<SandwichShop>>(myList, HttpStatus.OK);
+    }
 
     //TODO POST /orders/shops → add sandwichshop
+    @PostMapping("shops")
+    public ResponseEntity<? extends Object> addSandwichShop(@RequestBody SandwichShopDTOModel sandwichShopDTO) {
+        SandwichShop myShop = new SandwichShop(sandwichShopDTO.getName());
+        if(sandwichShopDTO.getSandwiches() != null) {
+            myShop.setSandwiches(sandwichShopDTO.getSandwiches());
+        }
+        if(sandwichShopDTO.getBreadTypes() != null) {
+            myShop.setBreadTypes(sandwichShopDTO.getBreadTypes());
+        }
+        if(sandwichShopDTO.getOptions() != null) {
+            myShop.setOptions(sandwichShopDTO.getOptions());
+        }
+        sandwichShopService.getSandwichShopRepository().addShop(myShop);
+        return new ResponseEntity<String>("Very good! My name Borat!", HttpStatus.OK);
+    }
 
     //TODO DELETE /orders/shops/{shopID} → delete sandwichshop
+    @DeleteMapping("shops/{id}")
+    public ResponseEntity<? extends Object> deleteSandwichShop(@PathVariable("id") int id) throws SandwichShopNotFoundException {
+        SandwichShop shop = sandwichShopService.getSandwichShopRepository().findSandwichShopById(id);
+        sandwichShopService.getSandwichShopRepository().deleteShop(shop);
+        return new ResponseEntity<String>("Deleted", HttpStatus.OK);
+    }
 
     //TODO POST /orders/shops/{shopID}/sandwiches → add sandwich to sandwichshop
 
