@@ -166,7 +166,6 @@ public class AbisOrderService implements OrderService {
     public void setTodaysSandwichShop(SandwichShop sandwichShop) {
         if (this.dayOrder == null || !this.dayOrder.getDate().equals(LocalDate.now())) {
             this.dayOrder = new DayOrder(sandwichShop, LocalDate.now());
-
         }
         else {
             this.dayOrder.setCurrentSandwichShop(sandwichShop);
@@ -179,7 +178,8 @@ public class AbisOrderService implements OrderService {
     }
 
     @Override
-    public SandwichShop getTodaysSandwichShop() {
+    public SandwichShop getTodaysSandwichShop() throws DayOrderDoesNotExistYet {
+        if (this.dayOrder == null) throw new DayOrderDoesNotExistYet("The sandwich shop has not yet been selected.");
         return this.dayOrder.getCurrentSandwichShop();
     }
 
@@ -204,6 +204,7 @@ public class AbisOrderService implements OrderService {
 
     // Simple getters and setters
     public DayOrder getDayOrder() {
+        //if (dayOrder == null) throw new DayOrderDoesNotExistYet("The day order was not initialised yet.");
         return dayOrder;
     }
 

@@ -40,7 +40,7 @@ public class ManagementController {
     // only for testing purposes
 
     @GetMapping("startup")
-    public void startDay() throws SandwichShopNotFoundException {
+    public void startDay() throws SandwichShopNotFoundException, DayOrderDoesNotExistYet {
         // set Vleugels as currentSandwichShop
         orderService.setTodaysSandwichShop(sandwichShopService.findShopByName("Vleugels"));
         System.out.println("SandwichShop set to: "+ orderService.getTodaysSandwichShop().getName());
