@@ -3,10 +3,7 @@ package be.abis.sandwichordersystem.controller;
 import be.abis.sandwichordersystem.dto.OrderModel;
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
-import be.abis.sandwichordersystem.exception.IngredientNotAvailableException;
-import be.abis.sandwichordersystem.exception.OrderNotFoundException;
-import be.abis.sandwichordersystem.exception.PersonNotFoundException;
-import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
+import be.abis.sandwichordersystem.exception.*;
 import be.abis.sandwichordersystem.model.Order;
 import be.abis.sandwichordersystem.model.Person;
 import be.abis.sandwichordersystem.model.Sandwich;
@@ -44,22 +41,22 @@ public class OrderController {
     }
 
     @GetMapping("shop")
-    public SandwichShop getTodaysSandwichShop(){
+    public SandwichShop getTodaysSandwichShop() throws DayOrderDoesNotExistYet {
         return orderService.getTodaysSandwichShop();
     }
 
     @GetMapping("shop/sandwiches")
-    public List<Sandwich> getTodaysSandwiches(){
+    public List<Sandwich> getTodaysSandwiches() throws DayOrderDoesNotExistYet {
         return orderService.getTodaysSandwichShop().getSandwiches();
     }
 
     @GetMapping("shop/options")
-    public List<Options> getTodaysOptions(){
+    public List<Options> getTodaysOptions() throws DayOrderDoesNotExistYet {
         return orderService.getTodaysSandwichShop().getOptions();
     }
 
     @GetMapping("shop/breadtypes")
-    public List<BreadType> getTodaysBreadTypes(){
+    public List<BreadType> getTodaysBreadTypes() throws DayOrderDoesNotExistYet {
         return orderService.getTodaysSandwichShop().getBreadTypes();
     }
 

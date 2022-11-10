@@ -38,7 +38,7 @@ public interface OrderService {
 
     void setTodaysSandwichShop(SandwichShop sandwichShop);
 
-    SandwichShop getTodaysSandwichShop();
+    SandwichShop getTodaysSandwichShop() throws DayOrderDoesNotExistYet;
 
     OrderRepository getOrderRepository();
     void setOrderRepository(OrderRepository orderRepository);

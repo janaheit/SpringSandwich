@@ -37,6 +37,7 @@ public class OrderServiceTest {
     @Mock Order mockOrder2;
 
     @Mock Session mockSession;
+    //@Mock DayOrder dayOrder;
 
     Order testOrder;
 
@@ -104,7 +105,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    void handleOrderWithNoSandwich(){
+    void handleOrderWithNoSandwich() throws DayOrderDoesNotExistYet {
         testOrder = new Order(p1, cut.getDayOrder());
         cut.handleOrder(testOrder, "test");
         assertEquals(OrderStatus.NOSANDWICH, testOrder.getOrderStatus());
@@ -112,7 +113,7 @@ public class OrderServiceTest {
 
 
     @Test
-    void handleOrderWithSandwichWorks() throws IngredientNotAvailableException, SandwichNotFoundException {
+    void handleOrderWithSandwichWorks() throws IngredientNotAvailableException, SandwichNotFoundException, DayOrderDoesNotExistYet {
         cut.setTodaysSandwichShop(sandwichShopRepository.getShops().get(0));
         testOrder = new Order(p1, cut.getDayOrder());
         cut.handleOrder(testOrder, sandwichShopRepository.getShops().get(0).getSandwiches().get(1), BreadType.GREY, sandwichShopRepository.getShops().get(0).getOptions(), "");
@@ -120,14 +121,14 @@ public class OrderServiceTest {
     }
 
     @Test
-    void handleOrderWithSandwichThrowsExceptionWithUnavailableSandwich(){
+    void handleOrderWithSandwichThrowsExceptionWithUnavailableSandwich() throws DayOrderDoesNotExistYet {
         cut.setTodaysSandwichShop(sandwichShopRepository.getShops().get(0));
         testOrder = new Order(p1, cut.getDayOrder());
         assertThrows(SandwichNotFoundException.class, () -> cut.handleOrder(testOrder, sandwichShopRepository.getShops().get(1).getSandwiches().get(1), BreadType.GREY, sandwichShopRepository.getShops().get(0).getOptions(), ""));
     }
 
     @Test
-    void handleOrderWithSandwichThrowsExceptionWithUnavailableOptions(){
+    void handleOrderWithSandwichThrowsExceptionWithUnavailableOptions() throws DayOrderDoesNotExistYet {
         cut.setTodaysSandwichShop(sandwichShopRepository.getShops().get(0));
         testOrder = new Order(p1, cut.getDayOrder());
         assertThrows(IngredientNotAvailableException.class, () -> cut.handleOrder(testOrder, sandwichShopRepository.getShops().get(0).getSandwiches().get(1), BreadType.GREY, sandwichShopRepository.getShops().get(1).getOptions(), ""));
@@ -165,7 +166,7 @@ public class OrderServiceTest {
         verify(orderRepository).findOrdersBySession(mockSession);
     }
     @Test
-    void findTodaysOrdersForPersonWithOrderTodayWorks(){
+    void findTodaysOrdersForPersonWithOrderTodayWorks() throws DayOrderDoesNotExistYet {
         List<Order> littleOrderList = new ArrayList<>();
         testOrder = new Order(p1, cut.getDayOrder());
         littleOrderList.add(testOrder);
@@ -175,7 +176,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    void findTodaysOrdersForPersonWithoutOrderTodayWorks(){
+    void findTodaysOrdersForPersonWithoutOrderTodayWorks() throws DayOrderDoesNotExistYet {
         List<Order> littleOrderList = new ArrayList<>();
         testOrder = new Order(p1, cut.getDayOrder());
         littleOrderList.add(testOrder);
@@ -185,7 +186,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    void findAllUnhandeledOrders(){
+    void findAllUnhandeledOrders() throws DayOrderDoesNotExistYet {
         List<Order> littleOrderList = new ArrayList<>();
         testOrder = new Order(p1, cut.getDayOrder());
         testOrder.setOrderStatus(OrderStatus.HANDELED);
@@ -198,7 +199,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    void findAllUnfilledOrders(){
+    void findAllUnfilledOrders() throws DayOrderDoesNotExistYet {
         List<Order> littleOrderList = new ArrayList<>();
         testOrder = new Order(p1, cut.getDayOrder());
         testOrder.setOrderStatus(OrderStatus.ORDERED);
@@ -211,7 +212,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    void getAllPersonsFromListOfOrders(){
+    void getAllPersonsFromListOfOrders() throws DayOrderDoesNotExistYet {
         List<Order> littleOrderList = new ArrayList<>();
         testOrder = new Order(p1, cut.getDayOrder());
         testOrder.setOrderStatus(OrderStatus.ORDERED);
@@ -229,7 +230,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    void setTodaysSandwichShop(){
+    void setTodaysSandwichShop() throws DayOrderDoesNotExistYet {
         DayOrder before = cut.getDayOrder();
         cut.setTodaysSandwichShop(sandwichShopRepository.getShops().get(0));
         DayOrder after = cut.getDayOrder();
@@ -237,14 +238,14 @@ public class OrderServiceTest {
     }
 
     @Test
-    void getTodaysSandwichShop() {
+    void getTodaysSandwichShop() throws DayOrderDoesNotExistYet {
         SandwichShop mySandwichShop = sandwichShopRepository.getShops().get(0);
         cut.setTodaysSandwichShop(mySandwichShop);
         assertEquals(mySandwichShop, cut.getTodaysSandwichShop());
     }
 
     @Test
-    public void findTodaysOrderByNameWorksTest() throws PersonNotFoundException {
+    public void findTodaysOrderByNameWorksTest() throws PersonNotFoundException, DayOrderDoesNotExistYet {
         List<Order> littleOrderList = new ArrayList<>();
         Order thirdTestOrder = new Order(p1, cut.getDayOrder());
         //thirdTestOrder.setOrderStatus(OrderStatus.ORDERED);
@@ -262,7 +263,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void findTodaysOrderByNameThrowsException() {
+    public void findTodaysOrderByNameThrowsException() throws DayOrderDoesNotExistYet {
         List<Order> littleOrderList = new ArrayList<>();
         Order thirdTestOrder = new Order(p1, cut.getDayOrder());
         Order testOrder2 = new Order(p2, cut.getDayOrder());
@@ -274,7 +275,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void findTodaysOrderByNameMakesSecondOrder() throws PersonNotFoundException {
+    public void findTodaysOrderByNameMakesSecondOrder() throws PersonNotFoundException, DayOrderDoesNotExistYet {
         System.out.println(cut.getDayOrder());
         List<Order> littleOrderList = new ArrayList<>();
         Order thirdTestOrder = new Order(p1, cut.getDayOrder());
