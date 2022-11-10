@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class OrderServiceImpl implements OrderService {
+public class AbisOrderService implements OrderService {
 
     @Autowired
     OrderRepository orderRepository;
@@ -171,6 +171,11 @@ public class OrderServiceImpl implements OrderService {
         else {
             this.dayOrder.setCurrentSandwichShop(sandwichShop);
         }
+    }
+
+    @Override
+    public List<Order> findOrdersByStatusAndDates(OrderStatus status, LocalDate startDate, LocalDate endDate) throws OrderNotFoundException {
+        return orderRepository.findOrdersByStatusAndDates(status, startDate, endDate);
     }
 
     @Override
