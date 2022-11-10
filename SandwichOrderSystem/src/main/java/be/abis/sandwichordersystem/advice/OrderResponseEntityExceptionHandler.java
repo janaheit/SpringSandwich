@@ -43,6 +43,15 @@ public class OrderResponseEntityExceptionHandler extends ResponseEntityException
         return new ResponseEntity<ApiError>(ae, responseHeaders, status);
     }
 
+    @ExceptionHandler(SessionNotFoundException.class)
+    public ResponseEntity<? extends Object> handleSessionNotFoundException(SessionNotFoundException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ApiError ae = new ApiError("session not found", status.value(), ex.getMessage());
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("content-type", MediaType.APPLICATION_PROBLEM_JSON_VALUE);
+        return new ResponseEntity<ApiError>(ae, responseHeaders, status);
+    }
+
     @ExceptionHandler(OrderNotFoundException.class)
     public ResponseEntity<? extends Object> handleOrderNotFoundException(OrderNotFoundException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
@@ -52,10 +61,10 @@ public class OrderResponseEntityExceptionHandler extends ResponseEntityException
         return new ResponseEntity<ApiError>(ae, responseHeaders, status);
     }
 
-    @ExceptionHandler(SessionNotFoundException.class)
-    public ResponseEntity<? extends Object> handleSessionNotFoundException(SessionNotFoundException ex, WebRequest request) {
+    @ExceptionHandler(NothingToHandleException.class)
+    public ResponseEntity<? extends Object> handleNothingToHandleException(NothingToHandleException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
-        ApiError ae = new ApiError("Session not found!", status.value(), ex.getMessage());
+        ApiError ae = new ApiError("nothing to handle", status.value(), ex.getMessage());
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("content-type", MediaType.APPLICATION_PROBLEM_JSON_VALUE);
         return new ResponseEntity<ApiError>(ae, responseHeaders, status);

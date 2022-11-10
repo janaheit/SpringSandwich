@@ -3,9 +3,13 @@ package be.abis.sandwichordersystem;
 import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.OrderNotFoundException;
 import be.abis.sandwichordersystem.model.Order;
+import be.abis.sandwichordersystem.model.Sandwich;
+import be.abis.sandwichordersystem.model.SandwichShop;
 import be.abis.sandwichordersystem.model.Session;
+import be.abis.sandwichordersystem.repository.SandwichShopRepository;
 import be.abis.sandwichordersystem.service.FinancialService;
 import be.abis.sandwichordersystem.service.OrderService;
+import be.abis.sandwichordersystem.service.SandwichShopService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -31,6 +35,10 @@ public class FinancialServiceTest {
     @Mock
     OrderService orderService;
     @Mock
+    SandwichShopService sandwichShopService;
+    @Mock
+    SandwichShopRepository sandwichShopRepository;
+    @Mock
     Order o1;
     @Mock
     Order o2;
@@ -44,6 +52,7 @@ public class FinancialServiceTest {
     @BeforeEach
     void setUp(){
         financialService.setOrderService(orderService);
+        financialService.setSandwichShopService(sandwichShopService);
         mockOrders = new ArrayList<>();
         mockOrders.add(o1);
         mockOrders.add(o2);
@@ -161,4 +170,51 @@ public class FinancialServiceTest {
         verify(o3).getSession();
         verify(orderService).findAllClosedOrdersForDates(any(), any());
     }
+
+    @Mock
+    Sandwich sand1;
+    @Mock Sandwich sand2;
+    //@Mock Sandwich sand3;
+    @Mock
+    SandwichShop sandwichShop1;
+    @Mock
+    SandwichShop sandwichShop2;
+    @Test
+    void getPopularity() throws OrderNotFoundException {
+        when(o1.getSandwich()).thenReturn(sand1);
+        when(o2.getSandwich()).thenReturn(sand1);
+        when(o3.getSandwich()).thenReturn(sand2);
+        mockOrders.add(o3);
+
+        List<SandwichShop> shops = new ArrayList<>();
+        shops.add(sandwichShop1);
+        shops.add(sandwichShop2);
+
+        List<Sandwich> shop1sandwich = new ArrayList<>();
+        shop1sandwich.add(sand1);
+        List<Sandwich> shop2sandwich = new ArrayList<>();
+        shop2sandwich.add(sand2);
+
+        when(sandwichShopService.getSandwichShopRepository()).thenReturn(sandwichShopRepository);
+        when(sandwichShopRepository.getShops()).thenReturn(shops);
+        when(sandwichShop1.getSandwiches()).thenReturn(shop1sandwich);
+        when(sandwichShop2.getSandwiches()).thenReturn(shop2sandwich);
+        when(orderService.findOrdersByStatusAndDates(OrderStatus.HANDELED, LocalDate.now().minusDays(2),
+                LocalDate.now().minusDays(1))).thenReturn(mockOrders);
+
+        Map<Sandwich, Integer> pop = financialService.getPopularityOfSandwichesByDates(LocalDate.now().minusDays(2), LocalDate.now().minusDays(1));
+
+        assertEquals(1, pop.get(sand2));
+        assertEquals(2, pop.get(sand1));
+    }
+
+    @Test
+    void getPopularityThrowsException() throws OrderNotFoundException {
+        when(orderService.findOrdersByStatusAndDates(OrderStatus.HANDELED, LocalDate.now().minusDays(2),
+                LocalDate.now().minusDays(1))).thenThrow(new OrderNotFoundException("No orders found"));
+
+        assertThrows(OrderNotFoundException.class, () -> financialService.getPopularityOfSandwichesByDates(LocalDate.now().minusDays(2), LocalDate.now().minusDays(1)));
+
+    }
+
 }

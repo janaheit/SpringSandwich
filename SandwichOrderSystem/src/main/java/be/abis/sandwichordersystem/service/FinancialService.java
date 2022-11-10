@@ -13,6 +13,7 @@ public interface FinancialService {
     Map<Session, Double> calculatePricesPerSessionOnDate(LocalDate date) throws OrderNotFoundException;
     Map<Session, Double> calculatePricesPerSessionForPeriod(LocalDate start, LocalDate end) throws OrderNotFoundException;
     void setOrderService(OrderService orderService);
-    Map<Sandwich, Integer> getPopularityOfSandwichesByDates(LocalDate start, LocalDate end);
+    void setSandwichShopService(SandwichShopService sandwichShopService);
+    Map<Sandwich, Integer> getPopularityOfSandwichesByDates(LocalDate startDate, LocalDate endDate) throws OrderNotFoundException;
     OrderService getOrderService();
 }
