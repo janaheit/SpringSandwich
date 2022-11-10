@@ -108,7 +108,7 @@ public class ManagementController {
         return new ResponseEntity<List<Session>>(sessionList, HttpStatus.OK);
     }
 
-    //TODO GET /orders/sessions/instructor?name=Sandy → get all sessions taught by sandy
+    // GET /orders/sessions/instructor?name=Sandy → get all sessions taught by sandy
     @GetMapping("sessions/instructor")
     public ResponseEntity<? extends Object> getAllSessionsOfInstructor(@RequestParam("name") String fullName) throws PersonNotFoundException {
         Instructor myInstructor = personService.findInstructorByName(fullName);
@@ -117,7 +117,7 @@ public class ManagementController {
     }
     //TODO POST /orders/startup → start day with selecting shop (param); creating orders for everyone
 
-    //TODO POST /orders/close → close all orders // when you ordered
+    // POST /orders/close → close all orders // when you ordered
     @PostMapping("close")
     public ResponseEntity<? extends Object> closeOrdersOfDay() throws IOException, NothingToHandleException, OrderNotFoundException, OperationNotAllowedException {
         orderService.generateOrderFile();
@@ -127,14 +127,14 @@ public class ManagementController {
         return new ResponseEntity<String>("all Good", HttpStatus.OK);
     }
 
-    //TODO GET /orders/shops → get all sandwich shops
+    // GET /orders/shops → get all sandwich shops
     @GetMapping("shops")
     public ResponseEntity<? extends Object> getAllSandwichShops() {
         List<SandwichShop> myList = sandwichShopService.getSandwichShopRepository().getShops();
         return new ResponseEntity<List<SandwichShop>>(myList, HttpStatus.OK);
     }
 
-    //TODO POST /orders/shops → add sandwichshop
+    // POST /orders/shops → add sandwichshop
     @PostMapping("shops")
     public ResponseEntity<? extends Object> addSandwichShop(@RequestBody SandwichShopDTOModel sandwichShopDTO) {
         SandwichShop myShop = new SandwichShop(sandwichShopDTO.getName());
@@ -151,7 +151,7 @@ public class ManagementController {
         return new ResponseEntity<String>("Very good! My name Borat!", HttpStatus.OK);
     }
 
-    //TODO DELETE /orders/shops/{shopID} → delete sandwichshop
+    //DELETE /orders/shops/{shopID} → delete sandwichshop
     @DeleteMapping("shops/{id}")
     public ResponseEntity<? extends Object> deleteSandwichShop(@PathVariable("id") int id) throws SandwichShopNotFoundException {
         SandwichShop shop = sandwichShopService.getSandwichShopRepository().findSandwichShopById(id);
@@ -159,7 +159,7 @@ public class ManagementController {
         return new ResponseEntity<String>("Deleted", HttpStatus.OK);
     }
 
-    //TODO POST /orders/shops/{shopID}/sandwiches → add sandwich to sandwichshop
+    //POST /orders/shops/{shopID}/sandwiches → add sandwich to sandwichshop
     @PostMapping("shops/{id}/sandwiches")
     public ResponseEntity<? extends Object> addSandwichToShop(@PathVariable("id") int id, @RequestBody Sandwich sandwich) throws SandwichShopNotFoundException {
         SandwichShop shop = sandwichShopService.getSandwichShopRepository().findSandwichShopById(id);
@@ -167,7 +167,7 @@ public class ManagementController {
         return new ResponseEntity<String>("Added", HttpStatus.OK);
     }
 
-    //TODO DELETE /orders/shops/{shopID}/sandwiches/{sandwichID} → delete sandwich from sandwichshop
+    //DELETE /orders/shops/{shopID}/sandwiches/{sandwichID} → delete sandwich from sandwichshop
     @DeleteMapping("shops/{shopID}/sandwiches/{sandwichID}")
     public ResponseEntity<? extends Object> deleteSandwichFromShop(@PathVariable("shopID") int shopID, @PathVariable("sandwichID") int sandwichID) throws SandwichShopNotFoundException, SandwichNotFoundException, OperationNotAllowedException {
         SandwichShop shop = sandwichShopService.getSandwichShopRepository().findSandwichShopById(shopID);
@@ -180,7 +180,7 @@ public class ManagementController {
         return new ResponseEntity<String>("Deleten", HttpStatus.OK);
     }
 
-    //TODO PUT /orders/shops/{shopID}/sandwiches/{sandwichID} → update sandwich at sandwichshop (generic update)
+    //PUT /orders/shops/{shopID}/sandwiches/{sandwichID} → update sandwich at sandwichshop (generic update)
     @PutMapping("shops/{shopID}/sandwiches/{sandwichID}")
     public ResponseEntity<? extends Object> updateSandwichInShop(@PathVariable("shopID") int shopID, @PathVariable("sandwichID") int sandwichID, @RequestBody Sandwich sandwich) throws OperationNotAllowedException, SandwichNotFoundException, SandwichShopNotFoundException {
         SandwichShop shop = sandwichShopService.getSandwichShopRepository().findSandwichShopById(shopID);
@@ -198,7 +198,7 @@ public class ManagementController {
         if (sandwich.getDescription() != null) {
             sandwichToUpdate.setDescription(sandwich.getDescription());
         }
-        if (sandwich.getPrice() != null) {
+        if (sandwich.getPrice() != 0.0) {
             sandwichToUpdate.setPrice(sandwich.getPrice());
         }
         return new ResponseEntity<String>("All good in the hood", HttpStatus.OK);
