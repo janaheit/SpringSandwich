@@ -8,7 +8,6 @@ import be.abis.sandwichordersystem.repository.OrderRepository;
 import be.abis.sandwichordersystem.repository.SandwichShopRepository;
 import be.abis.sandwichordersystem.service.OrderService;
 import be.abis.sandwichordersystem.service.SessionService;
-import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -22,7 +21,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -92,20 +90,16 @@ public class OrderServiceTest {
         when(orderRepository.addOrder(any())).thenReturn(true);
         List<Session> locoSession = new ArrayList<Session>();
         locoSession.add(mockSession);
-        when(sessionService.findSessionsToday()).thenReturn(locoSession);
-        when(sessionService.findAllPersonsFollowingSession(any())).thenReturn(people);
+        when(sessionService.findAllPersonsFollowingSessionToday()).thenReturn(people);
         cut.createOrdersForEveryoneToday();
-        verify(sessionService).findSessionsToday();
-        verify(sessionService).findAllPersonsFollowingSession(any());
+        verify(sessionService).findAllPersonsFollowingSessionToday();
         verify(orderRepository, times(people.size())).addOrder(any());
     }
 
     @Test
     void createOrderForPerson(){
         when(orderRepository.addOrder(any())).thenReturn(true);
-        //System.out.println(cut.getDayOrder());
         Order myOrder = cut.createOrder(p1);
-        //System.out.println(myOrder.getDayOrder());
         assertEquals(p1, myOrder.getPerson());
         verify(orderRepository).addOrder(myOrder);
     }
@@ -261,9 +255,9 @@ public class OrderServiceTest {
         littleOrderList.add(testOrder2);
         when(orderRepository.findOrdersByDate(LocalDate.now())).thenReturn(littleOrderList);
 
-        //Order returnOrder = cut.findTodaysOrderByName("p1 lastname");
-        //System.out.println(cut.findTodaysOrderByName("p1 lastname").getOrderNum());
-        assertEquals(thirdTestOrder, cut.findTodaysOrderByName("p1 lastname"));
+        //Order returnOrder = cut.findTodaysUnfilledOrderByName("p1 lastname");
+        //System.out.println(cut.findTodaysUnfilledOrderByName("p1 lastname").getOrderNum());
+        assertEquals(thirdTestOrder, cut.findTodaysUnfilledOrderByName("p1 lastname"));
 
         verify(orderRepository).findOrdersByDate(LocalDate.now());
     }
@@ -276,7 +270,7 @@ public class OrderServiceTest {
         littleOrderList.add(thirdTestOrder);
         littleOrderList.add(testOrder2);
         when(orderRepository.findOrdersByDate(LocalDate.now())).thenReturn(littleOrderList);
-        assertThrows(PersonNotFoundException.class, () -> cut.findTodaysOrderByName("Henkie Penkie"));
+        assertThrows(PersonNotFoundException.class, () -> cut.findTodaysUnfilledOrderByName("Henkie Penkie"));
         verify(orderRepository).findOrdersByDate(LocalDate.now());
     }
 
@@ -290,7 +284,7 @@ public class OrderServiceTest {
         littleOrderList.add(thirdTestOrder);
         littleOrderList.add(testOrder2);
         when(orderRepository.findOrdersByDate(LocalDate.now())).thenReturn(littleOrderList);
-        assertTrue(cut.findTodaysOrderByName("p1 lastname").getOrderStatus().equals(OrderStatus.UNFILLED));
+        assertTrue(cut.findTodaysUnfilledOrderByName("p1 lastname").getOrderStatus().equals(OrderStatus.UNFILLED));
         verify(orderRepository).findOrdersByDate(LocalDate.now());
     }
 

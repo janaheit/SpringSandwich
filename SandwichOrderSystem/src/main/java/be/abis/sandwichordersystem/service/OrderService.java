@@ -45,7 +45,7 @@ public interface OrderService {
     void setDayOrder(DayOrder dayOrder);
     DayOrder getDayOrder();
 
-    Order findTodaysOrderByName(String name) throws PersonNotFoundException;
+    Order findTodaysUnfilledOrderByName(String name) throws PersonNotFoundException;
 
     public void setTodaysFilledOrdersToHandeled() throws NothingToHandleException;
     public void deleteAllUnfilledOrdersOfDay(LocalDate date) throws OrderNotFoundException;

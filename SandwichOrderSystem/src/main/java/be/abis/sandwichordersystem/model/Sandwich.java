@@ -48,7 +48,7 @@ public class Sandwich {
 
     @Override
     public int hashCode() {
-        return Objects.hash(sandwichID, name, price, description, category);
+        return Objects.hash(sandwichID, name, price, category);
     }
 
     @Override

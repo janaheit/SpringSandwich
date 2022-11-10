@@ -79,7 +79,6 @@ public class FinancialServiceTest {
         // TODO needed?
     }
 
-    // we need to remove the orders with no sandwich
     @Test
     void getTotalPriceForSession() throws OrderNotFoundException {
         when(o1.getPrice()).thenReturn(40.0);
@@ -98,10 +97,9 @@ public class FinancialServiceTest {
     @Test
     void getTotalPriceForNonExistingSession() throws OrderNotFoundException {
 
-        fail();
-        // first test method in orderRepo && orderservice
-        // TODO implement the Exception handling here
-        // when(orderService.findOrdersBySession(s1)).thenThrow(() -> );
+        when(orderService.findOrdersByStatusAndSession(OrderStatus.HANDELED, s3)).thenThrow(new OrderNotFoundException("No orders found."));
+        assertThrows(OrderNotFoundException.class, () -> financialService.calculateTotalPriceForSession(s3));
+
     }
 
     // tests both calculatePricesPerSessionOnDate and calculatePricesPerSessionForPeriod (using same code)

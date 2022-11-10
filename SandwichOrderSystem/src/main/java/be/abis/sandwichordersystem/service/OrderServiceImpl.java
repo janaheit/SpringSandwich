@@ -52,21 +52,38 @@ public class OrderServiceImpl implements OrderService {
         if (this.dayOrder == null || this.dayOrder.getCurrentSandwichShop() == null) {
             throw new SandwichShopNotFoundException("No sandwichshop selected for this day");
         } else {
+            List<Person> personsFollowingSessionToday = sessionService.findAllPersonsFollowingSessionToday();
+            for (Person p : personsFollowingSessionToday) {
+                this.createOrder(p);
+            }
+
+            /*
             List<Session> sessionsOfToday = sessionService.findSessionsToday();
             for (Session s : sessionsOfToday) {
                 List<Person> personsOfSession = sessionService.findAllPersonsFollowingSession(s);
                 for (Person p : personsOfSession) {
-                    Order o = this.createOrder(p);
-                    o.setSession(s);
+                    this.createOrder(p);
                 }
-            }
+            }*/
         }
     }
 
+    // TODO
     @Override
     public Order createOrder(Person person) {
         Order thisOrder = new Order(person, this.dayOrder);
         addOrder(thisOrder);
+
+
+        // set session on order
+        List<Session> sessionsToday = sessionService.findSessionsToday();
+
+        for (Session s:sessionsToday){
+            if (s.getStudents().contains(person)){
+                thisOrder.setSession(s);
+            }
+        }
+
         return thisOrder;
     }
 
@@ -79,10 +96,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException {
         SandwichShop mySandwichShop = order.getDayOrder().getCurrentSandwichShop();
+        //System.out.println("sandwich ordered: " + sandwich);
+        //System.out.println("sandwichshop today: "+mySandwichShop);
+
         if(!sandwichShopService.checkSandwich(sandwich, mySandwichShop)) {
-            throw new SandwichNotFoundException("Sandwich" + sandwich.getName() + " not available at " + mySandwichShop.getName());
+            throw new SandwichNotFoundException("Sandwich " + sandwich.getName() + " not available at " + mySandwichShop.getName());
         }
         order.setSandwich(sandwich);
+        System.out.println("setting sandwich: "+order.getSandwich());
+
         if(!sandwichShopService.checkBreadType(breadType, mySandwichShop)) {
             throw new IngredientNotAvailableException("Breadtype " + breadType.getBreadType() + " not available at " + mySandwichShop.getName());
         }
@@ -163,8 +185,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order findTodaysOrderByName(String name) throws PersonNotFoundException {
-        List<Order> myOrderList = orderRepository.findOrdersByDate(LocalDate.now()).stream().filter(order -> (order.getPerson().getFirstName() + " " + order.getPerson().getLastName()).equals(name)).collect(Collectors.toList());
+    public Order findTodaysUnfilledOrderByName(String name) throws PersonNotFoundException {
+        List<Order> myOrderList = orderRepository.findOrdersByDate(LocalDate.now()).stream().filter(order -> (order.getPerson().getFirstName() + " " + order.getPerson().getLastName()).equalsIgnoreCase(name)).collect(Collectors.toList());
         if (myOrderList.size()==0) {
             throw new PersonNotFoundException("This person was not found in a session today");
         } else {

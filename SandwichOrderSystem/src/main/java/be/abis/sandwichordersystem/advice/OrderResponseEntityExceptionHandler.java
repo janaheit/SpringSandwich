@@ -39,7 +39,7 @@ public class OrderResponseEntityExceptionHandler extends ResponseEntityException
     @ExceptionHandler(SandwichNotFoundException.class)
     public ResponseEntity<? extends Object> handleSandWichNotFoundException(SandwichNotFoundException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
-        ApiError ae = new ApiError("Sandwich not found!", status.value(), ex.getMessage());
+        ApiError ae = new ApiError("sandwich not found", status.value(), ex.getMessage());
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("content-type", MediaType.APPLICATION_PROBLEM_JSON_VALUE);
         return new ResponseEntity<ApiError>(ae, responseHeaders, status);

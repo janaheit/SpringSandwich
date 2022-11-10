@@ -1,13 +1,11 @@
 package be.abis.sandwichordersystem.controller;
 
-import be.abis.sandwichordersystem.dto.NameModel;
 import be.abis.sandwichordersystem.dto.OrderModel;
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.exception.IngredientNotAvailableException;
 import be.abis.sandwichordersystem.exception.PersonNotFoundException;
 import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
-import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
 import be.abis.sandwichordersystem.model.Order;
 import be.abis.sandwichordersystem.model.Sandwich;
 import be.abis.sandwichordersystem.model.SandwichShop;
@@ -16,7 +14,6 @@ import be.abis.sandwichordersystem.service.SandwichShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -28,9 +25,11 @@ public class OrderController {
     @Autowired
     SandwichShopService sandwichShopService;
 
-    @PostMapping()
-    public Order findTodaysOrderByName(@RequestBody NameModel nameModel) throws PersonNotFoundException {
-        return orderService.findTodaysOrderByName(nameModel.getName());
+    // when a person tries to order, they will get back always a new unfilled order in their name,
+    // so that they can order twice
+    @GetMapping("query")
+    public Order findTodaysUnfilledOrderByName(@RequestParam String name) throws PersonNotFoundException {
+        return orderService.findTodaysUnfilledOrderByName(name);
     }
 
     @GetMapping("shop")
@@ -54,11 +53,11 @@ public class OrderController {
     }
 
 
-    @PostMapping("{firstName}")
-    public void handleOrder(@PathVariable String firstName, @RequestBody OrderModel orderModel) throws PersonNotFoundException, IngredientNotAvailableException, SandwichNotFoundException {
+    @PostMapping()
+    public void handleOrder(@RequestBody OrderModel orderModel) throws PersonNotFoundException, IngredientNotAvailableException, SandwichNotFoundException {
 
         String fullName = orderModel.getPerson().getFirstName() + " " + orderModel.getPerson().getLastName();
-        Order personOrder = orderService.findTodaysOrderByName(fullName);
+        Order personOrder = orderService.findTodaysUnfilledOrderByName(fullName);
 
         // if noSandwich == true (aka person does not want a sandwich)
         if (orderModel.getNoSandwich()) {
@@ -68,5 +67,4 @@ public class OrderController {
                     orderModel.getOptions(), orderModel.getRemark());
         }
     }
-
 }

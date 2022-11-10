@@ -105,6 +105,17 @@ class OrderRepositoryTest {
     }
 
     @Test
+    public void findOrderByStatusAndFutureDatesThrowsException() {
+        assertThrows(OrderNotFoundException.class, () -> orderRepository.findOrdersByStatusAndDates(OrderStatus.HANDELED, LocalDate.now().plusYears(10), LocalDate.now().plusYears(11)));
+    }
+
+    // TODO: create exception handling for wrong dates
+    @Test
+    public void findOrderByStatusAndWrongDatesThrowsException() {
+        assertThrows(OrderNotFoundException.class, () -> orderRepository.findOrdersByStatusAndDates(OrderStatus.HANDELED, LocalDate.now(), LocalDate.now().minusDays(11)));
+    }
+
+    @Test
     public void findOrderByPersonAndDatesReturnsCorrectOrder() throws OrderNotFoundException {
         when(order1.getDayOrder()).thenReturn(mockDayOrder);
         when(mockDayOrder.getDate()).thenReturn(LocalDate.now());

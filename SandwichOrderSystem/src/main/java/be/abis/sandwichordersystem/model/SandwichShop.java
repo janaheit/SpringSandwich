@@ -38,6 +38,14 @@ public class SandwichShop {
 
     // Getters and Setters
 
+
+    @Override
+    public String toString() {
+        return "SandwichShop{" +
+                "name='" + name + '\'' +
+                ", sandwich1=\'}" + sandwiches.get(0) ;
+    }
+
     public int getSandwichShopID() {
         return sandwichShopID;
     }
