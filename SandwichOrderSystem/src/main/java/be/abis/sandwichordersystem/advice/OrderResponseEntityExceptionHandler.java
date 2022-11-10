@@ -1,10 +1,7 @@
 package be.abis.sandwichordersystem.advice;
 
 import be.abis.sandwichordersystem.error.ApiError;
-import be.abis.sandwichordersystem.exception.OrderNotFoundException;
-import be.abis.sandwichordersystem.exception.PersonNotFoundException;
-import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
-import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
+import be.abis.sandwichordersystem.exception.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,6 +47,15 @@ public class OrderResponseEntityExceptionHandler extends ResponseEntityException
     public ResponseEntity<? extends Object> handleOrderNotFoundException(OrderNotFoundException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         ApiError ae = new ApiError("Order not found!", status.value(), ex.getMessage());
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("content-type", MediaType.APPLICATION_PROBLEM_JSON_VALUE);
+        return new ResponseEntity<ApiError>(ae, responseHeaders, status);
+    }
+
+    @ExceptionHandler(SessionNotFoundException.class)
+    public ResponseEntity<? extends Object> handleSessionNotFoundException(SessionNotFoundException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ApiError ae = new ApiError("Session not found!", status.value(), ex.getMessage());
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("content-type", MediaType.APPLICATION_PROBLEM_JSON_VALUE);
         return new ResponseEntity<ApiError>(ae, responseHeaders, status);

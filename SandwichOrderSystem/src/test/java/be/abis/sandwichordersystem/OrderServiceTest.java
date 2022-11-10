@@ -311,7 +311,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void deleteAllUnfilledOrdersOfTheDayWorks() throws OrderNotFoundException {
+    public void deleteAllUnfilledOrdersOfTheDayWorks() throws OrderNotFoundException, OperationNotAllowedException {
         List<Order> ol = new ArrayList<>();
         ol.add(o5);
         when(orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now())).thenReturn(ol);
@@ -320,7 +320,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void deleteAllUnfilledOrdersOfTheDayWorksForNoSandwich() throws OrderNotFoundException {
+    public void deleteAllUnfilledOrdersOfTheDayWorksForNoSandwich() throws OrderNotFoundException, OperationNotAllowedException {
         List<Order> ol = new ArrayList<>();
         ol.add(o5);
         when(orderRepository.findOrdersByStatusAndDates(OrderStatus.NOSANDWICH, LocalDate.now(), LocalDate.now())).thenReturn(ol);

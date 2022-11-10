@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class SessionRepositoryTest {
@@ -22,6 +24,7 @@ public class SessionRepositoryTest {
 
     @Mock Instructor instructor;
     @Mock Session session;
+    @Mock Session mockSession2;
 
     @Test
     public void findSessionWithInstructorSandy(){
@@ -71,6 +74,65 @@ public class SessionRepositoryTest {
         sessionRepository.getSessions().add(session);
         sessionRepository.deleteSession(session);
         assertFalse(sessionRepository.getSessions().contains(session));
+    }
+
+    @Test
+    public void findSessionsByPeriodStartDateInRange() throws SessionNotFoundException {
+        when(session.getStartDate()).thenReturn(LocalDate.now().plusDays(1));
+        when(session.getEndDate()).thenReturn(LocalDate.now().plusDays(10));
+        sessionRepository.addSession(session);
+        List<Session> assertList = sessionRepository.findSessionsByPeriod(LocalDate.now(), LocalDate.now().plusDays(5));
+        assertTrue(assertList.contains(session));
+        verify(session, atLeastOnce()).getStartDate();
+        verify(session, atLeastOnce()).getEndDate();
+        sessionRepository.deleteSession(session);
+    }
+
+    @Test
+    public void findSessionByPeriodEndDateInRange() throws SessionNotFoundException {
+        when(session.getStartDate()).thenReturn(LocalDate.now().minusDays(10));
+        when(session.getEndDate()).thenReturn(LocalDate.now().plusDays(3));
+        sessionRepository.addSession(session);
+        List<Session> assertList = sessionRepository.findSessionsByPeriod(LocalDate.now(), LocalDate.now().plusDays(5));
+        assertTrue(assertList.contains(session));
+        verify(session, atLeastOnce()).getStartDate();
+        verify(session, atLeastOnce()).getEndDate();
+        sessionRepository.deleteSession(session);
+    }
+
+    @Test
+    public void findSessionByPeriodBothDatesInRange() throws SessionNotFoundException {
+        when(session.getStartDate()).thenReturn(LocalDate.now().plusDays(1));
+        when(session.getEndDate()).thenReturn(LocalDate.now().plusDays(3));
+        sessionRepository.addSession(session);
+        List<Session> assertList = sessionRepository.findSessionsByPeriod(LocalDate.now(), LocalDate.now().plusDays(5));
+        assertTrue(assertList.contains(session));
+        verify(session, atLeastOnce()).getStartDate();
+        verify(session, atLeastOnce()).getEndDate();
+        sessionRepository.deleteSession(session);
+    }
+
+    @Test
+    public void findSessionByPeriodBothDatesBeforePeriod() throws SessionNotFoundException {
+        when(session.getStartDate()).thenReturn(LocalDate.now().minusDays(20));
+        when(session.getEndDate()).thenReturn(LocalDate.now().minusDays(10));
+        sessionRepository.addSession(session);
+        List<Session> assertList = sessionRepository.findSessionsByPeriod(LocalDate.now(), LocalDate.now().plusDays(5));
+        assertFalse(assertList.contains(session));
+        verify(session, atLeastOnce()).getStartDate();
+        verify(session, atLeastOnce()).getEndDate();
+        sessionRepository.deleteSession(session);
+    }
+
+    @Test
+    public void findSessionByPeriodBothDatesAfterPeriod() throws SessionNotFoundException {
+        when(session.getStartDate()).thenReturn(LocalDate.now().plusDays(10));
+        when(session.getEndDate()).thenReturn(LocalDate.now().plusDays(15));
+        sessionRepository.addSession(session);
+        List<Session> assertList = sessionRepository.findSessionsByPeriod(LocalDate.now(), LocalDate.now().plusDays(5));
+        assertFalse(assertList.contains(session));
+        verify(session, atLeastOnce()).getStartDate();
+        sessionRepository.deleteSession(session);
     }
 
 }

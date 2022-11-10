@@ -93,4 +93,9 @@ public class ListSessionRepository implements SessionRepository {
             throw new SessionNotFoundException(session.getCourse().getTitle() + " could not be found and therefore could not be deleted.");
         }
     }
+
+    @Override
+    public List<Session> findSessionsByPeriod(LocalDate startDate, LocalDate endDate) {
+        return this.sessions.stream().filter(session -> session.getStartDate().isBefore(startDate.plusDays(1)) || session.getStartDate().isBefore(endDate.minusDays(1))).filter(session -> session.getEndDate().isAfter(startDate.minusDays(1)) || session.getEndDate().isAfter(endDate.minusDays(1))).collect(Collectors.toList());
+    }
 }

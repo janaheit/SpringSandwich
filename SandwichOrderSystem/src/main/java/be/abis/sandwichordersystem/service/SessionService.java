@@ -18,6 +18,8 @@ public interface SessionService {
     List<Session> findSessionsOnDate(LocalDate date);
     List<Session> findSessionsByInstructor(Instructor instructor);
 
+    List<Session> findSessionsByPeriod(LocalDate startDate, LocalDate endDate);
+
     Session findSessionByID(int id) throws SessionNotFoundException;
 
     // Basic methods

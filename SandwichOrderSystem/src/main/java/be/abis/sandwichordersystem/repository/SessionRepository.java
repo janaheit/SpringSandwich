@@ -16,6 +16,8 @@ public interface SessionRepository {
     List<Person> findAllPersonsFollowingSessionOnDate(LocalDate date);
     List<Person> findAllPersonsFollowingSession(Session session);
 
+    List<Session> findSessionsByPeriod(LocalDate startDate, LocalDate endDate);
+
     List<Session> getSessions();
     void addSession(Session session);
     void deleteSession(Session session) throws SessionNotFoundException;

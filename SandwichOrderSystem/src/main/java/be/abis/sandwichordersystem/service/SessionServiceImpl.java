@@ -69,4 +69,9 @@ public class SessionServiceImpl implements SessionService {
     public void deleteSession(Session session) throws SessionNotFoundException {
         this.sessionRepository.deleteSession(session);
     }
+
+    @Override
+    public List<Session> findSessionsByPeriod(LocalDate startDate, LocalDate endDate) {
+        return sessionRepository.findSessionsByPeriod(startDate, endDate);
+    }
 }

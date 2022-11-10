@@ -4,13 +4,12 @@ import be.abis.sandwichordersystem.dto.NameModel;
 import be.abis.sandwichordersystem.dto.OrderModel;
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
+import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.*;
-import be.abis.sandwichordersystem.model.Order;
-import be.abis.sandwichordersystem.model.Person;
-import be.abis.sandwichordersystem.model.Sandwich;
-import be.abis.sandwichordersystem.model.SandwichShop;
+import be.abis.sandwichordersystem.model.*;
 import be.abis.sandwichordersystem.service.OrderService;
 import be.abis.sandwichordersystem.service.SandwichShopService;
+import be.abis.sandwichordersystem.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -29,6 +28,8 @@ public class ManagementController {
     OrderService orderService;
     @Autowired
     SandwichShopService sandwichShopService;
+    @Autowired
+    SessionService sessionService;
 
 
     // Old methods copied from ordercontroller, see below for new
@@ -74,25 +75,43 @@ public class ManagementController {
 
     //TODO GET /orders/period?start=12-12-2022&end=30-12-2022 → get all closed orders for period grouped by session
     @GetMapping("period")
-    public ResponseEntity<? extends Object> getClosedOrdersPerPeriod(@RequestParam("start") @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate startDate, @RequestParam("end") @DateTimeFormat(pattern="dd-MM-yyyy")LocalDate endDate) throws OrderNotFoundException {
+    public ResponseEntity<? extends Object> getClosedOrdersPerPeriod(@RequestParam("start") @DateTimeFormat(pattern="d-M-yyyy") LocalDate startDate, @RequestParam("end") @DateTimeFormat(pattern="d-M-yyyy")LocalDate endDate) throws OrderNotFoundException {
         List<Order> orderlist = orderService.findAllClosedOrdersForDates(startDate, endDate);
         return new ResponseEntity<List<Order>>(orderlist, HttpStatus.OK);
     }
 
 
-    //TODO GET /orders/query?session={id} → get all orders for session
+    //TODO GET /orders/session?id={id} → get all orders for session
+    @GetMapping("session")
+    public ResponseEntity<? extends Object> getAllClosedOrdersForSessionId(@RequestParam("id") int id) throws SessionNotFoundException, OrderNotFoundException {
+        Session mySession = sessionService.findSessionByID(id);
+        List<Order> orderList = orderService.findOrdersByStatusAndSession(OrderStatus.HANDELED, mySession);
+        return new ResponseEntity<List<Order>>(orderList, HttpStatus.OK);
+    }
 
     //TODO GET /orders/query?date={date} → get all orders for date grouped by session
 
-    //TODO GET /orders/sessions/period?start=12-12-2022&end=30-12-2022 → get all sessions during period
+    @GetMapping("query")
+    public ResponseEntity<? extends Object> getAllClosedOrdersForDate(@RequestParam("date") @DateTimeFormat(pattern="d-M-yyyy") LocalDate date) throws OrderNotFoundException {
+        List<Order> orderList = orderService.findAllClosedOrdersForDates(date, date);
+        return new ResponseEntity<List<Order>>(orderList, HttpStatus.OK);
+    }
 
-    //TODO GET /orders/sessions/query?instructor=Sandy → get all sessions taught by sandy
+
+    //TODO GET /orders/sessions/period?start=12-12-2022&end=30-12-2022 → get all sessions during period
+    @GetMapping("sessions/period")
+    public ResponseEntity<? extends Object> getAllSessionsDuringPeriod(@RequestParam("start") @DateTimeFormat(pattern="d-M-yyyy") LocalDate startDate, @RequestParam("end") @DateTimeFormat(pattern="d-M-yyyy")LocalDate endDate) {
+        List<Session> sessionList = sessionService.findSessionsByPeriod(startDate, endDate);
+        return new ResponseEntity<List<Session>>(sessionList, HttpStatus.OK);
+    }
+
+    //TODO GET /orders/sessions/instructor?name=Sandy → get all sessions taught by sandy
 
     //TODO POST /orders/startup → start day with selecting shop (param); creating orders for everyone
 
     //TODO POST /orders/close → close all orders // when you ordered
     @PostMapping("close")
-    public ResponseEntity<? extends Object> closeOrdersOfDay() throws IOException, NothingToHandleException, OrderNotFoundException {
+    public ResponseEntity<? extends Object> closeOrdersOfDay() throws IOException, NothingToHandleException, OrderNotFoundException, OperationNotAllowedException {
         orderService.generateOrderFile();
         orderService.setTodaysFilledOrdersToHandeled();
         // Also deletes the noSandwich orders.

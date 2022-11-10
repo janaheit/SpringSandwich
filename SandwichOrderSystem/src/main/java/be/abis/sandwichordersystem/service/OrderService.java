@@ -49,7 +49,7 @@ public interface OrderService {
     Order findTodaysUnfilledOrderByName(String name) throws PersonNotFoundException;
 
     public void setTodaysFilledOrdersToHandeled() throws NothingToHandleException;
-    public void deleteAllUnfilledOrdersOfDay(LocalDate date) throws OrderNotFoundException;
+    public void deleteAllUnfilledOrdersOfDay(LocalDate date) throws OrderNotFoundException, OperationNotAllowedException;
     List<Order> findTodaysFilledOrdersForPerson(Person person) throws OrderNotFoundException;
 
 

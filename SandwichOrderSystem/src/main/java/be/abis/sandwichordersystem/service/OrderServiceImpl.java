@@ -267,9 +267,13 @@ public class OrderServiceImpl implements OrderService {
         for (Order order : myOrderList) {
             orderRepository.deleteOrder(order);
         }
-        List<Order> noSandwichList = orderRepository.findOrdersByStatusAndDates(OrderStatus.NOSANDWICH, date, date);
-        for (Order order : noSandwichList) {
-            orderRepository.deleteOrder(order);
+        try {
+            List<Order> noSandwichList = orderRepository.findOrdersByStatusAndDates(OrderStatus.NOSANDWICH, date, date);
+            for (Order order : noSandwichList) {
+                orderRepository.deleteOrder(order);
+            }
+        } catch(OrderNotFoundException ex) {
+            System.out.println("Everyone wants a Sandwich today, nothing to worry about.");
         }
     }
 
