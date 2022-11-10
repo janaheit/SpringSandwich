@@ -12,11 +12,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class SessionServiceImpl implements SessionService {
+public class AbisSessionService implements SessionService {
 
     @Autowired private SessionRepository sessionRepository;
 
-    public SessionServiceImpl() {
+    public AbisSessionService() {
     }
 
     @Override

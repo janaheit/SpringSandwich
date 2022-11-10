@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PersonServiceImpl implements PersonService {
+public class AbisPersonService implements PersonService {
 
     @Autowired private PersonRepository personRepository;
 
-    public PersonServiceImpl() {
+    public AbisPersonService() {
     }
 
     @Override
