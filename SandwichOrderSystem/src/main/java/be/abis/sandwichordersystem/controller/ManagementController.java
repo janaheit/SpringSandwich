@@ -4,10 +4,7 @@ import be.abis.sandwichordersystem.dto.NameModel;
 import be.abis.sandwichordersystem.dto.OrderModel;
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
-import be.abis.sandwichordersystem.exception.IngredientNotAvailableException;
-import be.abis.sandwichordersystem.exception.OrderNotFoundException;
-import be.abis.sandwichordersystem.exception.PersonNotFoundException;
-import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
+import be.abis.sandwichordersystem.exception.*;
 import be.abis.sandwichordersystem.model.Order;
 import be.abis.sandwichordersystem.model.Person;
 import be.abis.sandwichordersystem.model.Sandwich;
@@ -94,6 +91,14 @@ public class ManagementController {
     //TODO POST /orders/startup → start day with selecting shop (param); creating orders for everyone
 
     //TODO POST /orders/close → close all orders // when you ordered
+    @PostMapping("close")
+    public ResponseEntity<? extends Object> closeOrdersOfDay() throws IOException, NothingToHandleException, OrderNotFoundException {
+        orderService.generateOrderFile();
+        orderService.setTodaysFilledOrdersToHandeled();
+        // Also deletes the noSandwich orders.
+        orderService.deleteAllUnfilledOrdersOfDay(LocalDate.now());
+        return new ResponseEntity<String>("all Good", HttpStatus.OK);
+    }
 
     //TODO GET /orders/shops → get all sandwich shops
 
