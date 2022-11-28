@@ -29,8 +29,8 @@ public class Order implements Comparable<Order> {
     private DayOrder dayOrder;
     @JsonIgnore
     private double price;
-
-
+    // TODO implement  amount in functions
+    private int amount;
 
     // Constructors
     public Order() {
@@ -45,6 +45,15 @@ public class Order implements Comparable<Order> {
     }
 
     // Getters and setters
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
     public double getPrice() {
         return price;
     }
