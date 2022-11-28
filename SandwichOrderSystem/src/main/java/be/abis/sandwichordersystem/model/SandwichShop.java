@@ -9,28 +9,32 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Entity
-//@Table(name="Sandwichshops")
+@Entity
+@Table(name="Sandwichshops")
 public class SandwichShop {
 
-    /*@SequenceGenerator(name = "shopSeqGen", sequenceName = "sandwichshops_sandshopid_seq", allocationSize = 1)
+    @SequenceGenerator(name = "shopSeqGen", sequenceName = "sandwichshops_sandshopid_seq", allocationSize = 1)
     @Id
     @Column(name = "sandshopid")
-     */
     private int sandwichShopID;
-    //@Column(name = "shopname")
+    @Column(name = "shopname")
     private String name;
-
-    //@OneToMany(targetEntity = Sandwich.class, mappedBy = "sandwichshop", fetch=FetchType.LAZY);
+    @OneToMany(targetEntity = Sandwich.class, mappedBy = "sandwichshop", fetch=FetchType.LAZY)
     private List<Sandwich> sandwiches = new ArrayList<>();
+    @ElementCollection(targetClass = BreadType.class)
+    @CollectionTable(name="ssbreadtypes")
+    @Column(name = "bread")
     private List<BreadType> breadTypes;
+    @ElementCollection(targetClass = Options.class)
+    @CollectionTable(name="ssoptions")
+    @Column(name = "option")
     private List<Options> options;
     private static int COUNT=0;
 
     // Constructors
 
     public SandwichShop() {
-        this.sandwichShopID = ++COUNT;
+        //this.sandwichShopID = ++COUNT;
     }
 
     public SandwichShop(String name) {
