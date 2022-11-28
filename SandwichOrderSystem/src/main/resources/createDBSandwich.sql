@@ -10,11 +10,11 @@ drop sequence sandwich_sandno_seq;
 drop sequence sandwichshops_sandshopno_seq;
 drop sequence sessions_sno_seq;
 
-create sequence orders_ono_seq starts with 1;
-create sequence persons_pno_seq starts with 1;
-create sequence sandwich_sandno_seq starts with 1;
-create sequence sandwichshops_sandshopno_seq starts with 1;
-create sequence sessions_sno_seq starts with 1;
+create sequence orders_ono_seq start with 1;
+create sequence persons_pno_seq start with 1;
+create sequence sandwich_sandno_seq start with 1;
+create sequence sandwichshops_sandshopno_seq start with 1;
+create sequence sessions_sno_seq start with 1;
 
 CREATE TABLE PERSONS
 (PNO         INT  primary key default nextval('persons_pno_seq'),
