@@ -15,11 +15,11 @@ drop sequence sandwichshops_sandshopid_seq;
 drop sequence sessions_sid_seq;
 drop sequence categories_cid_seq;
 
-create sequence orders_oid_seq starts with 1;
-create sequence persons_pid_seq starts with 1;
-create sequence sandwich_sandid_seq starts with 1;
-create sequence sandwichshops_sandshopid_seq starts with 1;
-create sequence sessions_sid_seq starts with 1;
+create sequence orders_oid_seq start with 1;
+create sequence persons_pid_seq start with 1;
+create sequence sandwich_sandid_seq start with 1;
+create sequence sandwichshops_sandshopid_seq start with 1;
+create sequence sessions_sid_seq start with 1;
 create sequence categories_cid_seq start with 1;
 
 
