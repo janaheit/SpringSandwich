@@ -21,8 +21,7 @@ public class Session {
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "SINS_PID")
     private Instructor instructor;
-    @JsonIgnore
-    @OneToMany(targetEntity = Student.class, mappedBy = "sessions", fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = Student.class, mappedBy = "currentSession", fetch = FetchType.LAZY)
     private List<Student> students = new ArrayList<>();
     @Column(name="SSTARTDATE")
     private LocalDate startDate;
@@ -44,7 +43,7 @@ public class Session {
     }
 
     public void addStudent(Student student){
-        students.add(student);
+        //students.add(student);
     }
 
     public void setInstructor(Instructor instructor) {
@@ -56,12 +55,15 @@ public class Session {
     }
 
     public List<Student> getStudents() {
-        return students;
+        //return students;
+        return new ArrayList<>();
     }
 
     public void setStudents(List<Student> students) {
         this.students = students;
     }
+
+
 
     public Course getCourse() {
         return course;
@@ -112,7 +114,7 @@ public class Session {
         return "Session{" +
                 "course=" + course +
                 ", instructor=" + instructor +
-                ", students=" + students +
+                ", students=" + //students +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", sessionNumber=" + sessionNumber +

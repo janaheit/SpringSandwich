@@ -10,7 +10,8 @@ public class Student extends Person {
 
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "P_SID")
+    @JoinColumn(name = "p_sid")
+
     private Session currentSession;
 
     public Student() {
@@ -21,6 +22,7 @@ public class Student extends Person {
     }
 
     // Getters and Setters
+
     public Session getCurrentSession() {
         return currentSession;
     }
@@ -28,4 +30,6 @@ public class Student extends Person {
     public void setCurrentSession(Session currentSession) {
         this.currentSession = currentSession;
     }
+
+
 }
