@@ -3,28 +3,44 @@ package be.abis.sandwichordersystem.model;
 import be.abis.sandwichordersystem.enums.Course;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name="SESSIONS")
 public class Session {
+
+    @SequenceGenerator(name="SessionIdGen", sequenceName = "sessions_sid_seq", allocationSize = 1)
+
+    @Column(name = "S_COURSE")
+    @Enumerated(EnumType.STRING)
     private Course course;
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "SINS_PID")
     private Instructor instructor;
     @JsonIgnore
+    @OneToMany(targetEntity = Student.class, mappedBy = "sessions", fetch = FetchType.EAGER)
     private List<Student> students = new ArrayList<>();
+    @Column(name="SSTARTDATE")
     private LocalDate startDate;
+    @Column(name = "SENDDATE")
     private LocalDate endDate;
-    private static int counter = 0;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SessionIdGen")
+    @Column(name = "SID")
     private int sessionNumber;
+
+    public Session() {
+    }
 
     public Session(Course course, Instructor instructor, LocalDate startDate, LocalDate endDate) {
         this.course = course;
         this.instructor = instructor;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.counter ++;
-        this.sessionNumber = counter;
     }
 
     public void addStudent(Student student){

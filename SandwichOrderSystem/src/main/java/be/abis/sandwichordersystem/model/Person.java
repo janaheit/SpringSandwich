@@ -1,11 +1,24 @@
 package be.abis.sandwichordersystem.model;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="KIND", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("")
+@Table(name="PERSONS")
 public class Person {
-    private static int COUNT=0;
+
+    @SequenceGenerator(name = "PersonIdGen", sequenceName = "persons_pid_seq", allocationSize = 1)
+
+    @Column(name = "PFNAME")
     private String firstName;
+    @Column(name = "PLNAME")
     private String lastName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PersonIdGen")
+    @Column(name = "PID")
     private int personNr;
 
     public Person() {
@@ -14,7 +27,6 @@ public class Person {
     public Person(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.personNr = ++COUNT;
     }
 
     @Override

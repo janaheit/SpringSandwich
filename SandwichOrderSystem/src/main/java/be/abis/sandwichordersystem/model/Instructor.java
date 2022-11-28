@@ -2,9 +2,15 @@ package be.abis.sandwichordersystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.*;
+
+@Entity
+@DiscriminatorValue("i")
 public class Instructor extends Person{
 
     @JsonIgnore
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "P_SID")
     private Session currentSession;
 
     public Instructor() {
