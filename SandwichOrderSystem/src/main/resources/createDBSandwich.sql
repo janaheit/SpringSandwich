@@ -109,8 +109,8 @@ INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Sandy', 'Schillebeeckx', 'i')
 INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Peter', 'idk', 'i');
 INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Emily', 'Admin', 'a');
 
-INSERT INTO SESSIONS(sstartdate, senddate, s_course) VALUES ('2022-09-01', '2022-12-31', 'Java programming');
-INSERT INTO SESSIONS(sstartdate, senddate, s_course) VALUES ('2022-09-05', '2023-01-31', 'SQL fundamentals');
+INSERT INTO SESSIONS(sstartdate, senddate, s_course) VALUES ('2022-09-01', '2022-12-31', 'JAVA_PROGRAMMING');
+INSERT INTO SESSIONS(sstartdate, senddate, s_course) VALUES ('2022-09-05', '2023-01-31', 'SQL_FUNDAMENTALS');
 
 -- set instructors
 UPDATE PERSONS SET p_sid = 1 WHERE pid = 3;

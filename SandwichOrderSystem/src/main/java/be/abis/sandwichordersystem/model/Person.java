@@ -20,6 +20,9 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PersonIdGen")
     @Column(name = "PID")
     private int personNr;
+    //@ManyToOne(cascade = CascadeType.MERGE)
+    //@JoinColumn(name="P_SID")
+    //private Session currentSession;
 
     public Person() {
     }
