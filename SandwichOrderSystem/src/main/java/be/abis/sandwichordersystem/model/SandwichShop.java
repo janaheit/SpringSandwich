@@ -5,19 +5,27 @@ import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+//@Entity
+//@Table(name="Sandwichshops")
 public class SandwichShop {
 
-    // Attributes
-
-    private String name;
-    private List<Sandwich> sandwiches = new ArrayList<>();
-    private List<Options> options;
-    private List<BreadType> breadTypes;
-    private static int COUNT=0;
+    /*@SequenceGenerator(name = "shopSeqGen", sequenceName = "sandwichshops_sandshopid_seq", allocationSize = 1)
+    @Id
+    @Column(name = "sandshopid")
+     */
     private int sandwichShopID;
+    //@Column(name = "shopname")
+    private String name;
+
+    //@OneToMany(targetEntity = Sandwich.class, mappedBy = "sandwichshop", fetch=FetchType.LAZY);
+    private List<Sandwich> sandwiches = new ArrayList<>();
+    private List<BreadType> breadTypes;
+    private List<Options> options;
+    private static int COUNT=0;
 
     // Constructors
 
@@ -70,6 +78,7 @@ public class SandwichShop {
         this.sandwiches = sandwiches;
     }
 
+
     public List<Options> getOptions() {
         return options;
     }
@@ -77,6 +86,8 @@ public class SandwichShop {
     public void setOptions(List<Options> options) {
         this.options = options;
     }
+
+
 
     public List<BreadType> getBreadTypes() {
         return breadTypes;

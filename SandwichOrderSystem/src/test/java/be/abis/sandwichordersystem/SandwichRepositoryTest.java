@@ -2,6 +2,7 @@ package be.abis.sandwichordersystem;
 
 import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
 import be.abis.sandwichordersystem.model.Sandwich;
+import be.abis.sandwichordersystem.repository.SandwichJPARepository;
 import be.abis.sandwichordersystem.repository.SandwichRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -16,13 +17,19 @@ import static org.mockito.Mockito.when;
 public class SandwichRepositoryTest {
 
     @Autowired
-    SandwichRepository cut;
+    SandwichJPARepository cut;
 
     @Mock
     Sandwich sandwich1;
     @Mock
     Sandwich sandwich2;
 
+    @Test
+    void findAllJPA(){
+        System.out.println(cut.findAll());
+    }
+
+    /*
     @Test
     public void addSandwichWorks() throws SandwichNotFoundException {
         int amountOfSandwichesBeforeTest = cut.getSandwiches().size();
@@ -70,5 +77,7 @@ public class SandwichRepositoryTest {
         assertEquals(mySandwich, mySandwich2);
     }
 
+
+     */
 
 }

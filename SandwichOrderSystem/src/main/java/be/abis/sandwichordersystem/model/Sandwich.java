@@ -1,23 +1,34 @@
 package be.abis.sandwichordersystem.model;
 
+import javax.persistence.*;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Objects;
 
+@Entity
+@Table(name = "Sandwiches")
+//@SecondaryTable(name = "Categories")
 public class Sandwich {
 
     // Attributes
-    private static int COUNT=0;
+    @SequenceGenerator(name = "sandwichSeqGen", sequenceName = "sandwiches_sandid_seq", allocationSize = 1)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sandwichSeqGen")
+    @Column(name = "sandid")
     private int sandwichID;
+    @Column(name = "sandname")
+
     private String name;
+    @Column(name = "price")
     private double price;
+    @Column(name = "description")
     private String description;
+    @Column(name = "category")
     private String category;
 
     // Constructor
 
     public Sandwich() {
-        this.sandwichID = ++COUNT;
     }
 
     public Sandwich(String name) {

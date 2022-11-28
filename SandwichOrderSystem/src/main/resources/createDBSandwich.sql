@@ -3,7 +3,7 @@ DROP table SANDWICHSHOPS CASCADE;
 DROP TABLE SANDWICHES CASCADE;
 DROP TABLE PERSONS CASCADE;
 DROP TABLE ORDERS CASCADE;
-DROP TABLE CATEGORIES CASCADE;
+--DROP TABLE CATEGORIES CASCADE;
 DROP TABLE SSOPTIONS CASCADE;
 DROP TABLE SSBREADTYPES CASCADE;
 DROP TABLE ORDEROPTIONS CASCADE;
@@ -13,14 +13,14 @@ drop sequence persons_pid_seq;
 drop sequence sandwich_sandid_seq;
 drop sequence sandwichshops_sandshopid_seq;
 drop sequence sessions_sid_seq;
-drop sequence categories_cid_seq;
+--drop sequence categories_cid_seq;
 
 create sequence orders_oid_seq start with 1;
 create sequence persons_pid_seq start with 1;
 create sequence sandwich_sandid_seq start with 1;
 create sequence sandwichshops_sandshopid_seq start with 1;
 create sequence sessions_sid_seq start with 1;
-create sequence categories_cid_seq start with 1;
+--create sequence categories_cid_seq start with 1;
 
 
 CREATE TABLE PERSONS
@@ -46,21 +46,21 @@ CREATE TABLE SANDWICHSHOPS
 );
 
 --categories
-CREATE TABLE CATEGORIES
-(
-    CID            INT primary key default nextval('categories_cid_seq'),
-    CTITLE         VARCHAR NOT NULL
-);
+--CREATE TABLE CATEGORIES
+--(
+--    CID            INT primary key default nextval('categories_cid_seq'),
+--    CTITLE         VARCHAR NOT NULL
+--);
 
 CREATE TABLE SANDWICHES
 (SANDID             INT primary key  default nextval('sandwich_sandid_seq'),
  SANDNAME           VARCHAR(20) NOT NULL,
  PRICE              NUMERIC(4,2),
  DESCRIPTION        TEXT,
- SAND_CATID         INT NOT NULL,
+ CATEGORY           VARCHAR NOT NULL,
  SAND_SANDSHOPID    INT NOT NULL,
- CONSTRAINT FK_SANDSANDWICHSHOP FOREIGN KEY (SAND_SANDSHOPID) REFERENCES SANDWICHSHOPS,
- CONSTRAINT FK_CATEGORY FOREIGN KEY (SAND_CATID) REFERENCES CATEGORIES
+ CONSTRAINT FK_SANDSANDWICHSHOP FOREIGN KEY (SAND_SANDSHOPID) REFERENCES SANDWICHSHOPS
+ --CONSTRAINT FK_CATEGORY FOREIGN KEY (SAND_CATID) REFERENCES CATEGORIES
 );
 
 
@@ -131,7 +131,5 @@ INSERT INTO SSBREADTYPES VALUES (1, 'grijs');
 INSERT INTO SSBREADTYPES VALUES (1, 'wit');
 
 -- make sandwich
-INSERT INTO CATEGORIES(ctitle) VALUES ('Veggie');
-
-INSERT INTO SANDWICHES(sandname, price, sand_catid, sand_sandshopid)
-VALUES ('veggie test', 3.5, 1, 1);
+INSERT INTO SANDWICHES(sandname, price, category, sand_sandshopid)
+VALUES ('veggie test', 3.5, 'Veggie', 1);
