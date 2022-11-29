@@ -1,5 +1,7 @@
 package be.abis.sandwichordersystem.model;
 
+import org.hibernate.annotations.DiscriminatorOptions;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -7,19 +9,23 @@ import java.util.Objects;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="KIND", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("")
+@DiscriminatorOptions(force = true)
 @Table(name="PERSONS")
 public class Person {
 
-    @SequenceGenerator(name = "PersonIdGen", sequenceName = "persons_pid_seq", allocationSize = 1)
+    @SequenceGenerator(name = "personGen", sequenceName = "persons_pid_seq", allocationSize = 1)
 
-    @Column(name = "PFNAME")
-    private String firstName;
-    @Column(name = "PLNAME")
-    private String lastName;
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PersonIdGen")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "personGen")
     @Column(name = "PID")
     private int personNr;
+
+
+    @Column(name = "PLNAME")
+    private String firstName;
+    @Column(name = "PFNAME")
+    private String lastName;
+
     //@ManyToOne(cascade = CascadeType.MERGE)
     //@JoinColumn(name="P_SID")
     //private Session currentSession;

@@ -43,6 +43,15 @@ public class PersonJpaRepositoryTest {
 
     }
 
+    @Test
+    @Transactional
+    public void saveCheck() {
+        Person myPerson = new Instructor("Sjakie", "Schildpad");
+        cut.save(myPerson);
+        Person checkPerson = cut.findPersonByName("sjakieschildpad");
+        assertEquals(myPerson, checkPerson);
+    }
+
     //@Test
     /*
     public void addPersonWorks() throws PersonNotFoundException {
@@ -73,6 +82,12 @@ public class PersonJpaRepositoryTest {
     @Test
     public void firstTest() {
         System.out.println(cut.getPersons());
+    }
+
+    @Test
+    public void justSomeChecks() {
+        Student myStudent = cut.findStudentByID(1);
+        System.out.println(myStudent.getCurrentSession().getCourse());
     }
 
     @Test

@@ -57,7 +57,7 @@ public class ListSessionRepository implements SessionRepository {
         List<Person> personsFollowingSessionOnDate = new ArrayList<>();
 
         for (Session s:sessionsOnDate){
-            personsFollowingSessionOnDate.addAll(s.getStudents());
+            //personsFollowingSessionOnDate.addAll(s.getStudents());
             personsFollowingSessionOnDate.add(s.getInstructor());
         }
 
@@ -69,7 +69,7 @@ public class ListSessionRepository implements SessionRepository {
     public List<Person> findAllPersonsFollowingSession(Session session) {
 
         List<Person> personsFollowingSession = new ArrayList<>();
-        personsFollowingSession.addAll(session.getStudents());
+        //personsFollowingSession.addAll(session.getStudents());
         personsFollowingSession.add(session.getInstructor());
 
         return personsFollowingSession;

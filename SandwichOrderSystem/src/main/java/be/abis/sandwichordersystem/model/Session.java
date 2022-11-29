@@ -13,7 +13,12 @@ import java.util.Objects;
 @Table(name="SESSIONS")
 public class Session {
 
-    @SequenceGenerator(name="SessionIdGen", sequenceName = "sessions_sid_seq", allocationSize = 1)
+    @SequenceGenerator(name="sessionGen", sequenceName = "sessions_sid_seq", allocationSize = 1)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sessionGen")
+    @Column(name = "SID")
+    private int sessionNumber;
 
     @Column(name = "S_COURSE")
     @Enumerated(EnumType.STRING)
@@ -21,16 +26,16 @@ public class Session {
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "SINS_PID")
     private Instructor instructor;
-    @OneToMany(targetEntity = Student.class, mappedBy = "currentSession", fetch = FetchType.LAZY)
-    private List<Student> students = new ArrayList<>();
     @Column(name="SSTARTDATE")
     private LocalDate startDate;
     @Column(name = "SENDDATE")
     private LocalDate endDate;
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SessionIdGen")
-    @Column(name = "SID")
-    private int sessionNumber;
+
+
+    /*
+    @OneToMany(targetEntity = Student.class, mappedBy = "currentSession", fetch = FetchType.EAGER)
+    private List<Student> students;
+     */
 
     public Session() {
     }
@@ -54,14 +59,17 @@ public class Session {
         return instructor;
     }
 
-    public List<Student> getStudents() {
-        //return students;
-        return new ArrayList<>();
-    }
 
+    public List<Student> getStudents() {
+        return new ArrayList<>();
+
+    }
+/*
     public void setStudents(List<Student> students) {
         this.students = students;
     }
+
+     */
 
 
 

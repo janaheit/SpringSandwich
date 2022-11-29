@@ -11,7 +11,6 @@ public class Student extends Person {
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "p_sid")
-
     private Session currentSession;
 
     public Student() {
