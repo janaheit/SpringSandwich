@@ -120,6 +120,10 @@ UPDATE PERSONS SET p_sid = 2 WHERE pid = 4;
 UPDATE PERSONS SET p_sid = 1 WHERE pid = 1;
 UPDATE PERSONS SET p_sid = 2 WHERE pid = 2;
 
+-- Give sessions instructors
+update sessions set sins_pid = 3 where sid = 1;
+update sessions set sins_pid = 4 where sid = 2;
+
 -- make sandwichshop
 INSERT INTO SANDWICHSHOPS(shopname) VALUES ('TestShop');
 
