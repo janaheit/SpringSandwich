@@ -24,4 +24,13 @@ public enum Options {
     public void setOption(String option) {
         this.option = option;
     }
+
+    public static Options fromStringToOption(String option){
+        for (Options o: Options.values()){
+            if (o.option.equalsIgnoreCase(option)){
+                return o;
+            }
+        }
+        return null;
+    }
 }

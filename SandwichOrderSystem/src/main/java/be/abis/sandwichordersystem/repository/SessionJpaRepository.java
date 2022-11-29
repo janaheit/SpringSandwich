@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface SessionJpaRepository extends JpaRepository<Session, Integer> {
+    /*
 
     @Query(value = " select * from sessions where sid = :sid", nativeQuery = true)
     Session findSessionByID(@Param("sid") int id);
@@ -24,5 +25,7 @@ public interface SessionJpaRepository extends JpaRepository<Session, Integer> {
     List<Session> findSessionsByPeriod(LocalDate startDate, LocalDate endDate);
 
     List<Session> getSessions();
+
+     */
 
 }

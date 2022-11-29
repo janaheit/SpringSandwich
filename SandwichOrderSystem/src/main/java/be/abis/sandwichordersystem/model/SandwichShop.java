@@ -19,13 +19,13 @@ public class SandwichShop {
     private int sandwichShopID;
     @Column(name = "shopname")
     private String name;
-    @OneToMany(targetEntity = Sandwich.class, mappedBy = "shop", fetch=FetchType.EAGER)
+    @OneToMany(targetEntity = Sandwich.class, mappedBy = "shop", fetch=FetchType.LAZY)
     private List<Sandwich> sandwiches = new ArrayList<>();
-    @ElementCollection(targetClass = BreadType.class)
+    @ElementCollection(targetClass = BreadType.class, fetch = FetchType.LAZY)
     @CollectionTable(name="ssbreadtypes")
     @Column(name = "bread")
     private List<BreadType> breadTypes;
-    @ElementCollection(targetClass = Options.class)
+    @ElementCollection(targetClass = Options.class, fetch = FetchType.LAZY)
     @CollectionTable(name="ssoptions")
     @Column(name = "option")
     private List<Options> options;
@@ -53,7 +53,8 @@ public class SandwichShop {
     public String toString() {
         return "SandwichShop{" +
                 "name='" + name + '\'' +
-                ", sandwich1=\'}" + sandwiches.get(0) ;
+                ", sandwich1=" + sandwiches.get(0) +
+                "}";
     }
 
     public int getSandwichShopID() {

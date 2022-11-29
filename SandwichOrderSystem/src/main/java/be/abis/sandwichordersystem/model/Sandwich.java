@@ -11,9 +11,9 @@ import java.util.Objects;
 public class Sandwich {
 
     // Attributes
-    @SequenceGenerator(name = "sandwichSeqGen", sequenceName = "sandwiches_sandid_seq", allocationSize = 1)
+    @SequenceGenerator(name = "mySeqGen", sequenceName = "sandwich_sandid_seq", allocationSize = 1)
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sandwichSeqGen")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mySeqGen")
     @Column(name = "sandid")
     private int sandwichID;
     @Column(name = "sandname")
@@ -25,7 +25,7 @@ public class Sandwich {
     private String description;
     @Column(name = "category")
     private String category;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "sand_sandshopid")
     private SandwichShop shop;
 
@@ -71,7 +71,7 @@ public class Sandwich {
         NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("nl", "BE"));
         if (price != 0) description = name+ " " + nf.format(price) + "";
         else description = name;
-        return description;
+        return description + ", cat: " + category;
     }
 
 
@@ -115,5 +115,13 @@ public class Sandwich {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public SandwichShop getShop() {
+        return shop;
+    }
+
+    public void setShop(SandwichShop shop) {
+        this.shop = shop;
     }
 }
