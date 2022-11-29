@@ -19,7 +19,7 @@ public class SandwichShop {
     private int sandwichShopID;
     @Column(name = "shopname")
     private String name;
-    @OneToMany(targetEntity = Sandwich.class, mappedBy = "sandwichshop", fetch=FetchType.LAZY)
+    @OneToMany(targetEntity = Sandwich.class, mappedBy = "shop", fetch=FetchType.EAGER)
     private List<Sandwich> sandwiches = new ArrayList<>();
     @ElementCollection(targetClass = BreadType.class)
     @CollectionTable(name="ssbreadtypes")
@@ -29,12 +29,10 @@ public class SandwichShop {
     @CollectionTable(name="ssoptions")
     @Column(name = "option")
     private List<Options> options;
-    private static int COUNT=0;
 
     // Constructors
 
     public SandwichShop() {
-        //this.sandwichShopID = ++COUNT;
     }
 
     public SandwichShop(String name) {
@@ -90,8 +88,6 @@ public class SandwichShop {
     public void setOptions(List<Options> options) {
         this.options = options;
     }
-
-
 
     public List<BreadType> getBreadTypes() {
         return breadTypes;

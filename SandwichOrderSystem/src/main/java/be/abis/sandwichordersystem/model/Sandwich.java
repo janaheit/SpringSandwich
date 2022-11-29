@@ -25,6 +25,9 @@ public class Sandwich {
     private String description;
     @Column(name = "category")
     private String category;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "sand_sandshopid")
+    private SandwichShop shop;
 
     // Constructor
 
