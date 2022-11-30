@@ -1,15 +1,19 @@
 package be.abis.sandwichordersystem;
 
+import be.abis.sandwichordersystem.exception.OperationNotAllowedException;
 import be.abis.sandwichordersystem.exception.PersonNotFoundException;
 import be.abis.sandwichordersystem.model.Admin;
 import be.abis.sandwichordersystem.model.Instructor;
 import be.abis.sandwichordersystem.model.Person;
 import be.abis.sandwichordersystem.model.Student;
 import be.abis.sandwichordersystem.service.PersonService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -20,25 +24,27 @@ public class PersonServiceTest {
     @Autowired
     PersonService cut;
 
-    @Mock
+
     Person mockPerson1;
 
-    @Mock
     Instructor mockInstructor1;
 
-    @Mock
     Student mockStudent1;
 
-    @Mock
     Admin mockAdmin1;
 
+    @BeforeEach
+    public void setUp() {
+        mockPerson1 = new Person("Person", "One");
+        mockInstructor1 = new Instructor("Instructor", "One");
+        mockStudent1 = new Student("Student", "One");
+        mockAdmin1 = new Admin("Admin", "One");
+    }
+
     @Test
-    public void findPersonByNameWorks() throws PersonNotFoundException {
-        when(mockPerson1.getFirstName()).thenReturn("TestPerson");
-        when(mockPerson1.getLastName()).thenReturn("Achternaam");
-        cut.addPerson(mockPerson1);
-        assertEquals(mockPerson1, cut.findPersonByName("TestPerson Achternaam"));
-        cut.deletePerson(mockPerson1);
+    @Transactional
+    public void findPersonByNameWorks() throws PersonNotFoundException, OperationNotAllowedException {
+        assertEquals("van Hassel", cut.findPersonByName("marcel").getLastName());
     }
 
     @Test
@@ -47,66 +53,48 @@ public class PersonServiceTest {
     }
 
     @Test
-    public void findInstructorByNameWorks() throws PersonNotFoundException {
-        when(mockInstructor1.getFirstName()).thenReturn("TestPerson");
-        when(mockInstructor1.getLastName()).thenReturn("Achternaam");
-        cut.addPerson(mockInstructor1);
-        assertEquals(mockInstructor1, cut.findInstructorByName("TestPerson Achternaam"));
-        cut.deletePerson(mockInstructor1);
+    public void findInstructorByNameWorks() throws PersonNotFoundException, OperationNotAllowedException {
+        assertEquals("Schillebeeckx", cut.findInstructorByName("sandy").getLastName());
     }
 
     @Test
-    public void findInstructorByNameThrowsException() throws PersonNotFoundException {
-        when(mockPerson1.getFirstName()).thenReturn("TestPerson");
-        when(mockPerson1.getLastName()).thenReturn("Achternaam");
-        cut.addPerson(mockPerson1);
-        assertThrows(PersonNotFoundException.class, () -> cut.findInstructorByName("TestPerson Achternaam"));
-        cut.deletePerson(mockPerson1);
-    }
-
-    @Test
-    public void findStudentByNameWorks() throws PersonNotFoundException {
-        when(mockStudent1.getFirstName()).thenReturn("TestPerson");
-        when(mockStudent1.getLastName()).thenReturn("Achternaam");
+    @Transactional
+    public void findInstructorByNameThrowsException() throws PersonNotFoundException, OperationNotAllowedException {
         cut.addPerson(mockStudent1);
-        assertEquals(mockStudent1, cut.findStudentByName("TestPerson Achternaam"));
+        assertThrows(PersonNotFoundException.class, () -> cut.findInstructorByName("Studentone"));
         cut.deletePerson(mockStudent1);
     }
 
     @Test
-    public void findStudentByNameThrowsException() throws PersonNotFoundException {
-        when(mockPerson1.getFirstName()).thenReturn("TestPerson");
-        when(mockPerson1.getLastName()).thenReturn("Achternaam");
-        cut.addPerson(mockPerson1);
-        assertThrows(PersonNotFoundException.class, () -> cut.findStudentByName("TestPerson Achternaam"));
-        cut.deletePerson(mockPerson1);
+    public void findStudentByNameWorks() throws PersonNotFoundException, OperationNotAllowedException {
+        assertEquals("van Hassel", cut.findStudentByName("Marcel").getLastName());
     }
 
     @Test
-    public void findAdminByNameWorks() throws PersonNotFoundException {
-        when(mockAdmin1.getFirstName()).thenReturn("TestPerson");
-        when(mockAdmin1.getLastName()).thenReturn("Achternaam");
-        cut.addPerson(mockAdmin1);
-        assertEquals(mockAdmin1, cut.findAdminByName("TestPerson Achternaam"));
-        cut.deletePerson(mockAdmin1);
-    }
-
-    @Test
-    public void findAdminByNameThrowsException() throws PersonNotFoundException {
-        when(mockPerson1.getFirstName()).thenReturn("TestPerson");
-        when(mockPerson1.getLastName()).thenReturn("Achternaam");
-        cut.addPerson(mockPerson1);
-        assertThrows(PersonNotFoundException.class, () -> cut.findAdminByName("TestPerson Achternaam"));
-        cut.deletePerson(mockPerson1);
-    }
-
-    @Test
-    public void findPersonByIdWorksTest() throws PersonNotFoundException {
-        int pId = cut.getPersons().size()+10;
-        when(mockInstructor1.getPersonNr()).thenReturn(pId);
+    @Transactional
+    public void findStudentByNameThrowsException() throws PersonNotFoundException, OperationNotAllowedException {
         cut.addPerson(mockInstructor1);
-        assertEquals(mockInstructor1, cut.findPersonByID(pId));
+        assertThrows(PersonNotFoundException.class, () -> cut.findStudentByName("InstructorOne"));
         cut.deletePerson(mockInstructor1);
+    }
+
+    @Test
+    public void findAdminByNameWorks() throws PersonNotFoundException, OperationNotAllowedException {
+        assertEquals("Admin", cut.findAdminByName("emily").getLastName());
+    }
+
+    @Test
+    @Transactional
+    public void findAdminByNameThrowsException() throws PersonNotFoundException, OperationNotAllowedException {
+        assertThrows(PersonNotFoundException.class, () -> cut.findAdminByName("sandy"));
+    }
+
+    @Test
+    @Transactional
+    public void findPersonByIdWorksTest() throws PersonNotFoundException, OperationNotAllowedException {
+        cut.addPerson(mockInstructor1);
+        int pId = cut.findPersonByName(mockInstructor1.getFirstName()+mockInstructor1.getLastName()).getPersonNr();
+        assertEquals(mockInstructor1, cut.findPersonByID(pId));
     }
 
     @Test
@@ -115,68 +103,70 @@ public class PersonServiceTest {
     }
 
     @Test
-    public void findInstructorByIdWorks() throws PersonNotFoundException {
-        int pId = cut.getPersons().size()+10;
-        when(mockInstructor1.getPersonNr()).thenReturn(pId);
+    @Transactional
+    public void findInstructorByIdWorks() throws PersonNotFoundException, OperationNotAllowedException {
         cut.addPerson(mockInstructor1);
+        int pId = cut.findPersonByName(mockInstructor1.getFirstName()+mockInstructor1.getLastName()).getPersonNr();
         assertEquals(mockInstructor1, cut.findInstructorByID(pId));
         cut.deletePerson(mockInstructor1);
     }
 
     @Test
-    public void findInstructorByIdThrowsException() throws PersonNotFoundException {
-        int pId = cut.getPersons().size()+10;
-        when(mockStudent1.getPersonNr()).thenReturn(pId);
+    @Transactional
+    public void findInstructorByIdThrowsException() throws PersonNotFoundException, OperationNotAllowedException {
         cut.addPerson(mockStudent1);
+        int pId = cut.findPersonByName(mockStudent1.getFirstName()+mockStudent1.getLastName()).getPersonNr();
         assertThrows(PersonNotFoundException.class, () -> cut.findInstructorByID(pId));
         cut.deletePerson(mockStudent1);
     }
 
     @Test
-    public void findStudentByIdWorks() throws PersonNotFoundException {
-        int pId = cut.getPersons().size()+10;
-        when(mockStudent1.getPersonNr()).thenReturn(pId);
+    @Transactional
+    public void findStudentByIdWorks() throws PersonNotFoundException, OperationNotAllowedException {
         cut.addPerson(mockStudent1);
+        int pId = cut.findPersonByName(mockStudent1.getFirstName()+mockStudent1.getLastName()).getPersonNr();
         assertEquals(mockStudent1, cut.findStudentByID(pId));
         cut.deletePerson(mockStudent1);
     }
 
     @Test
-    public void findStudentByIdThrowsException() throws PersonNotFoundException {
-        int pId = cut.getPersons().size()+10;
-        when(mockInstructor1.getPersonNr()).thenReturn(pId);
+    @Transactional
+    public void findStudentByIdThrowsException() throws PersonNotFoundException, OperationNotAllowedException {
         cut.addPerson(mockInstructor1);
+        int pId = cut.findPersonByName(mockInstructor1.getFirstName()+mockInstructor1.getLastName()).getPersonNr();
         assertThrows(PersonNotFoundException.class, () ->  cut.findStudentByID(pId));
         cut.deletePerson(mockInstructor1);
     }
 
     @Test
-    public void findAdminByIdWorks() throws PersonNotFoundException {
-        int pId = cut.getPersons().size()+10;
-        when(mockAdmin1.getPersonNr()).thenReturn(pId);
+    @Transactional
+    public void findAdminByIdWorks() throws PersonNotFoundException, OperationNotAllowedException {
         cut.addPerson(mockAdmin1);
+        int pId = cut.findPersonByName(mockAdmin1.getFirstName()+mockAdmin1.getLastName()).getPersonNr();
         assertEquals(mockAdmin1, cut.findAdminByID(pId));
         cut.deletePerson(mockAdmin1);
     }
 
     @Test
-    public void findAdminByIdThrowsException() throws PersonNotFoundException {
-        int pId = cut.getPersons().size()+10;
-        when(mockInstructor1.getPersonNr()).thenReturn(pId);
+    @Transactional
+    public void findAdminByIdThrowsException() throws PersonNotFoundException, OperationNotAllowedException {
         cut.addPerson(mockInstructor1);
+        int pId = cut.findPersonByName(mockInstructor1.getFirstName()+mockInstructor1.getLastName()).getPersonNr();
         assertThrows(PersonNotFoundException.class, () -> cut.findAdminByID(pId));
         cut.deletePerson(mockInstructor1);
     }
 
     @Test
-    public void getPersonsWorks() throws PersonNotFoundException {
-        cut.addPerson(mockPerson1);
-        assertTrue(cut.getPersons().contains(mockPerson1));
-        cut.deletePerson(mockPerson1);
+    @Transactional
+    public void getPersonsWorks() throws PersonNotFoundException, OperationNotAllowedException {
+        cut.addPerson(mockStudent1);
+        assertTrue(cut.getPersons().contains(mockStudent1));
+        cut.deletePerson(mockStudent1);
     }
 
     @Test
-    public void getInstructorsWorks() throws PersonNotFoundException {
+    @Transactional
+    public void getInstructorsWorks() throws PersonNotFoundException, OperationNotAllowedException {
         cut.addPerson(mockStudent1);
         cut.addPerson(mockInstructor1);
         assertTrue(cut.getInstructors().contains(mockInstructor1) && !cut.getInstructors().contains(mockStudent1));
@@ -185,7 +175,8 @@ public class PersonServiceTest {
     }
 
     @Test
-    public void getStudentsWorks() throws PersonNotFoundException {
+    @Transactional
+    public void getStudentsWorks() throws PersonNotFoundException, OperationNotAllowedException {
         cut.addPerson(mockStudent1);
         cut.addPerson(mockInstructor1);
         assertTrue(cut.getStudents().contains(mockStudent1) && !cut.getStudents().contains(mockInstructor1));
@@ -194,7 +185,8 @@ public class PersonServiceTest {
     }
 
     @Test
-    public void getAdminsWorks() throws PersonNotFoundException {
+    @Transactional
+    public void getAdminsWorks() throws PersonNotFoundException, OperationNotAllowedException {
         cut.addPerson(mockStudent1);
         cut.addPerson(mockAdmin1);
         assertTrue(cut.getAdmins().contains(mockAdmin1) && !cut.getAdmins().contains(mockStudent1));
@@ -203,24 +195,26 @@ public class PersonServiceTest {
     }
 
     @Test
-    public void addPersonWorks() throws PersonNotFoundException {
+    @Transactional
+    public void addPersonWorks() throws PersonNotFoundException, OperationNotAllowedException {
         int amountOfPersonsBeforeTest = cut.getPersons().size();
-        cut.addPerson(mockPerson1);
+        cut.addPerson(mockStudent1);
         int amountOfPersonsAftersTest = cut.getPersons().size();
         assertEquals(amountOfPersonsBeforeTest +1, amountOfPersonsAftersTest);
-        cut.deletePerson(mockPerson1);
+        cut.deletePerson(mockStudent1);
     }
 
     @Test
-    public void deletePersonWorks() throws PersonNotFoundException {
-        cut.addPerson(mockPerson1);
+    public void deletePersonWorks() throws PersonNotFoundException, OperationNotAllowedException {
+        cut.addPerson(mockStudent1);
         int amountOfPersonsBeforeTest = cut.getPersons().size();
-        cut.deletePerson(mockPerson1);
+        cut.deletePerson(mockStudent1);
         int amountOfPersonsAfterTest = cut.getPersons().size();
         assertEquals(amountOfPersonsBeforeTest -1, amountOfPersonsAfterTest);
     }
 
     @Test
+    @Transactional
     public void deletePersonThrowsException() {
         assertThrows(PersonNotFoundException.class, () -> cut.deletePerson(mockPerson1));
     }

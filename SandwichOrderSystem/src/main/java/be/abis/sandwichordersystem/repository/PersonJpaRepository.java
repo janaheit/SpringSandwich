@@ -15,13 +15,13 @@ public interface PersonJpaRepository extends JpaRepository<Person, Integer> {
     @Query(value = "select * from persons where lower(concat(plname, pfname)) like lower(concat('%', :name, '%'))", nativeQuery = true)
     Person findPersonByName(@Param("name") String name);
 
-    @Query(value = "select * from persons where lower(concat(plname, pfname)) like lower(concat('%', 'sandy', '%')) and kind = 'i'", nativeQuery = true)
+    @Query(value = "select * from persons where lower(concat(plname, pfname)) like lower(concat('%', :name, '%')) and kind = 'i'", nativeQuery = true)
     Instructor findInstructorByName(@Param("name") String name);
 
-    @Query(value = "select * from persons where lower(concat(plname, pfname)) like lower(concat('%', 'sandy', '%')) and kind = 's'", nativeQuery = true)
+    @Query(value = "select * from persons where lower(concat(plname, pfname)) like lower(concat('%', :name, '%')) and kind = 's'", nativeQuery = true)
     Student findStudentByName(@Param("name") String name);
 
-    @Query(value = "select * from persons where lower(concat(plname, pfname)) like lower(concat('%', 'sandy', '%')) and kind = 'a'", nativeQuery = true)
+    @Query(value = "select * from persons where lower(concat(plname, pfname)) like lower(concat('%', :name, '%')) and kind = 'a'", nativeQuery = true)
     Admin findAdminByName(@Param("name") String name);
 
     @Query(value = "select * from persons where pid = :id", nativeQuery = true)

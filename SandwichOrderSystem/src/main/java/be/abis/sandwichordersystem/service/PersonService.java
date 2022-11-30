@@ -1,5 +1,6 @@
 package be.abis.sandwichordersystem.service;
 
+import be.abis.sandwichordersystem.exception.OperationNotAllowedException;
 import be.abis.sandwichordersystem.exception.PersonNotFoundException;
 import be.abis.sandwichordersystem.model.Admin;
 import be.abis.sandwichordersystem.model.Instructor;
@@ -24,6 +25,6 @@ public interface PersonService {
     List<Admin> getAdmins();
     List<Instructor> getInstructors();
     List<Student> getStudents();
-    void addPerson(Person person);
+    void addPerson(Person person) throws OperationNotAllowedException;
     void deletePerson(Person person) throws PersonNotFoundException;
 }

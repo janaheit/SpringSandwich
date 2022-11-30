@@ -6,6 +6,7 @@ import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.*;
 import be.abis.sandwichordersystem.model.*;
 import be.abis.sandwichordersystem.repository.OrderRepository;
+import be.abis.sandwichordersystem.repository.SessionJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class AbisOrderService implements OrderService {
+
+    // Possible temporarily given acces to session repo
+    @Autowired
+    SessionJpaRepository sessionRepository;
 
     @Autowired
     OrderRepository orderRepository;
@@ -68,8 +73,9 @@ public class AbisOrderService implements OrderService {
         // set session on order
         List<Session> sessionsToday = sessionService.findSessionsToday();
 
+        //TODO get students doesn't exist anymore, so fixed with seperate query, TEST!
         for (Session s:sessionsToday){
-            if (s.getStudents().contains(person)){
+            if (sessionRepository.findAllPersonsFollowingSession(s.getSessionNumber()).contains(person)){
                 thisOrder.setSession(s);
             }
         }
