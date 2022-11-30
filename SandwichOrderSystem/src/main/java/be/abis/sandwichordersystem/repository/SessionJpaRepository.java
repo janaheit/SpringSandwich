@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface SessionJpaRepository extends JpaRepository<Session, Integer> {
-    /*
 
     @Query(value = " select * from sessions where sid = :sid", nativeQuery = true)
     Session findSessionByID(@Param("sid") int id);
@@ -34,11 +33,7 @@ public interface SessionJpaRepository extends JpaRepository<Session, Integer> {
     @Query(value = "select * from sessions", nativeQuery = true)
     List<Session> getSessions();
 
-
-     */
-
     @Query(value = "select pid, plname, pfname, kind, p_sid from sessions join persons on p_sid = sid where sid = :sessionId and kind = 's'", nativeQuery = true)
     List<Student> findAllStudentsFollowingSession(@Param("sessionId") int sessionId);
-
 
 }

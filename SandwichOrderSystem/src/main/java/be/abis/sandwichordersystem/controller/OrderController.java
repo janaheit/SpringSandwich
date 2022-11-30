@@ -47,17 +47,17 @@ public class OrderController {
 
     @GetMapping("shop/sandwiches")
     public List<Sandwich> getTodaysSandwiches() throws DayOrderDoesNotExistYet {
-        return orderService.getTodaysSandwichShop().getSandwiches();
+        return orderService.getTodaysSandwiches();
     }
 
     @GetMapping("shop/options")
     public List<Options> getTodaysOptions() throws DayOrderDoesNotExistYet {
-        return orderService.getTodaysSandwichShop().getOptions();
+        return orderService.getTodaysOptions();
     }
 
     @GetMapping("shop/breadtypes")
     public List<BreadType> getTodaysBreadTypes() throws DayOrderDoesNotExistYet {
-        return orderService.getTodaysSandwichShop().getBreadTypes();
+        return orderService.getTodaysBreadTypes();
     }
 
 

@@ -9,8 +9,9 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -23,6 +24,68 @@ public class SandwichShopJPARepositoryTest {
     SandwichShop mockShop1;
     @Mock
     SandwichShop mockShop2;
+
+    @Test
+    void findOptionsForShopReturnsCorrectListOfOptions(){
+        List<String> options = sandwichShopRepository.findOptionsForShopID(1);
+        assertTrue(options.contains("Rauwkost"));
+        assertTrue(options.contains("Zonder boter"));
+    }
+
+    @Test
+    void findOptionsForNonExistingShopReturnsEmptyList(){
+        assertEquals(0, sandwichShopRepository.findOptionsForShopID(1000).size());
+    }
+
+    @Test
+    void findBreadTypesForShopReturnsCorrectBreadTypes(){
+        List<String> breadtypes = sandwichShopRepository.findBreadTypesForShopID(1);
+        assertTrue(breadtypes.contains("grijs"));
+        assertTrue(breadtypes.contains("wit"));
+    }
+
+    @Test
+    void findBreadtypesForNonExistingShopReturnsEmptyList(){
+        assertEquals(0, sandwichShopRepository.findBreadTypesForShopID(1000).size());
+    }
+
+    @Test
+    void findBreadtypesForShopWithoutBreadTypes(){
+        // TODO currently no shop that satisfies this
+        fail();
+    }
+
+    @Test
+    void findObjectByIDReturnsCorrectName(){
+        List<Object[]> objects = sandwichShopRepository.findObjectById(1);
+
+        assertEquals(1, objects.size());
+        assertEquals(1, Integer.parseInt(objects.get(0)[0].toString()));
+        assertEquals("TestShop", objects.get(0)[1].toString());
+    }
+
+    @Test
+    void findObjectByNonExistingIDReturnsEmtpyList(){
+        List<Object[]> objects = sandwichShopRepository.findObjectById(1000);
+
+        assertEquals(0, objects.size());
+    }
+
+    @Test
+    void findObjectByNameReturnsCorrectObject(){
+        List<Object[]> objects = sandwichShopRepository.findObjectByName("TestShop");
+
+        assertEquals(1, objects.size());
+        assertEquals(1, Integer.parseInt(objects.get(0)[0].toString()));
+        assertEquals("TestShop", objects.get(0)[1].toString());
+    }
+
+    @Test
+    void findObjectByNonExistingNameReturnsEmtpyList(){
+        List<Object[]> objects = sandwichShopRepository.findObjectByName("bla");
+
+        assertEquals(0, objects.size());
+    }
 
 
 }

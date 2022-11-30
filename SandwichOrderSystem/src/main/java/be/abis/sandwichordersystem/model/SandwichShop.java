@@ -19,6 +19,7 @@ public class SandwichShop {
     private int sandwichShopID;
     @Column(name = "shopname")
     private String name;
+    /*
     @OneToMany(targetEntity = Sandwich.class, mappedBy = "shop", fetch=FetchType.LAZY)
     private List<Sandwich> sandwiches = new ArrayList<>();
     @ElementCollection(targetClass = BreadType.class, fetch = FetchType.LAZY)
@@ -30,6 +31,8 @@ public class SandwichShop {
     @Column(name = "option")
     private List<Options> options;
 
+     */
+
     // Constructors
 
     public SandwichShop() {
@@ -39,12 +42,13 @@ public class SandwichShop {
         this();
         this.name = name;
     }
+    /*
     public SandwichShop(String name, List<Sandwich> sandwiches, List<Options> options, List<BreadType> breadTypes) {
         this(name);
         this.sandwiches = sandwiches;
         this.options = options;
         this.breadTypes = breadTypes;
-    }
+    }*/
 
     // Getters and Setters
 
@@ -52,9 +56,7 @@ public class SandwichShop {
     @Override
     public String toString() {
         return "SandwichShop{" +
-                "name='" + name + '\'' +
-                ", sandwich1=" + sandwiches.get(0) +
-                "}";
+                "name='" + name +"}";
     }
 
     public int getSandwichShopID() {
@@ -73,6 +75,7 @@ public class SandwichShop {
         this.name = name;
     }
 
+    /*
     public List<Sandwich> getSandwiches() {
         return sandwiches;
     }
@@ -110,4 +113,6 @@ public class SandwichShop {
             throw new SandwichNotFoundException("Cannot delete sandwich since it's not found in this sandwichshop");
         }
     }
+
+     */
 }

@@ -21,7 +21,7 @@ public interface SandwichJPAService {
     List<Options> checkIfOptionsInShop(List<Options> options, int shopID);
     boolean checkIfBreadTypeInShop(BreadType breadType, int shopID);
 
-    void addSandwichToShop(Sandwich sandwich, int shopID) throws SandwichAlreadyExistsException;
+    void addSandwichToShop(Sandwich sandwich, int shopID) throws SandwichAlreadyExistsException, SandwichShopNotFoundException;
     void deleteSandwichByID(int sandwichID) throws SandwichNotFoundException;
 
     Sandwich findSandwichByName(String name) throws SandwichNotFoundException;
@@ -29,5 +29,5 @@ public interface SandwichJPAService {
 
     SandwichShop findShopForSandwich(int sandwichID) throws SandwichShopNotFoundException;
     SandwichShop findShopByName(String name) throws SandwichShopNotFoundException;
-
+    SandwichShop findShopByID(int id) throws SandwichShopNotFoundException;
 }

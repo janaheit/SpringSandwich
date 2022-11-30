@@ -134,6 +134,8 @@ public class ManagementController {
         return new ResponseEntity<List<SandwichShop>>(myList, HttpStatus.OK);
     }
 
+    // TODO reimplement
+    /*
     // POST /orders/shops → add sandwichshop
     @PostMapping("shops")
     public ResponseEntity<? extends Object> addSandwichShop(@RequestBody SandwichShopDTOModel sandwichShopDTO) {
@@ -150,6 +152,8 @@ public class ManagementController {
         sandwichShopService.getSandwichShopRepository().addShop(myShop);
         return new ResponseEntity<String>("Very good! My name Borat!", HttpStatus.OK);
     }
+
+     */
 
     //DELETE /orders/shops/{shopID} → delete sandwichshop
     @DeleteMapping("shops/{id}")

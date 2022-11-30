@@ -1,6 +1,8 @@
 package be.abis.sandwichordersystem;
 
+import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
 import be.abis.sandwichordersystem.model.Sandwich;
+import be.abis.sandwichordersystem.model.SandwichShop;
 import be.abis.sandwichordersystem.repository.SandwichJPARepository;
 import be.abis.sandwichordersystem.repository.SandwichShopJPARepository;
 import org.junit.jupiter.api.Test;
@@ -9,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import javax.transaction.Transactional;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,12 +25,12 @@ public class SandwichJPARepositoryTest {
 
     @Test
     void findAll(){
-        assertEquals(3, sandwichRepository.findAll().size());
+       assertEquals(56, sandwichRepository.findAll().size());
     }
 
     @Test
     void findSandwichesByShopID1Return3Sandwiches(){
-        assertEquals(3, sandwichRepository.findSandwichesByShopId(1).size());
+        assertEquals(1, sandwichRepository.findSandwichesByShopId(1).size());
     }
 
     @Test
@@ -56,16 +60,6 @@ public class SandwichJPARepositoryTest {
         assertEquals("Veggie", s.getCategory());
     }
 
-    @Transactional
-    @Test
-    void addSandwichWithSaveWorks(){
-        Sandwich s = new Sandwich();
-        s.setName("addSandwichTest");
-        s.setPrice(5.0);
-        s.setCategory("Veggie");
-        s.setShop(sandwichShopRepository.findById(1));
-        System.out.println(sandwichRepository.save(s));
-    }
 
     @Transactional
     @Test
@@ -86,6 +80,16 @@ public class SandwichJPARepositoryTest {
         Sandwich s = sandwichRepository.findById(1);
         s.setPrice(4);
         assertEquals(4, sandwichRepository.save(s).getPrice());
+    }
+
+    @Test
+    void getShopIDForSandwichWorks(){
+        assertEquals(1, sandwichRepository.getShopIDForSandwich(1));
+    }
+
+    @Test
+    void getShopIDForNonExistingSandwichReturnsNull(){
+        assertNull(sandwichRepository.getShopIDForSandwich(1000));
     }
 
 }

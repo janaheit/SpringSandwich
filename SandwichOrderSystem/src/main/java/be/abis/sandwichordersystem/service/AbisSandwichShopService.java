@@ -30,30 +30,37 @@ public class AbisSandwichShopService implements SandwichShopService {
 
     @Override
     public List<Sandwich> getSandwiches(SandwichShop sandwichShop) {
-        return sandwichShop.getSandwiches();
+        // doesnt work anymore, old implementation, delete later
+        return null;
     }
 
     @Override
     public List<Options> getOptions(SandwichShop sandwichShop) {
-        return sandwichShop.getOptions();
+        return null;
+        //return sandwichShop.getOptions();
     }
 
     @Override
     public List<BreadType> getBreadTypes(SandwichShop sandwichShop) {
-        return sandwichShop.getBreadTypes();
+        return null;//sandwichShop.getBreadTypes();
     }
 
     @Override
     public boolean checkSandwich(Sandwich sandwich, SandwichShop sandwichShop) {
-        if (sandwichShop.getSandwiches().contains(sandwich)) {
+        return false;
+        /*if (sandwichShop.getSandwiches().contains(sandwich)) {
             return true;
         } else {
             return false;
         }
+
+         */
     }
 
     @Override
     public List<Options> checkOptions(List<Options> options, SandwichShop sandwichShop) {
+        return null;
+        /*
         List<Options> outputList = new ArrayList<>();
         for (Options option : options) {
             if(sandwichShop.getOptions().contains(option)) {
@@ -61,31 +68,41 @@ public class AbisSandwichShopService implements SandwichShopService {
             }
         }
         return outputList;
+
+         */
     }
 
     @Override
     public boolean checkBreadType(BreadType breadType, SandwichShop sandwichShop) {
+        return false;
+        /*
         if (sandwichShop.getBreadTypes().contains(breadType)) {
             return true;
         } else {
             return false;
         }
+
+         */
     }
 
     @Override
     public void addSandwich(Sandwich sandwich, SandwichShop sandwichShop) {
+        /*
         if (!sandwichRepository.getSandwiches().contains(sandwich)) {
             sandwichRepository.addSandwich(sandwich);
         }
         if (!sandwichShop.getSandwiches().contains(sandwich)) {
             sandwichShop.addSandwich(sandwich);
         }
+
+         */
     }
 
     @Override
     public SandwichShop findShopForSandwich(Sandwich sandwich) throws SandwichShopNotFoundException {
 
-        return sandwichShopRepository.getShops().stream().filter(sandwichShop -> sandwichShop.getSandwiches().contains(sandwich)).findAny().orElseThrow(() -> new SandwichShopNotFoundException("No shop seems to have this sandwich"));
+        return null;
+        //return sandwichShopRepository.getShops().stream().filter(sandwichShop -> sandwichShop.getSandwiches().contains(sandwich)).findAny().orElseThrow(() -> new SandwichShopNotFoundException("No shop seems to have this sandwich"));
     }
 
     @Override
@@ -99,7 +116,7 @@ public class AbisSandwichShopService implements SandwichShopService {
         SandwichShop foundSandwichShop;
         try {
             foundSandwichShop = findShopForSandwich(sandwich);
-            foundSandwichShop.deleteSandwich(sandwich);
+            //foundSandwichShop.deleteSandwich(sandwich);
             sandwichRepository.deleteSandwich(sandwich);
         } catch (SandwichShopNotFoundException e) {
             throw new SandwichNotFoundException("Sandwich not found in any shop");

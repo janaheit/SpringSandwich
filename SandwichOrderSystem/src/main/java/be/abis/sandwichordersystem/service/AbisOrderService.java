@@ -35,6 +35,9 @@ public class AbisOrderService implements OrderService {
     @Autowired
     SandwichShopService sandwichShopService;
 
+    @Autowired
+    SandwichJPAService sandwichJPAService;
+
     private DayOrder dayOrder;
 
     @Value("${filepath.orderfile}")
@@ -187,6 +190,22 @@ public class AbisOrderService implements OrderService {
     public SandwichShop getTodaysSandwichShop() throws DayOrderDoesNotExistYet {
         if (this.dayOrder == null) throw new DayOrderDoesNotExistYet("The sandwich shop has not yet been selected.");
         return this.dayOrder.getCurrentSandwichShop();
+    }
+
+    @Override
+    public List<Sandwich> getTodaysSandwiches() throws DayOrderDoesNotExistYet {
+        return sandwichJPAService.getSandwichesForShop(getTodaysSandwichShop().getSandwichShopID());
+    }
+
+    @Override
+    public List<Options> getTodaysOptions() throws DayOrderDoesNotExistYet {
+        return sandwichJPAService.getOptionsForShop(getTodaysSandwichShop().getSandwichShopID());
+    }
+
+    @Override
+    public List<BreadType> getTodaysBreadTypes() throws DayOrderDoesNotExistYet {
+        return sandwichJPAService.getBreadTypesForShop(getTodaysSandwichShop().getSandwichShopID());
+
     }
 
     @Override

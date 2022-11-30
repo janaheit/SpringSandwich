@@ -179,8 +179,12 @@ public class FinancialServiceTest {
     SandwichShop sandwichShop1;
     @Mock
     SandwichShop sandwichShop2;
+
+    // TODO IMPLEMENT
     @Test
     void getPopularity() throws OrderNotFoundException {
+        fail();
+        /*
         when(o1.getSandwich()).thenReturn(sand1);
         when(o2.getSandwich()).thenReturn(sand1);
         when(o3.getSandwich()).thenReturn(sand2);
@@ -206,10 +210,13 @@ public class FinancialServiceTest {
 
         assertEquals(1, pop.get(sand2));
         assertEquals(2, pop.get(sand1));
+
+         */
     }
 
     @Test
     void getPopularityThrowsException() throws OrderNotFoundException {
+
         when(orderService.findOrdersByStatusAndDates(OrderStatus.HANDELED, LocalDate.now().minusDays(2),
                 LocalDate.now().minusDays(1))).thenThrow(new OrderNotFoundException("No orders found"));
 

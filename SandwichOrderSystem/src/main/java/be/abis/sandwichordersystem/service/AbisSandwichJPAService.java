@@ -53,7 +53,8 @@ public class AbisSandwichJPAService implements SandwichJPAService {
 
     @Override
     public boolean checkIfSandwichInShop(int sandwichID, int shopID) {
-        int shopIDForSandwich = sandwichRepository.getShopIDForSandwich(sandwichID);
+        Integer shopIDForSandwich = sandwichRepository.getShopIDForSandwich(sandwichID);
+        if (shopIDForSandwich == null) return false;
         return (shopIDForSandwich == shopID);
     }
 
@@ -74,6 +75,9 @@ public class AbisSandwichJPAService implements SandwichJPAService {
         return outputList;
     }
 
+    // TODO should this throw an exception if shop does not exist?
+    // currently returns false for non existing shop
+    // same for check sandwich and check options!
     @Override
     public boolean checkIfBreadTypeInShop(BreadType breadType, int shopID) {
         List<BreadType> breadtypes = sandwichShopRepository.findBreadTypesForShopID(shopID).stream()
@@ -82,15 +86,48 @@ public class AbisSandwichJPAService implements SandwichJPAService {
         return breadtypes.contains(breadType);
     }
 
-    @Override
-    public void addSandwichToShop(Sandwich sandwich, int shopID) throws SandwichAlreadyExistsException {
+    public Sandwich addSandwichToShopNew(Sandwich sandwich, int shopID) throws SandwichShopNotFoundException, SandwichAlreadyExistsException {
+        // find shop here & add to sandwich
+        List<Object[]> shopList = sandwichShopRepository.findObjectById(shopID);
+        if (shopList.size()==0) throw new SandwichShopNotFoundException("This shop was not found");
+
+        SandwichShop shop = new SandwichShop(shopList.get(0)[1].toString().trim());
+        shop.setSandwichShopID(Integer.parseInt(shopList.get(0)[0].toString()));
+
+        sandwich.setShop(shop);
+
         Sandwich existing = sandwichRepository.findSandwichByNameAndCategoryAndShop(sandwich.getName(),
-                sandwich.getCategory(), sandwich.getSandwichID());
+                sandwich.getCategory(), sandwich.getShop().getSandwichShopID()); // shop not sandwich
 
         if (existing == null) {
-            sandwichRepository.save(sandwich);
+            return sandwichRepository.save(sandwich);
         } else {
             throw new SandwichAlreadyExistsException("This sandwich already exists, won't be added.");
+        }
+    }
+
+    // Sandwich needs name, price, category (can have shopID, but second param is used)
+    @Transactional
+    @Override
+    public void addSandwichToShop(Sandwich sandwich, int shopID) throws SandwichAlreadyExistsException, SandwichShopNotFoundException {
+
+        // if shop does not exist, DO NOT ADD
+        if (sandwichShopRepository.findObjectById(shopID).size() == 0) {
+            throw new SandwichShopNotFoundException("This sandwich-shop does not exist");
+        }
+
+        // check if sandwich already exists
+        if (sandwichRepository.findSandwichByNameAndCategoryAndShop(sandwich.getName(),
+                sandwich.getCategory(), shopID) == null) {
+            if (sandwich.getDescription()==null) {
+                sandwichRepository.insertSandwich(sandwich.getName(), sandwich.getPrice(), sandwich.getCategory(),
+                        shopID);
+            } else {
+                sandwichRepository.insertSandwich(sandwich.getName(), sandwich.getPrice(), sandwich.getDescription(),
+                        sandwich.getCategory(), shopID);
+            }
+        } else{
+            throw new SandwichAlreadyExistsException("This sandwich already exists, so it will not be added again.");
         }
     }
 
@@ -121,21 +158,33 @@ public class AbisSandwichJPAService implements SandwichJPAService {
     @Transactional
     @Override
     public SandwichShop findShopForSandwich(int sandwichID) throws SandwichShopNotFoundException {
-        int id = sandwichRepository.getShopIDForSandwich(sandwichID);
-        Object[] shopList = sandwichShopRepository.findObjectById(id);
-        if (shopList==null) throw new SandwichShopNotFoundException("This shop was not found");
-        SandwichShop shop = new SandwichShop(shopList[1].toString().trim());
-        shop.setSandwichShopID(Integer.parseInt(shopList[0].toString()));
+        Integer id = sandwichRepository.getShopIDForSandwich(sandwichID);
+        if (id==null) throw new SandwichShopNotFoundException("this sandwich does not exist");
+        List<Object[]> shopList = sandwichShopRepository.findObjectById(id);
+        if (shopList.size()==0) throw new SandwichShopNotFoundException("This shop was not found");
+        SandwichShop shop = new SandwichShop(shopList.get(0)[1].toString().trim());
+        shop.setSandwichShopID(Integer.parseInt(shopList.get(0)[0].toString()));
+
         return shop;
     }
 
     @Override
     public SandwichShop findShopByName(String name) throws SandwichShopNotFoundException {
-        Object[] shopList = sandwichShopRepository.findByName(name);
-        if (shopList==null) throw new SandwichShopNotFoundException("This shop was not found");
+        List<Object[]> shopList = sandwichShopRepository.findObjectByName(name);
+        if (shopList.size()==0) throw new SandwichShopNotFoundException("This shop was not found");
 
-        SandwichShop shop = new SandwichShop(shopList[1].toString().trim());
-        shop.setSandwichShopID(Integer.parseInt(shopList[0].toString()));
+        SandwichShop shop = new SandwichShop(shopList.get(0)[1].toString().trim());
+        shop.setSandwichShopID(Integer.parseInt(shopList.get(0)[0].toString()));
+        return shop;
+    }
+
+    @Override
+    public SandwichShop findShopByID(int id) throws SandwichShopNotFoundException {
+        List<Object[]> shopList = sandwichShopRepository.findObjectById(id);
+        if (shopList.size()==0) throw new SandwichShopNotFoundException("This shop was not found");
+
+        SandwichShop shop = new SandwichShop(shopList.get(0)[1].toString().trim());
+        shop.setSandwichShopID(Integer.parseInt(shopList.get(0)[0].toString()));
         return shop;
     }
 }

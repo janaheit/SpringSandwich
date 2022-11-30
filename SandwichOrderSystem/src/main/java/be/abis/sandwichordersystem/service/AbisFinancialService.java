@@ -18,6 +18,7 @@ public class AbisFinancialService implements FinancialService {
 
     @Autowired OrderService orderService;
     @Autowired SandwichShopService sandwichShopService;
+    @Autowired SandwichJPAService sandwichJPAService;
 
     public AbisFinancialService() {
     }
@@ -72,7 +73,8 @@ public class AbisFinancialService implements FinancialService {
         // initialise the Map with all Sandwiches
         Map<Sandwich, Integer> popularity = new HashMap<>();
         for (SandwichShop shop:sandwichShopService.getSandwichShopRepository().getShops()){
-            for (Sandwich sandwich:shop.getSandwiches()){
+            List<Sandwich> sandwiches = sandwichJPAService.getSandwichesForShop(shop.getSandwichShopID());
+            for (Sandwich sandwich:sandwiches){
                 popularity.put(sandwich, 0);
             }
         }

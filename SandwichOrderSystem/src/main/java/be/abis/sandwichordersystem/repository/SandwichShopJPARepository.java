@@ -14,12 +14,14 @@ public interface SandwichShopJPARepository extends JpaRepository<SandwichShop, I
     List<String> findBreadTypesForShopID(int shopID);
 
     @Query(value = "select sandshopid, shopname from sandwichshops where sandshopid=:shopID", nativeQuery = true)
-    Object[] findObjectById(int shopID);
+    List<Object[]> findObjectById(int shopID);
     @Query(value = "select sandshopid, shopname from sandwichshops where shopname=:name", nativeQuery = true)
-    Object[] findByName(String name);
+    List<Object[]> findObjectByName(String name);
+
+    @Query(value = "select * from sandwichshops where sandshopid=:shopID", nativeQuery = true)
+    SandwichShop findShopById(int shopID);
 
     SandwichShop findById(int shopID);
-
 /*
     SandwichShop findSandwichShopByName(String name) throws SandwichShopNotFoundException;
     List<SandwichShop> getShops();
