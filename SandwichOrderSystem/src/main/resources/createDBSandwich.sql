@@ -54,7 +54,7 @@ CREATE TABLE SANDWICHSHOPS
 
 CREATE TABLE SANDWICHES
 (SANDID             INT primary key  default nextval('sandwich_sandid_seq'),
- SANDNAME           VARCHAR(20) NOT NULL,
+ SANDNAME           VARCHAR(60) NOT NULL,
  PRICE              NUMERIC(4,2),
  DESCRIPTION        TEXT,
  CATEGORY           VARCHAR NOT NULL,
@@ -127,13 +127,92 @@ update sessions set sins_pid = 4 where sid = 2;
 -- make sandwichshop
 INSERT INTO SANDWICHSHOPS(shopname) VALUES ('TestShop');
 
+INSERT INTO SANDWICHSHOPS(shopname) VALUES ('Vleugels');
+INSERT INTO SANDWICHSHOPS(shopname) VALUES ('Pinkys');
+
 -- configure shop
 INSERT INTO SSOPTIONS VALUES (1, 'Rauwkost');
 INSERT INTO SSOPTIONS VALUES (1, 'Zonder boter');
 
+INSERT INTO SSOPTIONS VALUES (2, 'GRILLEDVEGGIES');
+INSERT INTO SSOPTIONS VALUES (2, 'RAUWKOST');
+
+INSERT INTO SSOPTIONS VALUES (3, 'CLUB');
+INSERT INTO SSOPTIONS VALUES (3, 'NO_BUTTER');
+
 INSERT INTO SSBREADTYPES VALUES (1, 'grijs');
 INSERT INTO SSBREADTYPES VALUES (1, 'wit');
+
+INSERT INTO SSBREADTYPES VALUES (2, 'GREY');
+INSERT INTO SSBREADTYPES VALUES (2, 'WHITE');
+
+INSERT INTO SSBREADTYPES VALUES (3, 'GREY');
+INSERT INTO SSBREADTYPES VALUES (3, 'WHITE');
 
 -- make sandwich
 INSERT INTO SANDWICHES(sandname, price, category, sand_sandshopid)
 VALUES ('veggie test', 3.5, 'Veggie', 1);
+
+-- Sandwiches for vleugels
+
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid)
+VALUES ('Americain', 'Vlees', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Boulette' , 'Vlees', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Pastrami' , 'Vlees', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Hesp + kaas' , 'Vlees', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Martino' , 'Vlees', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Vleessalade' , 'Vlees', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Hesp' , 'Vlees', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Parmaham' , 'Vlees', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Kipfilet' , 'Kip', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Spicy kip curry' , 'Kip', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Kip Hawai' , 'Kip', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Tonijnsalade' , 'Vis', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Tonijnsalade pikant' , 'Vis', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('gemarineerd) + philadephia' , 'Vis', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Kaas' , 'Veggie', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Tomaat + mozzarella + pesto' , 'Veggie', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Eiersalade' , 'Veggie', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Brie' , 'Veggie', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Feta' , 'Veggie', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Geitenkaas' , 'Veggie', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Wortelspread + sesam + tuinkers' , 'Vegan', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Hummus' , 'Vegan', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Vegan mayo' , 'Vegan', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Avocadospread' , 'Vegan', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Carolina' , 'Specials', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Parmigiano' , 'Specials', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Kip cocktail' , 'Specials', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('BBQ Chicken' , 'Specials', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Flying Brie' , 'Specials', 3.5, 2);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Provence' , 'Specials', 3.5, 2);
+
+--Pinky
+
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Hesp' , 'Vlees', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Rosbief' , 'Vlees', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Gebraad' , 'Vlees', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Gerookte nootham' , 'Vlees', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Parma ham' , 'Vlees', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Salami' , 'Vlees', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Américain préparé' , 'Vlees', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Gemengd gehakt' , 'Vlees', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Martino' , 'Vlees', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Kip curry' , 'Vlees', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Kip zigeuner' , 'Vlees', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Kipsla' , 'Vlees', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Weense sla' , 'Vlees', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Vleessla' , 'Vlees', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Hollandse kaas' , 'Kaas', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Brie' , 'Kaas', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Kaassla' , 'Kaas', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Tomaat garnaal' , 'Vis', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Garnaalsla' , 'Vis', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Tonijnsla' , 'Vis', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Pikante tonijnsla' , 'Vis', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Zalmsla' , 'Vis', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Gerookte zalmsla' , 'Vis', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Krabsla' , 'Vis', 3.5, 3);
+INSERT INTO SANDWICHES(sandname, category, price,  sand_sandshopid) VALUES ('Eiersla' , 'Vis', 3.5, 3);
+
+
