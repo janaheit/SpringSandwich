@@ -5,8 +5,11 @@ import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.*;
 import be.abis.sandwichordersystem.model.*;
 import be.abis.sandwichordersystem.repository.OrderRepository;
+import be.abis.sandwichordersystem.repository.SandwichShopJPARepository;
 import be.abis.sandwichordersystem.repository.SandwichShopRepository;
+import be.abis.sandwichordersystem.service.OrderJPAService;
 import be.abis.sandwichordersystem.service.OrderService;
+import be.abis.sandwichordersystem.service.SandwichJPAService;
 import be.abis.sandwichordersystem.service.SessionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,12 +29,16 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class OrderServiceTest {
 
-    @Autowired OrderService cut;
     @Autowired
-    SandwichShopRepository sandwichShopRepository;
+    OrderJPAService cut;
+    @Autowired
+    SandwichShopJPARepository sandwichShopRepository;
 
-    @Mock SessionService sessionService;
-    @Mock OrderRepository orderRepository;
+    @Autowired
+    SandwichJPAService sandwichService;
+
+    SessionService sessionService;
+    OrderRepository orderRepository;
 
     @Mock Order o5;
     @Mock Order mockOrder2;
@@ -45,12 +52,11 @@ public class OrderServiceTest {
     Person p2;
     List<Person> people = new ArrayList<>();
 
-    /*
+
 
     @BeforeEach
     void setUp(){
-        cut.setOrderRepository(orderRepository);
-        cut.setSessionService(sessionService);
+
         cut.setDayOrder(null);
 
         testOrder = null;
@@ -87,7 +93,7 @@ public class OrderServiceTest {
 
     @Test
     void createOrdersForEveryoneToday() throws SandwichShopNotFoundException {
-        cut.setTodaysSandwichShop(sandwichShopRepository.getShops().get(0));
+        cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(0));
         when(orderRepository.addOrder(any())).thenReturn(true);
         List<Session> locoSession = new ArrayList<Session>();
         locoSession.add(mockSession);
@@ -115,24 +121,24 @@ public class OrderServiceTest {
 
     @Test
     void handleOrderWithSandwichWorks() throws IngredientNotAvailableException, SandwichNotFoundException, DayOrderDoesNotExistYet {
-        cut.setTodaysSandwichShop(sandwichShopRepository.getShops().get(0));
+        cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
         testOrder = new Order(p1, cut.getDayOrder());
-        cut.handleOrder(testOrder, sandwichShopRepository.getShops().get(0).getSandwiches().get(1), BreadType.GREY, sandwichShopRepository.getShops().get(0).getOptions(), "");
+        cut.handleOrder(testOrder, sandwichService.getSandwichesForShop(2).get(1), BreadType.GREY, sandwichService.getOptionsForShop(2), "");
         assertEquals(OrderStatus.ORDERED, testOrder.getOrderStatus());
     }
 
     @Test
     void handleOrderWithSandwichThrowsExceptionWithUnavailableSandwich() throws DayOrderDoesNotExistYet {
-        cut.setTodaysSandwichShop(sandwichShopRepository.getShops().get(0));
+        cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
         testOrder = new Order(p1, cut.getDayOrder());
-        assertThrows(SandwichNotFoundException.class, () -> cut.handleOrder(testOrder, sandwichShopRepository.getShops().get(1).getSandwiches().get(1), BreadType.GREY, sandwichShopRepository.getShops().get(0).getOptions(), ""));
+        assertThrows(SandwichNotFoundException.class, () -> cut.handleOrder(testOrder, sandwichService.getSandwichesForShop(2).get(1), BreadType.GREY, sandwichService.getOptionsForShop(2), ""));
     }
 
     @Test
     void handleOrderWithSandwichThrowsExceptionWithUnavailableOptions() throws DayOrderDoesNotExistYet {
-        cut.setTodaysSandwichShop(sandwichShopRepository.getShops().get(0));
+        cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
         testOrder = new Order(p1, cut.getDayOrder());
-        assertThrows(IngredientNotAvailableException.class, () -> cut.handleOrder(testOrder, sandwichShopRepository.getShops().get(0).getSandwiches().get(1), BreadType.GREY, sandwichShopRepository.getShops().get(1).getOptions(), ""));
+        assertThrows(IngredientNotAvailableException.class, () -> cut.handleOrder(testOrder, sandwichService.getSandwichesForShop(2).get(1), BreadType.GREY, sandwichService.getOptionsForShop(2), ""));
     }
 
     @Test
@@ -233,14 +239,14 @@ public class OrderServiceTest {
     @Test
     void setTodaysSandwichShop() throws DayOrderDoesNotExistYet {
         DayOrder before = cut.getDayOrder();
-        cut.setTodaysSandwichShop(sandwichShopRepository.getShops().get(0));
+        cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(0));
         DayOrder after = cut.getDayOrder();
         assertNotEquals(before, after);
     }
 
     @Test
     void getTodaysSandwichShop() throws DayOrderDoesNotExistYet {
-        SandwichShop mySandwichShop = sandwichShopRepository.getShops().get(0);
+        SandwichShop mySandwichShop = sandwichService.getSandwichShops().get(0);
         cut.setTodaysSandwichShop(mySandwichShop);
         assertEquals(mySandwichShop, cut.getTodaysSandwichShop());
     }
@@ -437,5 +443,5 @@ public class OrderServiceTest {
 
 
 
-     */
+
 }

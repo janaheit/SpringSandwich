@@ -5,6 +5,7 @@ import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.*;
 import be.abis.sandwichordersystem.model.*;
+import be.abis.sandwichordersystem.repository.OrderJpaRepository;
 import be.abis.sandwichordersystem.repository.OrderRepository;
 
 import java.io.IOException;
@@ -43,8 +44,8 @@ public interface OrderJPAService {
     List<Options> getTodaysOptions() throws DayOrderDoesNotExistYet;
     List<BreadType> getTodaysBreadTypes() throws DayOrderDoesNotExistYet;
 
-    OrderRepository getOrderRepository();
-    void setOrderRepository(OrderRepository orderRepository);
+    OrderJpaRepository getOrderRepository();
+    void setOrderRepository(OrderJpaRepository orderRepository);
     void setSessionService(SessionService sessionService);
     void setDayOrder(DayOrder dayOrder);
     DayOrder getDayOrder();

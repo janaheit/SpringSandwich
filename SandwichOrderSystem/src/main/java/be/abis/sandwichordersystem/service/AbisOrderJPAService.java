@@ -5,6 +5,7 @@ import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.*;
 import be.abis.sandwichordersystem.model.*;
+import be.abis.sandwichordersystem.repository.OrderJpaRepository;
 import be.abis.sandwichordersystem.repository.OrderRepository;
 import be.abis.sandwichordersystem.repository.SessionJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class AbisOrderJPAService implements OrderJPAService {
     SessionJpaRepository sessionRepository;
 
     @Autowired
-    OrderRepository orderRepository;
+    OrderJpaRepository orderRepository;
 
     @Autowired
     SessionService sessionService;
@@ -43,14 +44,18 @@ public class AbisOrderJPAService implements OrderJPAService {
 
     // Method implementations
 
+    //TODO do checks if order already exists etc.
     @Override
     public boolean addOrder(Order order) {
-        return orderRepository.addOrder(order);
+        orderRepository.save(order);
+        return true;
     }
 
+    //TODO OrderNotFoundException should be thrown
     @Override
     public boolean deleteOrder(Order order) throws OrderNotFoundException {
-        return orderRepository.deleteOrder(order);
+        orderRepository.delete(order);
+        return true;
     }
 
     @Override
@@ -124,19 +129,22 @@ public class AbisOrderJPAService implements OrderJPAService {
 
     @Override
     public List<Order> findOrdersBySession(Session session) {
-        return orderRepository.findOrdersBySession(session);
+        return orderRepository.findOrdersBySession(session.getSessionNumber());
     }
 
+    //TODO This should probably be implemented a bit better with a separate query
     @Override
     public List<Order> findTodaysOrdersForPerson(Person person) {
         return orderRepository.findOrdersByDate(LocalDate.now()).stream().filter(order -> order.getPerson().equals(person)).collect(Collectors.toList());
     }
 
+    //TODO This should also get its own query
     @Override
     public List<Order> findAllUnhandeledOrders() {
         return orderRepository.getOrders().stream().filter(order -> order.getOrderStatus() != OrderStatus.HANDELED).collect(Collectors.toList());
     }
 
+    //TODO This should also get its own query
     @Override
     public List<Order> findAllUnfilledOrders() {
         return orderRepository.getOrders().stream().filter(order -> order.getOrderStatus() == OrderStatus.UNFILLED).collect(Collectors.toList());
@@ -144,12 +152,12 @@ public class AbisOrderJPAService implements OrderJPAService {
 
     @Override
     public List<Order> findOrdersByStatusAndSession(OrderStatus status, Session session) throws OrderNotFoundException {
-        return orderRepository.findOrdersByStatusAndSession(status, session);
+        return orderRepository.findOrdersByStatusAndSession(status.name(), session.getSessionNumber());
     }
 
     @Override
     public List<Order> findTodaysFilledOrdersForPerson(Person person) throws OrderNotFoundException {
-        return orderRepository.findOrdersByPersonAndDates(person, LocalDate.now(), LocalDate.now()).stream()
+        return orderRepository.findOrdersByPersonAndDates(person.getPersonNr(), LocalDate.now(), LocalDate.now()).stream()
                 .filter(o -> o.getOrderStatus().equals(OrderStatus.ORDERED) || o.getOrderStatus().equals(OrderStatus.NOSANDWICH))
                 .collect(Collectors.toList());
     }
@@ -181,7 +189,7 @@ public class AbisOrderJPAService implements OrderJPAService {
 
     @Override
     public List<Order> findOrdersByStatusAndDates(OrderStatus status, LocalDate startDate, LocalDate endDate) throws OrderNotFoundException {
-        return orderRepository.findOrdersByStatusAndDates(status, startDate, endDate);
+        return orderRepository.findOrdersByStatusAndDates(status.name(), startDate, endDate);
     }
 
     @Override
@@ -221,7 +229,7 @@ public class AbisOrderJPAService implements OrderJPAService {
 
     @Override
     public List<Order> findAllFilledOrdersForToday() throws OrderNotFoundException {
-        return orderRepository.findOrdersByStatusAndDates(OrderStatus.ORDERED, LocalDate.now(), LocalDate.now());
+        return orderRepository.findOrdersByStatusAndDates(OrderStatus.ORDERED.name(), LocalDate.now(), LocalDate.now());
     }
 
     // Simple getters and setters
@@ -230,12 +238,12 @@ public class AbisOrderJPAService implements OrderJPAService {
         return dayOrder;
     }
 
-    public OrderRepository getOrderRepository(){
+    public OrderJpaRepository getOrderRepository(){
         return this.orderRepository;
     }
 
     @Override
-    public void setOrderRepository(OrderRepository orderRepository) {
+    public void setOrderRepository(OrderJpaRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
 
@@ -274,46 +282,51 @@ public class AbisOrderJPAService implements OrderJPAService {
 
     @Override
     public List<Order> findAllClosedOrdersForDates(LocalDate startDate, LocalDate endDate) throws OrderNotFoundException {
-        return orderRepository.findOrdersByStatusAndDates(OrderStatus.HANDELED, startDate, endDate);
+        return orderRepository.findOrdersByStatusAndDates(OrderStatus.HANDELED.name(), startDate, endDate);
     }
 
     @Override
     public void setTodaysFilledOrdersToHandeled() throws NothingToHandleException {
-        try {
-            List<Order> myOrderList = orderRepository.findOrdersByStatusAndDates(OrderStatus.ORDERED, LocalDate.now(), LocalDate.now());
+
+            List<Order> myOrderList = orderRepository.findOrdersByStatusAndDates(OrderStatus.ORDERED.name(), LocalDate.now(), LocalDate.now());
+            if (myOrderList.size() == 0) {
+                throw new NothingToHandleException("No orders were found that could be handled today");
+            }
+
             for (Order order : myOrderList) {
                 order.setOrderStatus(OrderStatus.HANDELED);
             }
-        } catch(OrderNotFoundException ex) {
-            throw new NothingToHandleException("No orders were found that could be handled today");
-        }
+
+
     }
 
     @Override
     public void deleteAllUnfilledOrdersOfDay(LocalDate date) throws OrderNotFoundException {
-        List<Order> myOrderList = orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED, date, date);
+        List<Order> myOrderList = orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED.name(), date, date);
         for (Order order : myOrderList) {
-            orderRepository.deleteOrder(order);
+            orderRepository.delete(order);
         }
-        try {
-            List<Order> noSandwichList = orderRepository.findOrdersByStatusAndDates(OrderStatus.NOSANDWICH, date, date);
+
+            List<Order> noSandwichList = orderRepository.findOrdersByStatusAndDates(OrderStatus.NOSANDWICH.name(), date, date);
             for (Order order : noSandwichList) {
-                orderRepository.deleteOrder(order);
+                orderRepository.delete(order);
             }
-        } catch(OrderNotFoundException ex) {
-            System.out.println("Everyone wants a Sandwich today, nothing to worry about.");
-        }
     }
 
     @Override
     public List<Person> findWhoStillHasToOrderToday() throws PersonNotFoundException {
-        try {
-            List<Person> unfilledOrders = orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now()).stream().map(order -> order.getPerson()).distinct().collect(Collectors.toList());
+
+            List<Person> unfilledOrders = orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED.name(), LocalDate.now(), LocalDate.now()).stream().map(order -> order.getPerson()).distinct().collect(Collectors.toList());
             List<Person> output = new ArrayList<>();
+
+            if (unfilledOrders.size() == 0) {
+                throw new PersonNotFoundException("No Persons found that still have to order today!");
+            }
+
             // Check for double orders
             for (Person p : unfilledOrders) {
-                try {
-                    List<Order> personsOrderOfToday = orderRepository.findOrdersByPersonAndDates(p, LocalDate.now(), LocalDate.now());
+
+                    List<Order> personsOrderOfToday = orderRepository.findOrdersByPersonAndDates(p.getPersonNr(), LocalDate.now(), LocalDate.now());
                     //System.out.println(personsOrderOfToday.size());
                     if (personsOrderOfToday.size() == 1) {
                         output.add(p);
@@ -329,15 +342,10 @@ public class AbisOrderJPAService implements OrderJPAService {
                             output.add(p);
                         }
                     }
-                } catch (OrderNotFoundException e) {
-                    // Doesn't work, just throws PersonNotFoundException below. But nvm
-                    throw new OrderNotFoundException("Something went wrong in checking for double orders: " + e.getMessage());
-                }
+
             }
             return output;
-        } catch (OrderNotFoundException e) {
-            throw new PersonNotFoundException("No Persons found that still have to order today!");
-        }
+
 
     }
 
