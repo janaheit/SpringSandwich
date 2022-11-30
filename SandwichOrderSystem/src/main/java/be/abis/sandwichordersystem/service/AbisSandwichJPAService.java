@@ -37,7 +37,7 @@ public class AbisSandwichJPAService implements SandwichJPAService {
         List<String> optionStrings = sandwichShopRepository.findOptionsForShopID(shopID);
 
         return optionStrings.stream()
-                .map(Options::fromStringToOption)
+                .map(Options::valueOf)
                 .collect(Collectors.toList());
     }
 
@@ -47,7 +47,7 @@ public class AbisSandwichJPAService implements SandwichJPAService {
         List<String> breadStrings = sandwichShopRepository.findBreadTypesForShopID(shopID);
 
         return breadStrings.stream()
-                .map(BreadType::fromStringToBreadType)
+                .map(BreadType::valueOf)
                 .collect(Collectors.toList());
     }
 
@@ -63,7 +63,7 @@ public class AbisSandwichJPAService implements SandwichJPAService {
     @Override
     public List<Options> checkIfOptionsInShop(List<Options> options, int shopID) {
         List<Options> realOptions = sandwichShopRepository.findOptionsForShopID(shopID).stream()
-                .map(Options::fromStringToOption)
+                .map(Options::valueOf)
                 .collect(Collectors.toList());
 
         List<Options> outputList = new ArrayList<>();
@@ -81,30 +81,11 @@ public class AbisSandwichJPAService implements SandwichJPAService {
     @Override
     public boolean checkIfBreadTypeInShop(BreadType breadType, int shopID) {
         List<BreadType> breadtypes = sandwichShopRepository.findBreadTypesForShopID(shopID).stream()
-                .map(BreadType::fromStringToBreadType)
+                .map(BreadType::valueOf)
                 .collect(Collectors.toList());
         return breadtypes.contains(breadType);
     }
 
-    public Sandwich addSandwichToShopNew(Sandwich sandwich, int shopID) throws SandwichShopNotFoundException, SandwichAlreadyExistsException {
-        // find shop here & add to sandwich
-        List<Object[]> shopList = sandwichShopRepository.findObjectById(shopID);
-        if (shopList.size()==0) throw new SandwichShopNotFoundException("This shop was not found");
-
-        SandwichShop shop = new SandwichShop(shopList.get(0)[1].toString().trim());
-        shop.setSandwichShopID(Integer.parseInt(shopList.get(0)[0].toString()));
-
-        sandwich.setShop(shop);
-
-        Sandwich existing = sandwichRepository.findSandwichByNameAndCategoryAndShop(sandwich.getName(),
-                sandwich.getCategory(), sandwich.getShop().getSandwichShopID()); // shop not sandwich
-
-        if (existing == null) {
-            return sandwichRepository.save(sandwich);
-        } else {
-            throw new SandwichAlreadyExistsException("This sandwich already exists, won't be added.");
-        }
-    }
 
     // Sandwich needs name, price, category (can have shopID, but second param is used)
     @Transactional

@@ -1,5 +1,7 @@
 package be.abis.sandwichordersystem;
 
+import be.abis.sandwichordersystem.enums.BreadType;
+import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
 import be.abis.sandwichordersystem.model.SandwichShop;
 import be.abis.sandwichordersystem.repository.SandwichShopJPARepository;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -27,9 +30,11 @@ public class SandwichShopJPARepositoryTest {
 
     @Test
     void findOptionsForShopReturnsCorrectListOfOptions(){
-        List<String> options = sandwichShopRepository.findOptionsForShopID(1);
-        assertTrue(options.contains("Rauwkost"));
-        assertTrue(options.contains("Zonder boter"));
+        List<Options> options = sandwichShopRepository.findOptionsForShopID(1).stream()
+                .map(Options::valueOf)
+                .collect(Collectors.toList());
+        assertTrue(options.contains(Options.RAUWKOST));
+        assertTrue(options.contains(Options.NO_BUTTER));
     }
 
     @Test
@@ -39,9 +44,11 @@ public class SandwichShopJPARepositoryTest {
 
     @Test
     void findBreadTypesForShopReturnsCorrectBreadTypes(){
-        List<String> breadtypes = sandwichShopRepository.findBreadTypesForShopID(1);
-        assertTrue(breadtypes.contains("grijs"));
-        assertTrue(breadtypes.contains("wit"));
+        List<BreadType> breadtypes = sandwichShopRepository.findBreadTypesForShopID(1).stream()
+                .map(BreadType::valueOf)
+                .collect(Collectors.toList());
+        assertTrue(breadtypes.contains(BreadType.WHITE));
+        assertTrue(breadtypes.contains(BreadType.GREY));
     }
 
     @Test
