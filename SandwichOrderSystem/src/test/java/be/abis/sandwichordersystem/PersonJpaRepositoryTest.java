@@ -79,10 +79,6 @@ public class PersonJpaRepositoryTest {
 
      */
 
-    @Test
-    public void firstTest() {
-        System.out.println(cut.getPersons());
-    }
 
     @Test
     public void justSomeChecks() {
@@ -160,6 +156,12 @@ public class PersonJpaRepositoryTest {
     }
 
  */
+@Test
+public void findPersonFollowingASession() {
+    List<Person> myPersons = cut.findAllPersonsFollowingSession(1);
+    Person myPerson = cut.findPersonById(1);
+    assertTrue(myPersons.contains(myPerson));
+}
 
     //TODO still have to test findAdmin/Student/Instructor by name methods
 

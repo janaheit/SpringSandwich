@@ -3,6 +3,7 @@ package be.abis.sandwichordersystem;
 import be.abis.sandwichordersystem.enums.Course;
 import be.abis.sandwichordersystem.exception.SessionNotFoundException;
 import be.abis.sandwichordersystem.model.Instructor;
+import be.abis.sandwichordersystem.model.Person;
 import be.abis.sandwichordersystem.model.Session;
 import be.abis.sandwichordersystem.repository.PersonJpaRepository;
 import be.abis.sandwichordersystem.repository.PersonRepository;
@@ -152,5 +153,6 @@ public class SessionJpaRepositoryTest {
         List<Session> assertList = sessionRepository.findSessionsByPeriod(LocalDate.now(), LocalDate.now().plusDays(5));
         assertFalse(assertList.contains(session));
     }
+
 
 }

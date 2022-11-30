@@ -112,7 +112,7 @@ public class ManagementController {
     @GetMapping("sessions/instructor")
     public ResponseEntity<? extends Object> getAllSessionsOfInstructor(@RequestParam("name") String fullName) throws PersonNotFoundException {
         Instructor myInstructor = personService.findInstructorByName(fullName);
-        List<Session> sessionList = sessionService.findSessionsByInstructor(myInstructor);
+        List<Session> sessionList = sessionService.findSessionsByInstructor(myInstructor.getPersonNr());
         return new ResponseEntity<List<Session>>(sessionList, HttpStatus.OK);
     }
     //TODO POST /orders/startup → start day with selecting shop (param); creating orders for everyone

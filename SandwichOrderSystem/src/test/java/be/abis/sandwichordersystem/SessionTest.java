@@ -32,14 +32,6 @@ public class SessionTest {
         cut = new Session(Course.JAVA_ADVANCED, mockPerson, LocalDate.now().minusDays(1), LocalDate.now().plusDays(2));
     }
 
-    @Test
-    public void addStudentWorks() {
-        int amountOfStudentsBeforeTest = cut.getStudents().size();
-        cut.addStudent(student1);
-        cut.addStudent(student2);
-        int amountOfStudentsAfterTest = cut.getStudents().size();
 
-        assertEquals(amountOfStudentsBeforeTest+2, amountOfStudentsAfterTest);
-    }
 
 }

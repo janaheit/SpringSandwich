@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class PersonRepositoryTest {
-
+/* depricated
     @Autowired
     PersonRepository cut;
 
@@ -131,4 +131,6 @@ public class PersonRepositoryTest {
 
     //TODO still have to test findAdmin/Student/Instructor by name methods
 
+
+ */
 }
