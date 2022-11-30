@@ -75,6 +75,20 @@ public class AbisSandwichJPAService implements SandwichJPAService {
         return outputList;
     }
 
+    @Override
+    public List<SandwichShop> getSandwichShops() {
+        //TODO
+        List<Object[]> shopList = sandwichShopRepository.findAllSandwichShops();
+
+        List<SandwichShop> shops = new ArrayList<>();
+        for(int x=0; x < shopList.size(); x++){
+            SandwichShop shop = new SandwichShop(shopList.get(x)[1].toString().trim());
+            shop.setSandwichShopID(Integer.parseInt(shopList.get(x)[0].toString()));
+            shops.add(shop);
+        }
+        return shops;
+    }
+
     // TODO should this throw an exception if shop does not exist?
     // currently returns false for non existing shop
     // same for check sandwich and check options!

@@ -21,7 +21,8 @@ public interface SandwichShopJPARepository extends JpaRepository<SandwichShop, I
     @Query(value = "select * from sandwichshops where sandshopid=:shopID", nativeQuery = true)
     SandwichShop findShopById(int shopID);
 
-    SandwichShop findById(int shopID);
+    @Query(value = "select sandshopid, shopname from sandwichshops", nativeQuery = true)
+    List<Object[]> findAllSandwichShops();
 /*
     SandwichShop findSandwichShopByName(String name) throws SandwichShopNotFoundException;
     List<SandwichShop> getShops();

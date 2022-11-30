@@ -8,6 +8,7 @@ import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name="Sandwichshops")
@@ -49,6 +50,19 @@ public class SandwichShop {
         this.options = options;
         this.breadTypes = breadTypes;
     }*/
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SandwichShop that = (SandwichShop) o;
+        return sandwichShopID == that.sandwichShopID && name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sandwichShopID, name);
+    }
 
     // Getters and Setters
 

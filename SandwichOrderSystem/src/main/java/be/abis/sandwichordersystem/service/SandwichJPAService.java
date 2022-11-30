@@ -7,12 +7,12 @@ import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
 import be.abis.sandwichordersystem.exception.SandwichShopNotFoundException;
 import be.abis.sandwichordersystem.model.Sandwich;
 import be.abis.sandwichordersystem.model.SandwichShop;
-import be.abis.sandwichordersystem.repository.SandwichShopRepository;
 
 import java.util.List;
 
 public interface SandwichJPAService {
     //SandwichShopRepository getSandwichShopRepository();
+    List<SandwichShop> getSandwichShops();
     List<Sandwich> getSandwichesForShop(int shopID);
     List<Options> getOptionsForShop(int shopID);
     List<BreadType> getBreadTypesForShop(int shopID);

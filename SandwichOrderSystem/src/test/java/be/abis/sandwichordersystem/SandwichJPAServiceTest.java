@@ -25,7 +25,11 @@ public class SandwichJPAServiceTest {
     SandwichJPAService sandwichService;
 
 
-    // TODO change when DB has actual sandwiches -- currently returning 3
+    @Test
+    void getAllSandwichShopsReturns3(){
+        assertEquals(3, sandwichService.getSandwichShops().size());
+    }
+
     @Test
     void getSandwichesFOrShopReturnsCorrectSandwiches(){
         assertEquals(1, sandwichService.getSandwichesForShop(1).size());
