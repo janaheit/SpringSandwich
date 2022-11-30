@@ -75,7 +75,7 @@ public class AbisOrderService implements OrderService {
 
         //TODO get students doesn't exist anymore, so fixed with seperate query, TEST!
         for (Session s:sessionsToday){
-            if (sessionRepository.findAllPersonsFollowingSession(s.getSessionNumber()).contains(person)){
+            if (sessionService.findAllPersonsFollowingSession(s.getSessionNumber()).contains(person)){
                 thisOrder.setSession(s);
             }
         }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface PersonJpaRepository extends JpaRepository<Person, Integer> {
@@ -47,5 +48,13 @@ public interface PersonJpaRepository extends JpaRepository<Person, Integer> {
 
     @Query(value="select * from persons where kind = 's'", nativeQuery = true)
     List<Student> getStudents();
+
+    //Copied from sessionsRepo
+    @Query(value = "select pid, plname, pfname, kind, p_sid from sessions join persons on p_sid = sid where sid = :sessionId", nativeQuery = true)
+    List<Person> findAllPersonsFollowingSession(@Param("sessionId") int sessionId);
+
+    @Query(value = "select pid, plname, pfname, kind, p_sid from sessions join persons on p_sid = sid  where sstartdate <= :date and senddate >= :date", nativeQuery = true)
+    List<Person> findAllPersonsFollowingSessionOnDate(@Param("date") LocalDate date);
+
 
 }

@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class SessionRepositoryTest {
-
+/* depricated!
     @Autowired private SessionRepository sessionRepository;
     @Autowired private PersonRepository personRepository;
 
@@ -135,4 +135,6 @@ public class SessionRepositoryTest {
         sessionRepository.deleteSession(session);
     }
 
+
+ */
 }
