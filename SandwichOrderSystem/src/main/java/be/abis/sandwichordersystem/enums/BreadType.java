@@ -14,18 +14,7 @@ public enum BreadType {
         this.breadType = breadType;
     }
 
-    public static BreadType fromStringToBreadType(String bread){
-        for (BreadType b: BreadType.values()){
-            if (b.breadType.equalsIgnoreCase(bread)){
-                return b;
-            }
-        }
-        return null;
-    }
-
     // Getters and Setters
-
-
     public String getBreadType() {
         return breadType;
     }
