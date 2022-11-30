@@ -8,9 +8,7 @@ import be.abis.sandwichordersystem.model.Order;
 import be.abis.sandwichordersystem.model.Person;
 import be.abis.sandwichordersystem.model.Sandwich;
 import be.abis.sandwichordersystem.model.SandwichShop;
-import be.abis.sandwichordersystem.service.OrderService;
-import be.abis.sandwichordersystem.service.PersonService;
-import be.abis.sandwichordersystem.service.SandwichShopService;
+import be.abis.sandwichordersystem.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +19,9 @@ import java.util.List;
 public class OrderController {
 
     @Autowired
-    OrderService orderService;
+    OrderJPAService orderService;
     @Autowired
-    SandwichShopService sandwichShopService;
+    SandwichJPAService sandwichService;
     @Autowired
     PersonService personService;
 

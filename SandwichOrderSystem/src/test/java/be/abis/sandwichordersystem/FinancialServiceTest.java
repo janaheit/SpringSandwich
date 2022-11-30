@@ -8,8 +8,9 @@ import be.abis.sandwichordersystem.model.SandwichShop;
 import be.abis.sandwichordersystem.model.Session;
 import be.abis.sandwichordersystem.repository.SandwichShopRepository;
 import be.abis.sandwichordersystem.service.FinancialService;
+import be.abis.sandwichordersystem.service.OrderJPAService;
 import be.abis.sandwichordersystem.service.OrderService;
-import be.abis.sandwichordersystem.service.SandwichShopService;
+import be.abis.sandwichordersystem.service.SandwichJPAService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -33,9 +34,9 @@ public class FinancialServiceTest {
     private List<Order> mockOrders;
 
     @Mock
-    OrderService orderService;
+    OrderJPAService orderService;
     @Mock
-    SandwichShopService sandwichShopService;
+    SandwichJPAService sandwichService;
     @Mock
     SandwichShopRepository sandwichShopRepository;
     @Mock
@@ -52,13 +53,11 @@ public class FinancialServiceTest {
     @BeforeEach
     void setUp(){
         financialService.setOrderService(orderService);
-        financialService.setSandwichShopService(sandwichShopService);
+        financialService.setSandwichService(sandwichService);
         mockOrders = new ArrayList<>();
         mockOrders.add(o1);
         mockOrders.add(o2);
     }
-
-
 
     @Test
     void getTotalPriceForToday() throws OrderNotFoundException {

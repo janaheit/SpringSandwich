@@ -16,9 +16,8 @@ import java.util.stream.Collectors;
 @Service
 public class AbisFinancialService implements FinancialService {
 
-    @Autowired OrderService orderService;
-    @Autowired SandwichShopService sandwichShopService;
-    @Autowired SandwichJPAService sandwichJPAService;
+    @Autowired OrderJPAService orderService;
+    @Autowired SandwichJPAService sandwichService;
 
     public AbisFinancialService() {
     }
@@ -72,8 +71,8 @@ public class AbisFinancialService implements FinancialService {
 
         // initialise the Map with all Sandwiches
         Map<Sandwich, Integer> popularity = new HashMap<>();
-        for (SandwichShop shop:sandwichShopService.getSandwichShopRepository().getShops()){
-            List<Sandwich> sandwiches = sandwichJPAService.getSandwichesForShop(shop.getSandwichShopID());
+        for (SandwichShop shop: sandwichService.getSandwichShops()){
+            List<Sandwich> sandwiches = sandwichService.getSandwichesForShop(shop.getSandwichShopID());
             for (Sandwich sandwich:sandwiches){
                 popularity.put(sandwich, 0);
             }
@@ -96,17 +95,20 @@ public class AbisFinancialService implements FinancialService {
     // getter and setter
 
     @Override
-    public OrderService getOrderService() {
+    public OrderJPAService getOrderService() {
         return orderService;
     }
 
     @Override
-    public void setOrderService(OrderService orderService) {
+    public void setOrderService(OrderJPAService orderService) {
         this.orderService = orderService;
     }
 
-    @Override
-    public void setSandwichShopService(SandwichShopService sandwichShopService) {
-        this.sandwichShopService = sandwichShopService;
+    public SandwichJPAService getSandwichService() {
+        return sandwichService;
+    }
+
+    public void setSandwichService(SandwichJPAService sandwichService) {
+        this.sandwichService = sandwichService;
     }
 }

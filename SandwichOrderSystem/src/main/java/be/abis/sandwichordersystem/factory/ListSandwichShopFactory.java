@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/*
 @Component
 public class ListSandwichShopFactory implements SandwichShopFactory {
 
@@ -75,4 +75,8 @@ public class ListSandwichShopFactory implements SandwichShopFactory {
         return shops;
     }
 
+
+
 }
+
+ */

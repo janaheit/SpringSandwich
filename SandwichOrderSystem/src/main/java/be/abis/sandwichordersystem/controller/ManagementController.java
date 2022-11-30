@@ -24,9 +24,7 @@ import java.util.List;
 public class ManagementController {
 
     @Autowired
-    OrderService orderService;
-    @Autowired
-    SandwichShopService sandwichShopService;
+    OrderJPAService orderService;
     @Autowired
     SandwichJPAService sandwichJPAService;
     @Autowired
@@ -38,7 +36,7 @@ public class ManagementController {
     @GetMapping("startup")
     public void startDay() throws SandwichShopNotFoundException, DayOrderDoesNotExistYet {
         // set Vleugels as currentSandwichShop
-        orderService.setTodaysSandwichShop(sandwichShopService.findShopByName("Vleugels"));
+        orderService.setTodaysSandwichShop(sandwichJPAService.findShopByName("Vleugels"));
         System.out.println("SandwichShop set to: "+ orderService.getTodaysSandwichShop().getName());
         orderService.createOrdersForEveryoneToday();
     }

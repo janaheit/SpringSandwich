@@ -33,10 +33,6 @@ public class AbisOrderJPAService implements OrderJPAService {
 
     @Autowired
     SessionService sessionService;
-
-    @Autowired
-    SandwichShopService sandwichShopService;
-
     @Autowired
     SandwichJPAService sandwichJPAService;
 
@@ -98,16 +94,16 @@ public class AbisOrderJPAService implements OrderJPAService {
     public void handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException {
         SandwichShop mySandwichShop = order.getDayOrder().getCurrentSandwichShop();
 
-        if(!sandwichShopService.checkSandwich(sandwich, mySandwichShop)) {
+        if(!sandwichJPAService.checkIfSandwichInShop(sandwich.getSandwichID(), mySandwichShop.getSandwichShopID())) {
             throw new SandwichNotFoundException("Sandwich " + sandwich.getName() + " not available at " + mySandwichShop.getName());
         }
         order.setSandwich(sandwich);
 
-        if(!sandwichShopService.checkBreadType(breadType, mySandwichShop)) {
+        if(!sandwichJPAService.checkIfBreadTypeInShop(breadType, mySandwichShop.getSandwichShopID())) {
             throw new IngredientNotAvailableException("Breadtype " + breadType.getBreadType() + " not available at " + mySandwichShop.getName());
         }
         order.setBreadType(breadType);
-        order.setOptions(sandwichShopService.checkOptions(options, mySandwichShop));
+        order.setOptions(sandwichJPAService.checkIfOptionsInShop(options, mySandwichShop.getSandwichShopID()));
         if(order.getOptions().size() != options.size()) {
             throw new IngredientNotAvailableException("Not all options were available!");
         }
