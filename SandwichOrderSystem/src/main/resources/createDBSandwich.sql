@@ -112,9 +112,11 @@ INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Marcel', 'van Hassel', 's');
 INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Sandy', 'Schillebeeckx', 'i');
 INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Peter', 'idk', 'i');
 INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Emily', 'Admin', 'a');
+INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Kim', 'Wauters', 's');
 
 INSERT INTO SESSIONS(sstartdate, senddate, s_course) VALUES ('2022-09-01', '2022-12-31', 'JAVA_PROGRAMMING');
 INSERT INTO SESSIONS(sstartdate, senddate, s_course) VALUES ('2022-09-05', '2023-01-31', 'SQL_FUNDAMENTALS');
+INSERT INTO SESSIONS(sstartdate, senddate, s_course) VALUES ('2022-09-05', '2022-09-12', 'SQL_FUNDAMENTALS');
 
 -- set instructors
 UPDATE PERSONS SET p_sid = 1 WHERE pid = 3;
@@ -123,10 +125,12 @@ UPDATE PERSONS SET p_sid = 2 WHERE pid = 4;
 -- set students
 UPDATE PERSONS SET p_sid = 1 WHERE pid = 1;
 UPDATE PERSONS SET p_sid = 2 WHERE pid = 2;
+UPDATE PERSONS SET p_sid = 3 WHERE pid = 6;
 
 -- Give sessions instructors
 update sessions set sins_pid = 3 where sid = 1;
 update sessions set sins_pid = 4 where sid = 2;
+update sessions set sins_pid = 4 where sid = 3;
 
 -- make sandwichshop
 INSERT INTO SANDWICHSHOPS(shopname) VALUES ('TestShop');
