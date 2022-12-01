@@ -130,26 +130,29 @@ public class OrderServiceTest {
     @Test
     @Transactional
     void createOrderForPerson() throws OrderAlreadyExistsException {
-
+        cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
         Order myOrder = cut.createOrder(p1);
         assertEquals(p1, myOrder.getPerson());
 
     }
 
     @Test
-    void handleOrderWithNoSandwich() throws DayOrderDoesNotExistYet {
-        testOrder = new Order(p1, cut.getDayOrder());
+    @Transactional
+    void handleOrderWithNoSandwich() throws DayOrderDoesNotExistYet, OrderAlreadyExistsException {
+        cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
+        testOrder = cut.createOrder(p1);
         cut.handleOrder(testOrder, "test");
-        assertEquals(OrderStatus.NOSANDWICH, testOrder.getOrderStatus());
+        assertEquals(OrderStatus.NOSANDWICH, orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0).getOrderStatus());
     }
 
 
     @Test
-    void handleOrderWithSandwichWorks() throws IngredientNotAvailableException, SandwichNotFoundException, DayOrderDoesNotExistYet {
+    @Transactional
+    void handleOrderWithSandwichWorks() throws IngredientNotAvailableException, SandwichNotFoundException, DayOrderDoesNotExistYet, OrderAlreadyExistsException {
         cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
-        testOrder = new Order(p1, cut.getDayOrder());
+        testOrder = cut.createOrder(p1);
         cut.handleOrder(testOrder, sandwichService.getSandwichesForShop(2).get(1), BreadType.GREY, sandwichService.getOptionsForShop(2), "");
-        assertEquals(OrderStatus.ORDERED, testOrder.getOrderStatus());
+        assertEquals(OrderStatus.ORDERED, orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0).getOrderStatus());
     }
 
     @Test

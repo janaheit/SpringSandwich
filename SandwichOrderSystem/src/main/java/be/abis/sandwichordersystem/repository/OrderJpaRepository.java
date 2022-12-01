@@ -2,6 +2,7 @@ package be.abis.sandwichordersystem.repository;
 
 import be.abis.sandwichordersystem.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -51,5 +52,9 @@ public interface OrderJpaRepository extends JpaRepository<Order, Integer> {
 
     @Query(value = "select * from orders where ostatus=:status", nativeQuery = true)
     List<Order> findAllUnfilledOrders(@Param("status") String status);
+
+    @Modifying
+    @Query(value = "update orders set o_sandid = :sandwichid , obread= :breadtype, oremark = :remark, ostatus = :orderstatus, oamount = :amount, oprice = :price, odate = :date, o_shop = :shopid, o_pid = :personid, o_sid = :sessionid where oid = :orderid", nativeQuery = true)
+    void updateHandleOrder(@Param("orderid") int orderId, @Param("sandwichid") int sandwichId, @Param("breadtype") String breadtype, @Param("remark") String remark, @Param("orderstatus") String orderStatus, @Param("amount") int amount, @Param("price") double price, @Param("date") LocalDate date, @Param("shopid") int shopId, @Param("personid") int personId, @Param("sessionid") int sessionId);
 
 }
