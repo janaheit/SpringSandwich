@@ -136,13 +136,14 @@ public class AbisOrderJPAService implements OrderJPAService {
     }
 
     @Override
-    public Order handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException {
+    public Order handleOrder(Order order, int sandwichID, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException {
         SandwichShop mySandwichShop = order.getDayOrder().getCurrentSandwichShop();
 
-        if(!sandwichJPAService.checkIfSandwichInShop(sandwich.getSandwichID(), mySandwichShop.getSandwichShopID())) {
-            throw new SandwichNotFoundException("Sandwich " + sandwich.getName() + " not available at " + mySandwichShop.getName());
+        if(!sandwichJPAService.checkIfSandwichInShop(sandwichID, mySandwichShop.getSandwichShopID())) {
+            throw new SandwichNotFoundException("Sandwich " + sandwichID + " not available at " + mySandwichShop.getName());
         }
-        order.setSandwich(sandwich);
+        Sandwich s = sandwichJPAService.findSandwichById(sandwichID);
+        order.setSandwich(s);
 
         if(!sandwichJPAService.checkIfBreadTypeInShop(breadType, mySandwichShop.getSandwichShopID())) {
             throw new IngredientNotAvailableException("Breadtype " + breadType.getBreadType() + " not available at " + mySandwichShop.getName());
@@ -257,7 +258,9 @@ public class AbisOrderJPAService implements OrderJPAService {
 
     @Override
     public Order findTodaysUnfilledOrderByName(String name) throws PersonNotFoundException, OrderAlreadyExistsException {
-        List<Order> myOrderList = orderRepository.findOrdersByDate(LocalDate.now()).stream().filter(order -> (order.getPerson().getFirstName() + " " + order.getPerson().getLastName()).equalsIgnoreCase(name)).collect(Collectors.toList());
+        List<Order> myOrderList = orderRepository.findOrdersByDate(LocalDate.now()).stream()
+                .filter(order -> (order.getPerson().getFirstName() + " " + order.getPerson().getLastName()).equalsIgnoreCase(name))
+                .collect(Collectors.toList());
         if (myOrderList.size()==0) {
             throw new PersonNotFoundException("This person was not found in a session today");
         } else {

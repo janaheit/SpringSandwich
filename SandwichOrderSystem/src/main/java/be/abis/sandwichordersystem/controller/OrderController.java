@@ -70,7 +70,7 @@ public class OrderController {
         if (orderModel.getNoSandwich()) {
             orderService.handleOrder(personOrder, orderModel.getRemark());
         } else { // if noSandwich == false (aka person wants a sandwich)
-            orderService.handleOrder(personOrder, orderModel.getSandwich(), orderModel.getBreadType(),
+            orderService.handleOrder(personOrder, orderModel.getSandwich().getSandwichID(), orderModel.getBreadType(),
                     orderModel.getOptions(), orderModel.getRemark());
         }
     }
