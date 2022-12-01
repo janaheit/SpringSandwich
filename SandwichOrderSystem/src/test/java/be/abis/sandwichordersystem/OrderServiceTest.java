@@ -43,7 +43,7 @@ public class OrderServiceTest {
     @Autowired
     SessionService sessionService;
     @Autowired
-    OrderRepository orderRepository;
+    OrderJpaRepository orderRepository;
     @Autowired
     SandwichJPARepository sandwichRepository;
 
@@ -331,7 +331,7 @@ public class OrderServiceTest {
     public void setTodaysFilledOrdersToHandledTest() throws OrderNotFoundException, NothingToHandleException, SandwichShopNotFoundException, OrderAlreadyExistsException {
         cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
         cut.createOrdersForEveryoneToday();
-        cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now()).get(0), "no");
+        cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0), "no");
         cut.setTodaysFilledOrdersToHandeled();
         List<Order> myOrderList = cut.findTodaysOrdersForPerson(p1);
         assertEquals(OrderStatus.HANDELED, myOrderList.get(0).getOrderStatus());
@@ -363,7 +363,7 @@ public class OrderServiceTest {
     public void deleteAllUnfilledOrdersOfTheDayWorksForNoSandwich() throws OrderNotFoundException, OperationNotAllowedException, SandwichShopNotFoundException, OrderAlreadyExistsException {
         cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
         cut.createOrdersForEveryoneToday();
-        cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now()).get(0), "No sandwich");
+        cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0), "No sandwich");
         int amountbefore = orderRepository.getOrders().size();
         cut.deleteAllUnfilledOrdersOfDay(LocalDate.now());
         int amountafter = orderRepository.getOrders().size();
@@ -375,7 +375,7 @@ public class OrderServiceTest {
 
         cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
         cut.createOrdersForEveryoneToday();
-        cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now()).get(0), "No sandwich");
+        cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0), "No sandwich");
 
         List<Person> check = cut.findWhoStillHasToOrderToday();
         //System.out.println(check);
@@ -388,7 +388,7 @@ public class OrderServiceTest {
     public void findWhoStillHasToOrderTodayHappyCaseWithDoubleOrders() throws OrderNotFoundException, PersonNotFoundException, SandwichShopNotFoundException, SandwichNotFoundException, IngredientNotAvailableException, OrderAlreadyExistsException {
         cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
         cut.createOrdersForEveryoneToday();
-        cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now()).get(0), sandwichService.getSandwichesForShop(2).get(2), BreadType.GREY, new ArrayList<Options>(), "All good");
+        cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0), sandwichService.getSandwichesForShop(2).get(2), BreadType.GREY, new ArrayList<Options>(), "All good");
         cut.createOrder(p1);
 
 

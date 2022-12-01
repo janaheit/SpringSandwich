@@ -86,7 +86,11 @@ public class AbisOrderJPAService implements OrderJPAService {
         } else {
             List<Person> personsFollowingSessionToday = sessionService.findAllPersonsFollowingSessionToday();
             for (Person p : personsFollowingSessionToday) {
-                this.createOrder(p);
+                try {
+                    this.createOrder(p);
+                } catch (OrderAlreadyExistsException e){
+                    System.out.println("This order already exists");
+                }
             }
         }
     }
