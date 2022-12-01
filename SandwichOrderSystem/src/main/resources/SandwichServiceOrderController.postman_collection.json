@@ -1,0 +1,234 @@
+{
+	"info": {
+		"_postman_id": "f9477946-dce3-40c2-aff1-0913f6256265",
+		"name": "SandwichServiceOrderController",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getTodaysSandwichShop",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/sandwich/order/shop",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"sandwich",
+						"order",
+						"shop"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTodaysOptions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/sandwich/order/shop/options",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"sandwich",
+						"order",
+						"shop",
+						"options"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTodaysSandwiches",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/sandwich/order/shop/sandwiches",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"sandwich",
+						"order",
+						"shop",
+						"sandwiches"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTodaysBreadTypes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/sandwich/order/shop/breadtypes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"sandwich",
+						"order",
+						"shop",
+						"breadtypes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUnfilledOrderFor",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/sandwich/order/unfilled/query?name=claudia%20negrila",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"sandwich",
+						"order",
+						"unfilled",
+						"query"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "claudia%20negrila"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "orderNoSandwichFor",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"noSandwich\":\"true\",\r\n    \"person\": {\r\n        \"firstName\": \"Jana\",\r\n        \"lastName\": \"Heitkemper\",\r\n        \"personNr\": 10\r\n    },\r\n    \"remark\":\"dentist appointment\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/sandwich/order/jana",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"sandwich",
+						"order",
+						"jana"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "orderSandwichFor",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"noSandwich\":\"false\",\r\n    \"person\": {\r\n            \"firstName\": \"Claudia\",\r\n            \"lastName\": \"Negrila\",\r\n            \"personNr\": 6\r\n        },\r\n    \"remark\":\"extra guac\",\r\n    \"sandwich\": {\r\n        \"sandwichNr\": 1,\r\n        \"name\": \"Americain\",\r\n        \"price\": 4.0,\r\n        \"description\": null,\r\n        \"category\": \"Vlees\"\r\n    },\r\n    \"breadType\":\"GREY\",\r\n    \"options\":[\"GRILLEDVEGGIES\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/sandwich/order/claudia",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"sandwich",
+						"order",
+						"claudia"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "orderNonExistentSandwichFor",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"noSandwich\":\"false\",\r\n    \"person\": {\r\n            \"firstName\": \"Esben\",\r\n            \"lastName\": \"Six\",\r\n            \"personNr\": 11\r\n        },\r\n    \"remark\":\"extra guac\",\r\n    \"sandwich\": {\r\n        \"sandwichNr\": 31,\r\n        \"name\": \"Hesp\",\r\n        \"price\": 4.0,\r\n        \"description\": null,\r\n        \"category\": \"Vlees\"\r\n    },\r\n    \"breadType\":\"GREY\",\r\n    \"options\":[\"GRILLEDVEGGIES\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/sandwich/order/esben",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"sandwich",
+						"order",
+						"esben"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllFilledOrdersFor",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
