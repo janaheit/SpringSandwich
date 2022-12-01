@@ -2,11 +2,13 @@ package be.abis.sandwichordersystem.controller;
 
 import be.abis.sandwichordersystem.dto.OrderDTO;
 import be.abis.sandwichordersystem.dto.PersonDTO;
+import be.abis.sandwichordersystem.dto.SandwichCreationDTO;
 import be.abis.sandwichordersystem.dto.SessionDTO;
 import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.*;
 import be.abis.sandwichordersystem.mapper.OrderMapper;
 import be.abis.sandwichordersystem.mapper.PersonMapper;
+import be.abis.sandwichordersystem.mapper.SandwichMapper;
 import be.abis.sandwichordersystem.mapper.SessionMapper;
 import be.abis.sandwichordersystem.model.*;
 import be.abis.sandwichordersystem.service.*;
@@ -105,9 +107,7 @@ public class ManagementController {
                 .map(SessionMapper::toDTO).collect(Collectors.toList());
         return new ResponseEntity<List<SessionDTO>>(sessionList, HttpStatus.OK);
     }
-    //TODO POST /orders/startup → start day with selecting shop (param); creating orders for everyone
 
-    //TODO reimplement with new order service
     // POST /orders/close → close all orders // when you ordered
     @PostMapping("close")
     public ResponseEntity<? extends Object> closeOrdersOfDay() throws IOException, NothingToHandleException, OrderNotFoundException, OperationNotAllowedException {
@@ -128,8 +128,11 @@ public class ManagementController {
 
     //POST /orders/shops/{shopID}/sandwiches → add sandwich to sandwichshop
     @PostMapping("shops/{id}/sandwiches")
-    public ResponseEntity<? extends Object> addSandwichToShop(@PathVariable("id") int id, @RequestBody Sandwich sandwich) throws SandwichShopNotFoundException, SandwichAlreadyExistsException {
-        sandwichJPAService.addSandwichToShop(sandwich, id);
+    public ResponseEntity<? extends Object> addSandwichToShop(@PathVariable("id") int id, @RequestBody SandwichCreationDTO sandwich) throws SandwichShopNotFoundException, SandwichAlreadyExistsException {
+
+        SandwichShop shop = sandwichJPAService.findShopByID(sandwich.getShopID());
+        Sandwich s = SandwichMapper.toSandwich(sandwich, shop);
+        sandwichJPAService.addSandwichToShop(s, id);
         return new ResponseEntity<String>("Added", HttpStatus.OK);
     }
 
