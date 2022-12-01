@@ -167,22 +167,23 @@ public class AbisOrderJPAService implements OrderJPAService {
         return orderRepository.findOrdersBySession(session.getSessionNumber());
     }
 
-    //TODO This should probably be implemented a bit better with a separate query
     @Override
     public List<Order> findTodaysOrdersForPerson(Person person) {
-        return orderRepository.findOrdersByDate(LocalDate.now()).stream().filter(order -> order.getPerson().equals(person)).collect(Collectors.toList());
+        return orderRepository.findOrdersByPersonAndDates(person.getPersonNr(), LocalDate.now(), LocalDate.now());
+
+        //return orderRepository.findOrdersByDate(LocalDate.now()).stream().filter(order -> order.getPerson().equals(person)).collect(Collectors.toList());
     }
 
-    //TODO This should also get its own query
     @Override
     public List<Order> findAllUnhandeledOrders() {
-        return orderRepository.getOrders().stream().filter(order -> order.getOrderStatus() != OrderStatus.HANDELED).collect(Collectors.toList());
+        // takes in the HANDELED status and in the repository it queries on NOT handled
+        return orderRepository.findAllUnhandledOrders(OrderStatus.HANDELED.name());
+        //return orderRepository.getOrders().stream().filter(order -> order.getOrderStatus() != OrderStatus.HANDELED).collect(Collectors.toList());
     }
 
-    //TODO This should also get its own query
     @Override
     public List<Order> findAllUnfilledOrders() {
-        return orderRepository.getOrders().stream().filter(order -> order.getOrderStatus() == OrderStatus.UNFILLED).collect(Collectors.toList());
+        return orderRepository.findAllUnfilledOrders(OrderStatus.UNFILLED.name());
     }
 
     @Override
@@ -199,7 +200,7 @@ public class AbisOrderJPAService implements OrderJPAService {
 
     @Override
     public List<Person> getAllPersonsFromListOfOrders(List<Order> orders) {
-        return orders.stream().map(order -> order.getPerson()).collect(Collectors.toList());
+        return orders.stream().map(Order::getPerson).collect(Collectors.toList());
     }
 
     @Override
