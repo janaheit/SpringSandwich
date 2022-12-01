@@ -328,7 +328,7 @@ public class OrderServiceTest {
     // From here down i checked
     @Test
     @Transactional
-    public void setTodaysFilledOrdersToHandledTest() throws OrderNotFoundException, NothingToHandleException, SandwichShopNotFoundException {
+    public void setTodaysFilledOrdersToHandledTest() throws OrderNotFoundException, NothingToHandleException, SandwichShopNotFoundException, OrderAlreadyExistsException {
         cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
         cut.createOrdersForEveryoneToday();
         cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now()).get(0), "no");
@@ -340,7 +340,7 @@ public class OrderServiceTest {
 
     @Test
     @Transactional
-    public void setTodaysFilledOrdersToHandledThrowsException() throws OrderNotFoundException, SandwichShopNotFoundException {
+    public void setTodaysFilledOrdersToHandledThrowsException() throws OrderNotFoundException, SandwichShopNotFoundException, OrderAlreadyExistsException {
         cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
         cut.createOrdersForEveryoneToday();
         assertThrows(NothingToHandleException.class, () -> cut.setTodaysFilledOrdersToHandeled());
@@ -348,7 +348,7 @@ public class OrderServiceTest {
 
     @Test
     @Transactional
-    public void deleteAllUnfilledOrdersOfTheDayWorks() throws OrderNotFoundException, OperationNotAllowedException, SandwichShopNotFoundException {
+    public void deleteAllUnfilledOrdersOfTheDayWorks() throws OrderNotFoundException, OperationNotAllowedException, SandwichShopNotFoundException, OrderAlreadyExistsException {
         cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
         cut.createOrdersForEveryoneToday();
         int amountbefore = orderRepository.getOrders().size();
@@ -360,7 +360,7 @@ public class OrderServiceTest {
 
     @Test
     @Transactional
-    public void deleteAllUnfilledOrdersOfTheDayWorksForNoSandwich() throws OrderNotFoundException, OperationNotAllowedException, SandwichShopNotFoundException {
+    public void deleteAllUnfilledOrdersOfTheDayWorksForNoSandwich() throws OrderNotFoundException, OperationNotAllowedException, SandwichShopNotFoundException, OrderAlreadyExistsException {
         cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
         cut.createOrdersForEveryoneToday();
         cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1, LocalDate.now(), LocalDate.now()).get(0), "No sandwich");
