@@ -102,19 +102,17 @@ public class Session {
     }
 
     // equals and hashcode
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Session session = (Session) o;
-        return sessionNumber == session.sessionNumber && course.equals(session.course) && instructor.equals(session.instructor);
+        return course == session.course && Objects.equals(instructor, session.instructor) && Objects.equals(startDate, session.startDate) && Objects.equals(endDate, session.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(course, instructor, sessionNumber);
+        return Objects.hash(course, instructor, startDate, endDate);
     }
 
     @Override
@@ -128,4 +126,7 @@ public class Session {
                 ", sessionNumber=" + sessionNumber +
                 '}';
     }
+
+
+
 }

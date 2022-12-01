@@ -361,4 +361,9 @@ public class AbisOrderJPAService implements OrderJPAService {
     public String getFilePath() {
         return filePath;
     }
+
+    @Override
+    public Order findOrder(Order order) {
+        return orderRepository.checkIfOrderExists(order.getSandwich().getSandwichID(), order.getBreadType().name(), order.getRemark(), order.getOrderStatus().name(), order.getAmount(), order.getPrice(), order.getDate(), order.getSandwichShop().getSandwichShopID(), order.getPerson().getPersonNr(), order.getSession().getSessionNumber());
+    }
 }
