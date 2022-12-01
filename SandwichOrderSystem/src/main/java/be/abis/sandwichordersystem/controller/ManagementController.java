@@ -34,7 +34,7 @@ public class ManagementController {
 
     //TODO reimplement with new order service
     @GetMapping("startup")
-    public void startDay() throws SandwichShopNotFoundException, DayOrderDoesNotExistYet {
+    public void startDay() throws SandwichShopNotFoundException, DayOrderDoesNotExistYet, OrderAlreadyExistsException {
         // set Vleugels as currentSandwichShop
         orderService.setTodaysSandwichShop(sandwichJPAService.findShopByName("Vleugels"));
         System.out.println("SandwichShop set to: "+ orderService.getTodaysSandwichShop().getName());

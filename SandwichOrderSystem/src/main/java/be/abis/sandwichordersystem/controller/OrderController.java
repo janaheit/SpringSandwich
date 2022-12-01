@@ -28,7 +28,7 @@ public class OrderController {
     // when a person tries to order, they will get back always a new unfilled order in their name,
     // so that they can order twice
     @GetMapping("/unfilled/query")
-    public Order findTodaysUnfilledOrderByName(@RequestParam String name) throws PersonNotFoundException {
+    public Order findTodaysUnfilledOrderByName(@RequestParam String name) throws PersonNotFoundException, OrderAlreadyExistsException {
         return orderService.findTodaysUnfilledOrderByName(name);
     }
 
@@ -60,7 +60,7 @@ public class OrderController {
 
 
     @PostMapping()
-    public void handleOrder(@RequestBody OrderModel orderModel) throws PersonNotFoundException, IngredientNotAvailableException, SandwichNotFoundException {
+    public void handleOrder(@RequestBody OrderModel orderModel) throws PersonNotFoundException, IngredientNotAvailableException, SandwichNotFoundException, OrderAlreadyExistsException {
 
         String fullName = orderModel.getPerson().getFirstName() + " " + orderModel.getPerson().getLastName();
         Order personOrder = orderService.findTodaysUnfilledOrderByName(fullName);

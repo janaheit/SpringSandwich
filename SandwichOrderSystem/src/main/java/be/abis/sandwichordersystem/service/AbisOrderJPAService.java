@@ -6,7 +6,6 @@ import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.*;
 import be.abis.sandwichordersystem.model.*;
 import be.abis.sandwichordersystem.repository.OrderJpaRepository;
-import be.abis.sandwichordersystem.repository.OrderRepository;
 import be.abis.sandwichordersystem.repository.SessionJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,15 +45,21 @@ public class AbisOrderJPAService implements OrderJPAService {
     // Method implementations
 
     //TODO do checks if order already exists etc.
+    @Transactional
     @Override
-    public boolean addOrder(Order order) {
-        orderRepository.save(order);
-        return true;
+    public Order addOrder(Order order) throws OrderAlreadyExistsException {
+        try {
+            findOrder(order);
+            throw new OrderAlreadyExistsException("This order already exists");
+        } catch (OrderNotFoundException e) {
+            return orderRepository.save(order);
+        }
     }
 
-    //TODO OrderNotFoundException should be thrown
+    @Transactional
     @Override
     public boolean deleteOrder(Order order) throws OrderNotFoundException {
+        findOrder(order);
         orderRepository.delete(order);
         return true;
     }
@@ -66,7 +71,6 @@ public class AbisOrderJPAService implements OrderJPAService {
         return existing;
     }
 
-    //TODO OrderNotFoundException should be thrown
     @Transactional
     @Override
     public boolean deleteOrderByID(int id) throws OrderNotFoundException {
@@ -76,7 +80,7 @@ public class AbisOrderJPAService implements OrderJPAService {
     }
 
     @Override
-    public void createOrdersForEveryoneToday() throws SandwichShopNotFoundException {
+    public void createOrdersForEveryoneToday() throws SandwichShopNotFoundException, OrderAlreadyExistsException {
         if (this.dayOrder == null || this.dayOrder.getCurrentSandwichShop() == null) {
             throw new SandwichShopNotFoundException("No sandwichshop selected for this day");
         } else {
@@ -89,7 +93,7 @@ public class AbisOrderJPAService implements OrderJPAService {
 
     // TODO
     @Override
-    public Order createOrder(Person person) {
+    public Order createOrder(Person person) throws OrderAlreadyExistsException {
         Order thisOrder = new Order(person, this.dayOrder);
         addOrder(thisOrder);
 
@@ -231,7 +235,7 @@ public class AbisOrderJPAService implements OrderJPAService {
     }
 
     @Override
-    public Order findTodaysUnfilledOrderByName(String name) throws PersonNotFoundException {
+    public Order findTodaysUnfilledOrderByName(String name) throws PersonNotFoundException, OrderAlreadyExistsException {
         List<Order> myOrderList = orderRepository.findOrdersByDate(LocalDate.now()).stream().filter(order -> (order.getPerson().getFirstName() + " " + order.getPerson().getLastName()).equalsIgnoreCase(name)).collect(Collectors.toList());
         if (myOrderList.size()==0) {
             throw new PersonNotFoundException("This person was not found in a session today");
@@ -380,7 +384,12 @@ public class AbisOrderJPAService implements OrderJPAService {
     }
 
     @Override
-    public Order findOrder(Order order) {
-        return orderRepository.checkIfOrderExists(order.getSandwich().getSandwichID(), order.getBreadType().name(), order.getRemark(), order.getOrderStatus().name(), order.getAmount(), order.getPrice(), order.getDate(), order.getSandwichShop().getSandwichShopID(), order.getPerson().getPersonNr(), order.getSession().getSessionNumber());
+    public Order findOrder(Order order) throws OrderNotFoundException {
+        Order existing =orderRepository.checkIfOrderExists(order.getSandwich().getSandwichID(),
+                order.getBreadType().name(), order.getRemark(), order.getOrderStatus().name(),
+                order.getAmount(), order.getPrice(), order.getDate(), order.getSandwichShop().getSandwichShopID(),
+                order.getPerson().getPersonNr(), order.getSession().getSessionNumber());
+        if (existing == null) throw new OrderNotFoundException("This order does not exist");
+        return existing;
     }
 }
