@@ -1,22 +1,42 @@
 package be.abis.sandwichordersystem.model;
 
+import javax.persistence.*;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Objects;
 
+@Entity
+@Table(name = "Sandwiches")
+//@SecondaryTable(name = "Categories")
 public class Sandwich {
 
     // Attributes
-    private static int COUNT=0;
-    private int sandwichNr;
+    @SequenceGenerator(name = "mySeqGen", sequenceName = "sandwich_sandid_seq", allocationSize = 1)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mySeqGen")
+    @Column(name = "sandid")
+    private int sandwichID;
+    @Column(name = "sandname")
+
     private String name;
+    @Column(name = "price")
     private double price;
+    @Column(name = "description")
     private String description;
+    @Column(name = "category")
     private String category;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "sand_sandshopid")
+    private SandwichShop shop;
 
     // Constructor
+
+    public Sandwich() {
+    }
+
     public Sandwich(String name) {
+        this();
         this.name = name;
-        this.sandwichNr = ++COUNT;
     }
 
     public Sandwich(String name, String category) {
@@ -31,24 +51,38 @@ public class Sandwich {
 
     // BUSINESS METHODS
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Sandwich sandwich = (Sandwich) o;
+        return sandwichID == sandwich.sandwichID && Double.compare(sandwich.price, price) == 0 && name.equals(sandwich.name) && Objects.equals(description, sandwich.description) && category.equals(sandwich.category);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sandwichID, name, price, category);
+    }
+
     @Override
     public String toString() {
         String description;
         NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("nl", "BE"));
         if (price != 0) description = name+ " " + nf.format(price) + "";
         else description = name;
-        return description;
+        return description + ", cat: " + category;
     }
 
 
     // Getters and Setters
 
-    public int getSandwichNr() {
-        return sandwichNr;
+    public int getSandwichID() {
+        return sandwichID;
     }
 
-    public void setSandwichNr(int sandwichNr) {
-        this.sandwichNr = sandwichNr;
+    public void setSandwichID(int sandwichID) {
+        this.sandwichID = sandwichID;
     }
 
     public String getName() {
@@ -81,5 +115,13 @@ public class Sandwich {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public SandwichShop getShop() {
+        return shop;
+    }
+
+    public void setShop(SandwichShop shop) {
+        this.shop = shop;
     }
 }

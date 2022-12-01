@@ -15,8 +15,6 @@ public enum BreadType {
     }
 
     // Getters and Setters
-
-
     public String getBreadType() {
         return breadType;
     }

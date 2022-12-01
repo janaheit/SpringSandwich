@@ -24,4 +24,5 @@ public enum Options {
     public void setOption(String option) {
         this.option = option;
     }
+
 }

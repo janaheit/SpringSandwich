@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/*
 @Component
 public class ListSessionFactory implements SessionFactory {
 
@@ -40,10 +40,11 @@ public class ListSessionFactory implements SessionFactory {
         }
 
         for (int l=students.size()/2; l<students.size();l++){
-            sessions.get(0).addStudent(students.get(l));
-            students.get(l).setCurrentSession(sessions.get(0));
+            sessions.get(1).addStudent(students.get(l));
+            students.get(l).setCurrentSession(sessions.get(1));
         }
 
         return sessions;
     }
 }
+*/

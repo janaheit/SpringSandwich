@@ -1,32 +1,54 @@
 package be.abis.sandwichordersystem.model;
 
 import be.abis.sandwichordersystem.enums.Course;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name="SESSIONS")
 public class Session {
-    private Course course;
-    private Instructor instructor;
-    private List<Student> students = new ArrayList<>();
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private static int counter = 0;
+
+    @SequenceGenerator(name="sessionGen", sequenceName = "sessions_sid_seq", allocationSize = 1)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sessionGen")
+    @Column(name = "SID")
     private int sessionNumber;
+
+    @Column(name = "S_COURSE")
+    @Enumerated(EnumType.STRING)
+    private Course course;
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "SINS_PID")
+    private Instructor instructor;
+    @Column(name="SSTARTDATE")
+    private LocalDate startDate;
+    @Column(name = "SENDDATE")
+    private LocalDate endDate;
+
+
+    /*
+    @OneToMany(targetEntity = Student.class, mappedBy = "currentSession", fetch = FetchType.EAGER)
+    private List<Student> students;
+     */
+
+    public Session() {
+    }
 
     public Session(Course course, Instructor instructor, LocalDate startDate, LocalDate endDate) {
         this.course = course;
         this.instructor = instructor;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.counter ++;
-        this.sessionNumber = counter;
     }
 
     public void addStudent(Student student){
-        students.add(student);
+        //students.add(student);
     }
 
     public void setInstructor(Instructor instructor) {
@@ -37,13 +59,19 @@ public class Session {
         return instructor;
     }
 
-    public List<Student> getStudents() {
-        return students;
-    }
 
+    public List<Student> getStudents() {
+        return new ArrayList<>();
+
+    }
+/*
     public void setStudents(List<Student> students) {
         this.students = students;
     }
+
+     */
+
+
 
     public Course getCourse() {
         return course;
@@ -74,19 +102,17 @@ public class Session {
     }
 
     // equals and hashcode
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Session session = (Session) o;
-        return sessionNumber == session.sessionNumber && course.equals(session.course) && instructor.equals(session.instructor);
+        return course == session.course && Objects.equals(instructor, session.instructor) && Objects.equals(startDate, session.startDate) && Objects.equals(endDate, session.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(course, instructor, sessionNumber);
+        return Objects.hash(course, instructor, startDate, endDate);
     }
 
     @Override
@@ -94,10 +120,13 @@ public class Session {
         return "Session{" +
                 "course=" + course +
                 ", instructor=" + instructor +
-                ", students=" + students +
+                ", students=" + //students +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", sessionNumber=" + sessionNumber +
                 '}';
     }
+
+
+
 }

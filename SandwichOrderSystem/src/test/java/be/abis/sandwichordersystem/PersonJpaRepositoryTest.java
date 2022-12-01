@@ -5,6 +5,7 @@ import be.abis.sandwichordersystem.model.Admin;
 import be.abis.sandwichordersystem.model.Instructor;
 import be.abis.sandwichordersystem.model.Person;
 import be.abis.sandwichordersystem.model.Student;
+import be.abis.sandwichordersystem.repository.PersonJpaRepository;
 import be.abis.sandwichordersystem.repository.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,14 +13,18 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.transaction.Transactional;
+
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class PersonRepositoryTest {
+public class PersonJpaRepositoryTest {
 
     @Autowired
-    PersonRepository cut;
+    PersonJpaRepository cut;
 
     // Mocks
     @Mock
@@ -39,6 +44,16 @@ public class PersonRepositoryTest {
     }
 
     @Test
+    @Transactional
+    public void saveCheck() {
+        Person myPerson = new Instructor("Sjakie", "Schildpad");
+        cut.save(myPerson);
+        Person checkPerson = cut.findPersonByName("sjakieschildpad");
+        assertEquals(myPerson, checkPerson);
+    }
+
+    //@Test
+    /*
     public void addPersonWorks() throws PersonNotFoundException {
         int amountOfPersonsBeforeTest = cut.getPersons().size();
         cut.addPerson(person1);
@@ -47,7 +62,7 @@ public class PersonRepositoryTest {
         cut.deletePerson(person1);
     }
 
-    @Test
+    //@Test
     public void deletePersonWorks() throws PersonNotFoundException {
         cut.addPerson(person1);
         int amountOfPersonsBeforeTest = cut.getPersons().size();
@@ -55,52 +70,63 @@ public class PersonRepositoryTest {
         assertEquals(amountOfPersonsBeforeTest -1, cut.getPersons().size());
     }
 
-    @Test
+    //@Test
     public void deletePersonThatDoesntExistThrowsException() throws PersonNotFoundException {
         cut.addPerson(person1);
         assertThrows(PersonNotFoundException.class, () -> cut.deletePerson(person2));
         cut.deletePerson(person1);
     }
 
+     */
+
+
     @Test
+    public void justSomeChecks() {
+        Student myStudent = cut.findStudentByID(1);
+        System.out.println(myStudent.getCurrentSession().getCourse());
+    }
+
+    @Test
+    @Transactional
     public void getAdminsTest() throws PersonNotFoundException {
         boolean test = false;
-        cut.addPerson(mockAdmin);
-        cut.addPerson(mockInstructor);
-        if(cut.getAdmins().contains(mockAdmin) && !cut.getAdmins().contains(mockInstructor)) {
+        Person myAdmin = cut.findPersonByName("Emily");
+        Person myInstructor = cut.findPersonByName("Sandy");
+
+        List<Admin> adminList = cut.getAdmins();
+        //System.out.println(adminList);
+
+        if(adminList.contains(myAdmin) && !adminList.contains(myInstructor)) {
             test = true;
         }
         assertTrue(test);
-        cut.deletePerson(mockAdmin);
-        cut.deletePerson(mockInstructor);
     }
 
     @Test
     public void getInstructorsTest() throws PersonNotFoundException {
         boolean test = false;
-        cut.addPerson(mockInstructor);
-        cut.addPerson(mockAdmin);
-        if(cut.getInstructors().contains(mockInstructor) && !cut.getInstructors().contains(mockAdmin)) {
+        Person myAdmin = cut.findPersonByName("Emily");
+        Person myInstructor = cut.findPersonByName("Sandy");
+
+        if(cut.getInstructors().contains(myInstructor) && !cut.getInstructors().contains(myAdmin)) {
             test = true;
         }
         assertTrue(test);
-        cut.deletePerson(mockAdmin);
-        cut.deletePerson(mockInstructor);
     }
 
     @Test
+    @Transactional
     public void getStudentsTest() throws PersonNotFoundException {
         boolean test = false;
-        cut.addPerson(mockStudent);
-        cut.addPerson(mockAdmin);
-        if(cut.getStudents().contains(mockStudent) && !cut.getStudents().contains(mockAdmin)) {
+        Person myAdmin = cut.findPersonByName("Emily");
+        Person myStudent = cut.findPersonByName("Jana");
+
+        if(cut.getStudents().contains(myStudent) && !cut.getStudents().contains(myAdmin)) {
             test = true;
         }
         assertTrue(test);
-        cut.deletePerson(mockAdmin);
-        cut.deletePerson(mockStudent);
     }
-
+/*
     @Test
     public void findPersonByNameWorks() throws PersonNotFoundException {
         when(person1.getFirstName()).thenReturn("Testing");
@@ -128,6 +154,14 @@ public class PersonRepositoryTest {
         Person mySecondPerson = cut.findPersonByName(fullName.toString());
         assertEquals(myFirstPerson, mySecondPerson);
     }
+
+ */
+@Test
+public void findPersonFollowingASession() {
+    List<Person> myPersons = cut.findAllPersonsFollowingSession(1);
+    Person myPerson = cut.findPersonById(1);
+    assertTrue(myPersons.contains(myPerson));
+}
 
     //TODO still have to test findAdmin/Student/Instructor by name methods
 
