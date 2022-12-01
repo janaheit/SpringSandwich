@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -55,6 +56,22 @@ public class AbisOrderJPAService implements OrderJPAService {
     @Override
     public boolean deleteOrder(Order order) throws OrderNotFoundException {
         orderRepository.delete(order);
+        return true;
+    }
+
+    @Override
+    public Order findOrderById(int id) throws OrderNotFoundException {
+        Order existing = orderRepository.findOrderById(id);
+        if (existing == null) throw new OrderNotFoundException("Order does not exist");
+        return existing;
+    }
+
+    //TODO OrderNotFoundException should be thrown
+    @Transactional
+    @Override
+    public boolean deleteOrderByID(int id) throws OrderNotFoundException {
+        findOrderById(id);
+        orderRepository.deleteById(id);
         return true;
     }
 

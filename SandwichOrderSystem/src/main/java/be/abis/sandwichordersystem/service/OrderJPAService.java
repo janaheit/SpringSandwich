@@ -16,12 +16,14 @@ public interface OrderJPAService {
 
     boolean addOrder(Order order);
     boolean deleteOrder(Order order) throws OrderNotFoundException;
+    boolean deleteOrderByID(int id) throws OrderNotFoundException;
     void createOrdersForEveryoneToday() throws SandwichShopNotFoundException;
     Order createOrder(Person person);
 
     void handleOrder(Order order, String remark);
     void handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException;
 
+    Order findOrderById(int id) throws OrderNotFoundException;
     List<Order> findOrdersByDate(LocalDate date);
     List<Order> findOrdersByDates(LocalDate startDate, LocalDate endDate);
     List<Order> findOrdersBySession(Session session);

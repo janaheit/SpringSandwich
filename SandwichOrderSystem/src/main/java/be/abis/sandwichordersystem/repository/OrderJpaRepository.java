@@ -14,7 +14,7 @@ public interface OrderJpaRepository extends JpaRepository<Order, Integer> {
     public boolean addOrder(Order order);
     public boolean deleteOrder(Order order) throws OrderNotFoundException;
      */
-
+    Order findOrderById(int id);
     @Query(value = "select * from orders", nativeQuery = true)
     public List<Order> getOrders();
 
