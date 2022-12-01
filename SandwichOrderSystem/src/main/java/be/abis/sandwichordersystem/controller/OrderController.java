@@ -1,9 +1,11 @@
 package be.abis.sandwichordersystem.controller;
 
-import be.abis.sandwichordersystem.dto.OrderModel;
+import be.abis.sandwichordersystem.dto.OrderCreationDTO;
+import be.abis.sandwichordersystem.dto.OrderDTO;
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.exception.*;
+import be.abis.sandwichordersystem.mapper.OrderMapper;
 import be.abis.sandwichordersystem.model.Order;
 import be.abis.sandwichordersystem.model.Person;
 import be.abis.sandwichordersystem.model.Sandwich;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/order")
@@ -29,15 +32,17 @@ public class OrderController {
     // when a person tries to order, they will get back always a new unfilled order in their name,
     // so that they can order twice
     @GetMapping("/unfilled/query")
-    public Order findTodaysUnfilledOrderByName(@RequestParam String name) throws PersonNotFoundException, OrderAlreadyExistsException {
-        return orderService.findTodaysUnfilledOrderByName(name);
+    public OrderDTO findTodaysUnfilledOrderByName(@RequestParam String name) throws PersonNotFoundException, OrderAlreadyExistsException {
+        return OrderMapper.toDTO(orderService.findTodaysUnfilledOrderByName(name));
     }
 
     @Transactional
     @GetMapping("/filled/query")
-    public List<Order> findTodaysFilledOrdersByName(@RequestParam String name) throws OrderNotFoundException, PersonNotFoundException {
+    public List<OrderDTO> findTodaysFilledOrdersByName(@RequestParam String name) throws OrderNotFoundException, PersonNotFoundException {
         Person p = personService.findPersonByName(name);
-        return orderService.findTodaysFilledOrdersForPerson(p);
+        return orderService.findTodaysFilledOrdersForPerson(p).stream()
+                .map(OrderMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("shop")
@@ -61,17 +66,17 @@ public class OrderController {
     }
 
     @PostMapping()
-    public void handleOrder(@RequestBody OrderModel orderModel) throws PersonNotFoundException, IngredientNotAvailableException, SandwichNotFoundException, OrderAlreadyExistsException {
+    public void handleOrder(@RequestBody OrderCreationDTO orderCreationDTO) throws PersonNotFoundException, IngredientNotAvailableException, SandwichNotFoundException, OrderAlreadyExistsException {
 
-        String fullName = orderModel.getPerson().getFirstName() + " " + orderModel.getPerson().getLastName();
+        String fullName = orderCreationDTO.getPerson().getFirstName() + " " + orderCreationDTO.getPerson().getLastName();
         Order personOrder = orderService.findTodaysUnfilledOrderByName(fullName);
 
         // if noSandwich == true (aka person does not want a sandwich)
-        if (orderModel.getNoSandwich()) {
-            orderService.handleOrder(personOrder, orderModel.getRemark());
+        if (orderCreationDTO.getNoSandwich()) {
+            orderService.handleOrder(personOrder, orderCreationDTO.getRemark());
         } else { // if noSandwich == false (aka person wants a sandwich)
-            orderService.handleOrder(personOrder, orderModel.getSandwich().getSandwichID(), orderModel.getBreadType(),
-                    orderModel.getOptions(), orderModel.getRemark());
+            orderService.handleOrder(personOrder, orderCreationDTO.getSandwich().getSandwichID(), orderCreationDTO.getBreadType(),
+                    orderCreationDTO.getOptions(), orderCreationDTO.getRemark());
         }
     }
 }

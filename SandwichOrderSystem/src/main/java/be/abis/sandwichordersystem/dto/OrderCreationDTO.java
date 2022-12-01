@@ -7,7 +7,7 @@ import be.abis.sandwichordersystem.model.Sandwich;
 
 import java.util.List;
 
-public class OrderModel {
+public class OrderCreationDTO {
 
     private boolean noSandwich;
     private Person person;
@@ -17,7 +17,7 @@ public class OrderModel {
     private String remark;
     private List<Options> options;
 
-    public OrderModel() {
+    public OrderCreationDTO() {
     }
 
     public boolean getNoSandwich() {

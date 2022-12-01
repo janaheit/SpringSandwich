@@ -1,10 +1,5 @@
 package be.abis.sandwichordersystem.controller;
 
-import be.abis.sandwichordersystem.dto.NameModel;
-import be.abis.sandwichordersystem.dto.OrderModel;
-import be.abis.sandwichordersystem.dto.SandwichShopDTOModel;
-import be.abis.sandwichordersystem.enums.BreadType;
-import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.*;
 import be.abis.sandwichordersystem.model.*;
