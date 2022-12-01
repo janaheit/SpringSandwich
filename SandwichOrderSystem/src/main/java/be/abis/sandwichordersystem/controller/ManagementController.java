@@ -1,7 +1,13 @@
 package be.abis.sandwichordersystem.controller;
 
+import be.abis.sandwichordersystem.dto.OrderDTO;
+import be.abis.sandwichordersystem.dto.PersonDTO;
+import be.abis.sandwichordersystem.dto.SessionDTO;
 import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.*;
+import be.abis.sandwichordersystem.mapper.OrderMapper;
+import be.abis.sandwichordersystem.mapper.PersonMapper;
+import be.abis.sandwichordersystem.mapper.SessionMapper;
 import be.abis.sandwichordersystem.model.*;
 import be.abis.sandwichordersystem.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/orders")
@@ -40,24 +47,27 @@ public class ManagementController {
     //GET /orders/today -> all filled orders for today (grouped by session)
     @GetMapping("today")
     public ResponseEntity<? extends Object> findAllFilledOrdersToday() throws OrderNotFoundException {
-        List<Order> orderList = orderService.findAllFilledOrdersForToday();
-        return new ResponseEntity<List<Order>>(orderList, HttpStatus.OK);
+        List<OrderDTO> orderList = orderService.findAllFilledOrdersForToday().stream()
+                .map(OrderMapper::toDTO).collect(Collectors.toList());
+        return new ResponseEntity<List<OrderDTO>>(orderList, HttpStatus.OK);
     }
 
     //TODO reimplement with new order service
     // GET /orders/missing -> get all unfilled orders / who still has to order
     @GetMapping("missing")
     public ResponseEntity<? extends Object> findWhoStillHasToOrder() throws PersonNotFoundException {
-        List<Person> personList = orderService.findWhoStillHasToOrderToday();
-        return new ResponseEntity<List<Person>>(personList, HttpStatus.OK);
+        List<PersonDTO> personList = orderService.findWhoStillHasToOrderToday().stream()
+                .map(PersonMapper::toDTO).collect(Collectors.toList());
+        return new ResponseEntity<List<PersonDTO>>(personList, HttpStatus.OK);
     }
 
     //TODO reimplement with new order service
     // GET /orders/period?start=12-12-2022&end=30-12-2022 → get all closed orders for period grouped by session
     @GetMapping("period")
     public ResponseEntity<? extends Object> getClosedOrdersPerPeriod(@RequestParam("start") @DateTimeFormat(pattern="d-M-yyyy") LocalDate startDate, @RequestParam("end") @DateTimeFormat(pattern="d-M-yyyy")LocalDate endDate) throws OrderNotFoundException {
-        List<Order> orderlist = orderService.findAllClosedOrdersForDates(startDate, endDate);
-        return new ResponseEntity<List<Order>>(orderlist, HttpStatus.OK);
+        List<OrderDTO> orderlist = orderService.findAllClosedOrdersForDates(startDate, endDate).stream()
+                .map(OrderMapper::toDTO).collect(Collectors.toList());
+        return new ResponseEntity<List<OrderDTO>>(orderlist, HttpStatus.OK);
     }
 
     //TODO reimplement with new order service
@@ -65,31 +75,35 @@ public class ManagementController {
     @GetMapping("session")
     public ResponseEntity<? extends Object> getAllClosedOrdersForSessionId(@RequestParam("id") int id) throws SessionNotFoundException, OrderNotFoundException {
         Session mySession = sessionService.findSessionByID(id);
-        List<Order> orderList = orderService.findOrdersByStatusAndSession(OrderStatus.HANDELED, mySession);
-        return new ResponseEntity<List<Order>>(orderList, HttpStatus.OK);
+        List<OrderDTO> orderList = orderService.findOrdersByStatusAndSession(OrderStatus.HANDELED, mySession).stream()
+                .map(OrderMapper::toDTO).collect(Collectors.toList());
+        return new ResponseEntity<List<OrderDTO>>(orderList, HttpStatus.OK);
     }
 
     //TODO reimplement with new order service
     // GET /orders/query?date={date} → get all orders for date grouped by session
     @GetMapping("query")
     public ResponseEntity<? extends Object> getAllClosedOrdersForDate(@RequestParam("date") @DateTimeFormat(pattern="d-M-yyyy") LocalDate date) throws OrderNotFoundException {
-        List<Order> orderList = orderService.findAllClosedOrdersForDates(date, date);
-        return new ResponseEntity<List<Order>>(orderList, HttpStatus.OK);
+        List<OrderDTO> orderList = orderService.findAllClosedOrdersForDates(date, date).stream()
+                .map(OrderMapper::toDTO).collect(Collectors.toList());
+        return new ResponseEntity<List<OrderDTO>>(orderList, HttpStatus.OK);
     }
 
     // GET /orders/sessions/period?start=12-12-2022&end=30-12-2022 → get all sessions during period
     @GetMapping("sessions/period")
     public ResponseEntity<? extends Object> getAllSessionsDuringPeriod(@RequestParam("start") @DateTimeFormat(pattern="d-M-yyyy") LocalDate startDate, @RequestParam("end") @DateTimeFormat(pattern="d-M-yyyy")LocalDate endDate) {
-        List<Session> sessionList = sessionService.findSessionsByPeriod(startDate, endDate);
-        return new ResponseEntity<List<Session>>(sessionList, HttpStatus.OK);
+        List<SessionDTO> sessionList = sessionService.findSessionsByPeriod(startDate, endDate).stream()
+                .map(SessionMapper::toDTO).collect(Collectors.toList());
+        return new ResponseEntity<List<SessionDTO>>(sessionList, HttpStatus.OK);
     }
 
     // GET /orders/sessions/instructor?name=Sandy → get all sessions taught by sandy
     @GetMapping("sessions/instructor")
     public ResponseEntity<? extends Object> getAllSessionsOfInstructor(@RequestParam("name") String fullName) throws PersonNotFoundException {
         Instructor myInstructor = personService.findInstructorByName(fullName);
-        List<Session> sessionList = sessionService.findSessionsByInstructor(myInstructor.getPersonNr());
-        return new ResponseEntity<List<Session>>(sessionList, HttpStatus.OK);
+        List<SessionDTO> sessionList = sessionService.findSessionsByInstructor(myInstructor.getPersonNr()).stream()
+                .map(SessionMapper::toDTO).collect(Collectors.toList());
+        return new ResponseEntity<List<SessionDTO>>(sessionList, HttpStatus.OK);
     }
     //TODO POST /orders/startup → start day with selecting shop (param); creating orders for everyone
 

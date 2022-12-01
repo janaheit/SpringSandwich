@@ -135,6 +135,7 @@ public class AbisOrderJPAService implements OrderJPAService {
         return orderRepository.save(order);
     }
 
+    @Transactional
     @Override
     public Order handleOrder(Order order, int sandwichID, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException {
         SandwichShop mySandwichShop = order.getDayOrder().getCurrentSandwichShop();
