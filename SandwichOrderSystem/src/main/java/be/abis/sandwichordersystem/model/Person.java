@@ -38,19 +38,6 @@ public class Person {
         this.lastName = lastName;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return personNr == person.personNr && firstName.equals(person.firstName) && lastName.equals(person.lastName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(firstName, lastName, personNr);
-    }
-
     // getters and setters
     public String getFirstName() {
         return firstName;
@@ -76,4 +63,17 @@ public class Person {
         this.personNr = personNr;
     }
 
+    // hashcode and equals
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName);
+    }
 }

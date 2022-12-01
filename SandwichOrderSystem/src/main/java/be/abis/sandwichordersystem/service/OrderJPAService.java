@@ -6,7 +6,6 @@ import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.*;
 import be.abis.sandwichordersystem.model.*;
 import be.abis.sandwichordersystem.repository.OrderJpaRepository;
-import be.abis.sandwichordersystem.repository.OrderRepository;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -58,6 +57,8 @@ public interface OrderJPAService {
     public void deleteAllUnfilledOrdersOfDay(LocalDate date) throws OrderNotFoundException, OperationNotAllowedException;
     List<Order> findTodaysFilledOrdersForPerson(Person person) throws OrderNotFoundException;
     List<Order> findOrdersByStatusAndDates(OrderStatus status, LocalDate startDate, LocalDate endDate) throws OrderNotFoundException;
+
+    Order findOrder(Order order);
 
 
 }
