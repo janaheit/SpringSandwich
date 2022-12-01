@@ -138,6 +138,7 @@ public class AbisOrderJPAService implements OrderJPAService {
     @Override
     public Order handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException {
         SandwichShop mySandwichShop = order.getDayOrder().getCurrentSandwichShop();
+        System.out.println("started handle order");
 
         if(!sandwichJPAService.checkIfSandwichInShop(sandwich.getSandwichID(), mySandwichShop.getSandwichShopID())) {
             throw new SandwichNotFoundException("Sandwich " + sandwich.getName() + " not available at " + mySandwichShop.getName());
@@ -154,7 +155,10 @@ public class AbisOrderJPAService implements OrderJPAService {
         }
         order.setRemark(remark);
         order.setOrderStatus(OrderStatus.ORDERED);
-        return orderRepository.save(order);
+        System.out.println("order handeled");
+        orderRepository.updateHandleOrder(order.getOrderNum(), order.getSandwich().getSandwichID(), order.getBreadType().name(), order.getRemark(), order.getOrderStatus().name(), order.getAmount(), order.getPrice(), order.getDate(), order.getSandwichShop().getSandwichShopID(), order.getPerson().getPersonNr(), order.getSession().getSessionNumber());
+        //return orderRepository.save(order);
+        return order;
     }
 
     @Override
@@ -418,6 +422,7 @@ public class AbisOrderJPAService implements OrderJPAService {
                     order.getSession().getSessionNumber());
         } else {
             // if everything filled in
+            System.out.println("CHECK EVERYTHING FILLED IN!");
             existing =orderRepository.checkIfOrderExists(order.getSandwich().getSandwichID(), order.getBreadType().name(), order.getRemark(),
                     order.getOrderStatus().name(), order.getAmount(), order.getPrice(), order.getDate(), order.getSandwichShop().getSandwichShopID(),
                     order.getPerson().getPersonNr(), order.getSession().getSessionNumber());
