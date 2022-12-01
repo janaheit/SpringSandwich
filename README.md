@@ -10,6 +10,7 @@ Functionality implemented (most important things noted):
 NOT implemented:
 * updating existing order 
 * financial controller is not working yet 
+* adding and removing persons (implemented in services but not via api yet)
 
 ## How to test 
 
