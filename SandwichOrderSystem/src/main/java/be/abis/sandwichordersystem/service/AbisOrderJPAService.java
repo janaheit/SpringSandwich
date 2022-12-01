@@ -125,13 +125,14 @@ public class AbisOrderJPAService implements OrderJPAService {
     }
 
     @Override
-    public void handleOrder(Order order, String remark) {
+    public Order handleOrder(Order order, String remark) {
         order.setOrderStatus(OrderStatus.NOSANDWICH);
         order.setRemark(remark);
+        return orderRepository.save(order);
     }
 
     @Override
-    public void handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException {
+    public Order handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException {
         SandwichShop mySandwichShop = order.getDayOrder().getCurrentSandwichShop();
 
         if(!sandwichJPAService.checkIfSandwichInShop(sandwich.getSandwichID(), mySandwichShop.getSandwichShopID())) {
@@ -149,6 +150,7 @@ public class AbisOrderJPAService implements OrderJPAService {
         }
         order.setRemark(remark);
         order.setOrderStatus(OrderStatus.ORDERED);
+        return orderRepository.save(order);
     }
 
     @Override
@@ -343,10 +345,10 @@ public class AbisOrderJPAService implements OrderJPAService {
             orderRepository.delete(order);
         }
 
-            List<Order> noSandwichList = orderRepository.findOrdersByStatusAndDates(OrderStatus.NOSANDWICH.name(), date, date);
-            for (Order order : noSandwichList) {
-                orderRepository.delete(order);
-            }
+        List<Order> noSandwichList = orderRepository.findOrdersByStatusAndDates(OrderStatus.NOSANDWICH.name(), date, date);
+        for (Order order : noSandwichList) {
+            orderRepository.delete(order);
+        }
     }
 
     @Override

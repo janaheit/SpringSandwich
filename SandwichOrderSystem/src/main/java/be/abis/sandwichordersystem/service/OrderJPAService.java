@@ -19,8 +19,8 @@ public interface OrderJPAService {
     void createOrdersForEveryoneToday() throws SandwichShopNotFoundException, OrderAlreadyExistsException;
     Order createOrder(Person person) throws OrderAlreadyExistsException;
 
-    void handleOrder(Order order, String remark);
-    void handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException;
+    Order handleOrder(Order order, String remark);
+    Order handleOrder(Order order, Sandwich sandwich, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException;
 
     Order findOrderById(int id) throws OrderNotFoundException;
     List<Order> findOrdersByDate(LocalDate date);

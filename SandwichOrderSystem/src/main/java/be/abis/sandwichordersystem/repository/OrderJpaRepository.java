@@ -1,8 +1,14 @@
 package be.abis.sandwichordersystem.repository;
 
+import be.abis.sandwichordersystem.enums.BreadType;
+import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.enums.OrderStatus;
+import be.abis.sandwichordersystem.exception.IngredientNotAvailableException;
+import be.abis.sandwichordersystem.exception.SandwichNotFoundException;
 import be.abis.sandwichordersystem.model.Order;
+import be.abis.sandwichordersystem.model.Sandwich;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -44,4 +50,5 @@ public interface OrderJpaRepository extends JpaRepository<Order, Integer> {
 
     @Query(value = "select * from orders where ostatus=:status", nativeQuery = true)
     List<Order> findAllUnfilledOrders(@Param("status") String status);
+
 }
