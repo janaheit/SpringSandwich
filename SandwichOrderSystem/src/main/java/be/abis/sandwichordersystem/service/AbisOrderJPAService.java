@@ -323,6 +323,7 @@ public class AbisOrderJPAService implements OrderJPAService {
         return orderRepository.findOrdersByStatusAndDates(OrderStatus.HANDELED.name(), startDate, endDate);
     }
 
+    @Transactional
     @Override
     public void setTodaysFilledOrdersToHandeled() throws NothingToHandleException {
 
@@ -333,9 +334,8 @@ public class AbisOrderJPAService implements OrderJPAService {
 
             for (Order order : myOrderList) {
                 order.setOrderStatus(OrderStatus.HANDELED);
+                orderRepository.save(order);
             }
-
-
     }
 
     @Override
