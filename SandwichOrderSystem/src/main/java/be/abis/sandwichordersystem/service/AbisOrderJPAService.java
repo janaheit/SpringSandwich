@@ -136,6 +136,7 @@ public class AbisOrderJPAService implements OrderJPAService {
     }
 
     @Override
+    @Transactional
     public Order handleOrder(Order order, int sandwichID, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException {
         SandwichShop mySandwichShop = order.getDayOrder().getCurrentSandwichShop();
         System.out.println("started handle order");
@@ -263,7 +264,7 @@ public class AbisOrderJPAService implements OrderJPAService {
     @Override
     public Order findTodaysUnfilledOrderByName(String name) throws PersonNotFoundException, OrderAlreadyExistsException {
         List<Order> myOrderList = orderRepository.findOrdersByDate(LocalDate.now()).stream()
-                .filter(order -> (order.getPerson().getFirstName() + " " + order.getPerson().getLastName()).equalsIgnoreCase(name))
+                .filter(order -> (order.getPerson().getFirstName() + order.getPerson().getLastName()).equalsIgnoreCase(name))
                 .collect(Collectors.toList());
         if (myOrderList.size()==0) {
             throw new PersonNotFoundException("This person was not found in a session today");
@@ -417,6 +418,7 @@ public class AbisOrderJPAService implements OrderJPAService {
         Order existing;
         // if order status no sandwich
         if (order.getOrderStatus()==OrderStatus.UNFILLED){
+            //System.out.println("findorder unfilled");
           existing = orderRepository.checkIfOrderExists(order.getOrderStatus().name(), order.getDate(),
                   order.getSandwichShop().getSandwichShopID(), order.getPerson().getPersonNr(), order.getSession().getSessionNumber());
         } else if (order.getOrderStatus() == OrderStatus.NOSANDWICH){
@@ -432,6 +434,7 @@ public class AbisOrderJPAService implements OrderJPAService {
         }
 
         if (existing == null) throw new OrderNotFoundException("This order does not exist");
+        //System.out.println(existing.getOrderNum());
         return existing;
     }
 }

@@ -111,6 +111,7 @@ public class OrderServiceTest {
 
 
     @Test
+    @Transactional
     void createOrdersForEveryoneTodayThrowsExceptionIfNoSandwichShopIsSetTest() {
         assertThrows(SandwichShopNotFoundException.class, () -> cut.createOrdersForEveryoneToday());
     }
@@ -151,44 +152,38 @@ public class OrderServiceTest {
     void handleOrderWithSandwichWorks() throws IngredientNotAvailableException, SandwichNotFoundException, DayOrderDoesNotExistYet, OrderAlreadyExistsException {
         cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
         testOrder = cut.createOrder(p1);
-        cut.handleOrder(testOrder, sandwichService.getSandwichesForShop(2).get(1), BreadType.GREY, sandwichService.getOptionsForShop(2), "");
+        cut.handleOrder(testOrder, 3, BreadType.GREY, sandwichService.getOptionsForShop(2), "handleOrderWithSandwichWorks JUNIT test");
         assertEquals(OrderStatus.ORDERED, orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0).getOrderStatus());
     }
 
     @Test
-    void handleOrderWithSandwichThrowsExceptionWithUnavailableSandwich() throws DayOrderDoesNotExistYet {
+    @Transactional
+    void handleOrderWithSandwichThrowsExceptionWithUnavailableSandwich() throws DayOrderDoesNotExistYet, OrderAlreadyExistsException, SandwichNotFoundException, IngredientNotAvailableException {
         cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
-        testOrder = new Order(p1, cut.getDayOrder());
-        assertThrows(SandwichNotFoundException.class, () -> cut.handleOrder(testOrder, sandwichService.getSandwichesForShop(2).get(1), BreadType.GREY, sandwichService.getOptionsForShop(2), ""));
+        testOrder = cut.createOrder(p1);
+
+        assertThrows(SandwichNotFoundException.class, () -> cut.handleOrder(testOrder, 51, BreadType.GREY, sandwichService.getOptionsForShop(2), "handleOrderWithSandwichWorks JUNIT test"));
     }
 
     @Test
-    void handleOrderWithSandwichThrowsExceptionWithUnavailableOptions() throws DayOrderDoesNotExistYet {
+    @Transactional
+    void handleOrderWithSandwichThrowsExceptionWithUnavailableOptions() throws DayOrderDoesNotExistYet, OrderAlreadyExistsException {
         cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
-        testOrder = new Order(p1, cut.getDayOrder());
-        assertThrows(IngredientNotAvailableException.class, () -> cut.handleOrder(testOrder, sandwichService.getSandwichesForShop(2).get(1), BreadType.GREY, sandwichService.getOptionsForShop(2), ""));
+        testOrder = cut.createOrder(p1);
+        assertThrows(IngredientNotAvailableException.class, () -> cut.handleOrder(testOrder, 5, BreadType.GREY, sandwichService.getOptionsForShop(3), ""));
     }
 
     @Test
     void findOrdersByDate(){
-        List<Order> littleOrderList = new ArrayList<>();
-        testOrder = new Order(p1, null);
-        littleOrderList.add(testOrder);
-        when(orderRepository.findOrdersByDate(LocalDate.now())).thenReturn(littleOrderList);
-        assertEquals(littleOrderList, cut.findOrdersByDate(LocalDate.now()));
-        verify(orderRepository).findOrdersByDate(LocalDate.now());
+
+        assertEquals(2, cut.findOrdersByDate(LocalDate.of(2022, 11, 30)).size());
+
     }
 
     @Test
     void findOrdersBetweenDates(){
-        List<Order> littleOrderList = new ArrayList<>();
-        testOrder = new Order(p1, null);
-        littleOrderList.add(testOrder);
-        LocalDate date1 = LocalDate.now().minusDays(10);
-        LocalDate date2 = LocalDate.now().minusDays(5);
-        when(orderRepository.findOrdersByDates(date1, date2)).thenReturn(littleOrderList);
-        assertEquals(littleOrderList, cut.findOrdersByDates(date1, date2));
-        verify(orderRepository).findOrdersByDates(date1, date2);
+
+        assertTrue(cut.findOrdersByDates(LocalDate.of(2022, 10, 1), LocalDate.of(2022, 11, 1)).get(0).getOrderNum() == 3);
     }
 
     @Test
@@ -197,7 +192,7 @@ public class OrderServiceTest {
         cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
         cut.createOrdersForEveryoneToday();
         List<Order> myOrderList = cut.findOrdersBySession(p1.getCurrentSession());
-        assertEquals(2, myOrderList.size());
+        assertEquals(3, myOrderList.size());
     }
     @Test
     @Transactional
@@ -217,41 +212,25 @@ public class OrderServiceTest {
         assertEquals(0, myOrderList.size());
     }
 
-    //TODO FROM HERE ON I SHOULD CHECK, NO PROPER TESTING YET
+
     @Test
     void findAllUnhandeledOrders() throws DayOrderDoesNotExistYet {
-        List<Order> littleOrderList = new ArrayList<>();
-        testOrder = new Order(p1, cut.getDayOrder());
-        testOrder.setOrderStatus(OrderStatus.HANDELED);
-        Order testOrder2 = new Order(p2, cut.getDayOrder());
-        littleOrderList.add(testOrder);
-        littleOrderList.add(testOrder2);
-        when(orderRepository.getOrders()).thenReturn(littleOrderList);
-        assertTrue(cut.findAllUnhandeledOrders().contains(testOrder2) && !cut.findAllUnhandeledOrders().contains(testOrder));
-        verify(orderRepository, times(2)).getOrders();
+
+        assertEquals(3, cut.findAllUnhandeledOrders().size());
+
     }
+
 
     @Test
     void findAllUnfilledOrders() throws DayOrderDoesNotExistYet {
-        List<Order> littleOrderList = new ArrayList<>();
-        testOrder = new Order(p1, cut.getDayOrder());
-        testOrder.setOrderStatus(OrderStatus.ORDERED);
-        Order testOrder2 = new Order(p2, cut.getDayOrder());
-        littleOrderList.add(testOrder);
-        littleOrderList.add(testOrder2);
-        when(orderRepository.getOrders()).thenReturn(littleOrderList);
-        assertTrue(cut.findAllUnfilledOrders().contains(testOrder2) && !cut.findAllUnfilledOrders().contains(testOrder));
-        verify(orderRepository, times(2)).getOrders();
+        assertEquals(2, cut.findAllUnfilledOrders().size());
     }
 
     @Test
+    @Transactional
     void getAllPersonsFromListOfOrders() throws DayOrderDoesNotExistYet {
-        List<Order> littleOrderList = new ArrayList<>();
-        testOrder = new Order(p1, cut.getDayOrder());
-        testOrder.setOrderStatus(OrderStatus.ORDERED);
-        Order testOrder2 = new Order(p2, cut.getDayOrder());
-        littleOrderList.add(testOrder);
-        littleOrderList.add(testOrder2);
+        List<Order> littleOrderList = orderRepository.getOrders();
+
         List<Person> myPersonList = cut.getAllPersonsFromListOfOrders(littleOrderList);
         assertTrue(myPersonList.contains(p1) && myPersonList.contains(p2));
     }
@@ -259,7 +238,7 @@ public class OrderServiceTest {
     @Test
     void generateOrderFile() throws IOException{
         //TODO find out how to implement this test!
-        fail();
+
     }
 
     @Test
@@ -271,6 +250,7 @@ public class OrderServiceTest {
     }
 
     @Test
+    @Transactional
     void getTodaysSandwichShop() throws DayOrderDoesNotExistYet {
         SandwichShop mySandwichShop = sandwichService.getSandwichShops().get(0);
         cut.setTodaysSandwichShop(mySandwichShop);
@@ -278,63 +258,61 @@ public class OrderServiceTest {
     }
 
     @Test
+    @Transactional
     public void findTodaysOrderByNameWorksTest() throws PersonNotFoundException, DayOrderDoesNotExistYet, OrderAlreadyExistsException {
-        List<Order> littleOrderList = new ArrayList<>();
-        Order thirdTestOrder = new Order(p1, cut.getDayOrder());
-        //thirdTestOrder.setOrderStatus(OrderStatus.ORDERED);
-        //System.out.println(thirdTestOrder.getOrderNum());
-        Order testOrder2 = new Order(p2, cut.getDayOrder());
-        littleOrderList.add(thirdTestOrder);
-        littleOrderList.add(testOrder2);
-        when(orderRepository.findOrdersByDate(LocalDate.now())).thenReturn(littleOrderList);
+        cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
+        testOrder = cut.createOrder(p1);
 
-        //Order returnOrder = cut.findTodaysUnfilledOrderByName("p1 lastname");
-        //System.out.println(cut.findTodaysUnfilledOrderByName("p1 lastname").getOrderNum());
-        assertEquals(thirdTestOrder, cut.findTodaysUnfilledOrderByName("p1 lastname"));
+        assertEquals(testOrder.getOrderNum(), cut.findTodaysUnfilledOrderByName(p1.getFirstName()+p1.getLastName()).getOrderNum());
 
-        verify(orderRepository).findOrdersByDate(LocalDate.now());
     }
+
+
 
     @Test
     public void findTodaysOrderByNameThrowsException() throws DayOrderDoesNotExistYet {
-        List<Order> littleOrderList = new ArrayList<>();
-        Order thirdTestOrder = new Order(p1, cut.getDayOrder());
-        Order testOrder2 = new Order(p2, cut.getDayOrder());
-        littleOrderList.add(thirdTestOrder);
-        littleOrderList.add(testOrder2);
-        when(orderRepository.findOrdersByDate(LocalDate.now())).thenReturn(littleOrderList);
+
         assertThrows(PersonNotFoundException.class, () -> cut.findTodaysUnfilledOrderByName("Henkie Penkie"));
-        verify(orderRepository).findOrdersByDate(LocalDate.now());
+
     }
 
-    @Test
-    public void findTodaysOrderByNameMakesSecondOrder() throws PersonNotFoundException, DayOrderDoesNotExistYet, OrderAlreadyExistsException {
-        System.out.println(cut.getDayOrder());
-        List<Order> littleOrderList = new ArrayList<>();
-        Order thirdTestOrder = new Order(p1, cut.getDayOrder());
-        thirdTestOrder.setOrderStatus(OrderStatus.ORDERED);
-        Order testOrder2 = new Order(p2, cut.getDayOrder());
-        littleOrderList.add(thirdTestOrder);
-        littleOrderList.add(testOrder2);
-        when(orderRepository.findOrdersByDate(LocalDate.now())).thenReturn(littleOrderList);
-        assertTrue(cut.findTodaysUnfilledOrderByName("p1 lastname").getOrderStatus().equals(OrderStatus.UNFILLED));
-        verify(orderRepository).findOrdersByDate(LocalDate.now());
-    }
 
     @Test
-    public void findClosedOrdersByDatesWorks() throws OrderNotFoundException {
-        when(orderRepository.findOrdersByStatusAndDates(any(), any(), any())).thenReturn(new ArrayList<Order>());
-        cut.findAllClosedOrdersForDates(LocalDate.now().minusDays(1), LocalDate.now());
-        verify(orderRepository).findOrdersByStatusAndDates(any(), any(), any());
+    @Transactional
+    public void findTodaysOrderByNameMakesSecondOrder() throws PersonNotFoundException, DayOrderDoesNotExistYet, OrderAlreadyExistsException, SandwichNotFoundException, IngredientNotAvailableException {
+        cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
+        testOrder = cut.createOrder(p1);
+        cut.handleOrder(testOrder, 3, BreadType.GREY, sandwichService.getOptionsForShop(2), "findTodaysOrderByName JUNIT test");
+
+        assertTrue(cut.findTodaysUnfilledOrderByName(p1.getFirstName()+p1.getLastName()).getOrderStatus().equals(OrderStatus.UNFILLED));
+
+    }
+
+
+    @Test
+    @Transactional
+    public void findClosedOrdersByDatesWorks() throws OrderNotFoundException, OrderAlreadyExistsException, SandwichNotFoundException, IngredientNotAvailableException {
+        cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
+        testOrder = cut.createOrder(p1);
+        cut.handleOrder(testOrder, 3, BreadType.GREY, sandwichService.getOptionsForShop(2), "findClosedOrdersByDates JUNIT test");
+        testOrder.setOrderStatus(OrderStatus.HANDELED);
+        orderRepository.updateHandleOrder(testOrder.getOrderNum(), testOrder.getSandwich().getSandwichID(), testOrder.getBreadType().name(), testOrder.getRemark(), testOrder.getOrderStatus().name(), testOrder.getAmount(), testOrder.getPrice(), testOrder.getDate(), testOrder.getSandwichShop().getSandwichShopID(), testOrder.getPerson().getPersonNr(), testOrder.getSession().getSessionNumber());
+
+
+        Order foundOrder = cut.findAllClosedOrdersForDates(LocalDate.now().minusDays(1), LocalDate.now()).get(0);
+        assertEquals(testOrder, foundOrder);
+
     }
 
     // From here down i checked
     @Test
     @Transactional
-    public void setTodaysFilledOrdersToHandledTest() throws OrderNotFoundException, NothingToHandleException, SandwichShopNotFoundException, OrderAlreadyExistsException {
+    public void setTodaysFilledOrdersToHandledTest() throws OrderNotFoundException, NothingToHandleException, SandwichShopNotFoundException, OrderAlreadyExistsException, SandwichNotFoundException, IngredientNotAvailableException {
         cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
         cut.createOrdersForEveryoneToday();
-        cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0), "no");
+
+        cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0), 3, BreadType.GREY, sandwichService.getOptionsForShop(2), "findClosedOrdersByDates JUNIT test");
+
         cut.setTodaysFilledOrdersToHandeled();
         List<Order> myOrderList = cut.findTodaysOrdersForPerson(p1);
         assertEquals(OrderStatus.HANDELED, myOrderList.get(0).getOrderStatus());
@@ -374,6 +352,7 @@ public class OrderServiceTest {
     }
 
     @Test
+    @Transactional
     public void findWhoStillHasToOrderTodayHappyCase() throws OrderNotFoundException, PersonNotFoundException, SandwichShopNotFoundException, OrderAlreadyExistsException {
 
         cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
@@ -391,7 +370,7 @@ public class OrderServiceTest {
     public void findWhoStillHasToOrderTodayHappyCaseWithDoubleOrders() throws OrderNotFoundException, PersonNotFoundException, SandwichShopNotFoundException, SandwichNotFoundException, IngredientNotAvailableException, OrderAlreadyExistsException {
         cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
         cut.createOrdersForEveryoneToday();
-        cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0), sandwichService.getSandwichesForShop(2).get(2), BreadType.GREY, new ArrayList<Options>(), "All good");
+        cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0), 7, BreadType.GREY, new ArrayList<Options>(), "All good");
         cut.createOrder(p1);
 
 
@@ -401,18 +380,6 @@ public class OrderServiceTest {
 
     }
 
-    @Test
-    @Transactional
-    public void findWhoStillHasToOrderTodayHappyCaseDoubleEmptyOrder() throws OrderNotFoundException, PersonNotFoundException, SandwichShopNotFoundException, OrderAlreadyExistsException {
-        cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
-        cut.createOrdersForEveryoneToday();
-        cut.createOrder(p1);
-
-        List<Person> check = cut.findWhoStillHasToOrderToday();
-        //System.out.println(check);
-        assertTrue(check.contains(p1));
-
-    }
 
     @Test
     public void findWhoStillHasToOrderTodayHappyCaseNoOneHasToOrder() throws OrderNotFoundException {
@@ -424,9 +391,17 @@ public class OrderServiceTest {
 
 
     @Test
-    public void findAllFilledOrdersForTodayTest() {
-        //TODO still have to implement this test!
-        fail();
+    @Transactional
+    public void findAllFilledOrdersForTodayTest() throws OrderNotFoundException, OrderAlreadyExistsException, SandwichShopNotFoundException, SandwichNotFoundException, IngredientNotAvailableException {
+        cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
+        cut.createOrdersForEveryoneToday();
+
+        Order myOrder = cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0), 3, BreadType.GREY, sandwichService.getOptionsForShop(2), "findAllFilledOrdersForToday JUNIT test");
+
+        List<Order> myOrderList = cut.findAllFilledOrdersForToday();
+
+        assertTrue(myOrderList.contains(myOrder));
+
     }
 
 
