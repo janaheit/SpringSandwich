@@ -402,10 +402,23 @@ public class AbisOrderJPAService implements OrderJPAService {
 
     @Override
     public Order findOrder(Order order) throws OrderNotFoundException {
-        Order existing =orderRepository.checkIfOrderExists(order.getSandwich().getSandwichID(),
-                order.getBreadType().name(), order.getRemark(), order.getOrderStatus().name(),
-                order.getAmount(), order.getPrice(), order.getDate(), order.getSandwichShop().getSandwichShopID(),
-                order.getPerson().getPersonNr(), order.getSession().getSessionNumber());
+
+        Order existing;
+        // if order status no sandwich
+        if (order.getOrderStatus()==OrderStatus.UNFILLED){
+          existing = orderRepository.checkIfOrderExists(order.getOrderStatus().name(), order.getDate(),
+                  order.getSandwichShop().getSandwichShopID(), order.getPerson().getPersonNr(), order.getSession().getSessionNumber());
+        } else if (order.getOrderStatus() == OrderStatus.NOSANDWICH){
+            existing = orderRepository.checkIfOrderExists(order.getRemark(), order.getOrderStatus().name(), order.getDate(),
+                    order.getSandwichShop().getSandwichShopID(), order.getPerson().getPersonNr(),
+                    order.getSession().getSessionNumber());
+        } else {
+            // if everything filled in
+            existing =orderRepository.checkIfOrderExists(order.getSandwich().getSandwichID(), order.getBreadType().name(), order.getRemark(),
+                    order.getOrderStatus().name(), order.getAmount(), order.getPrice(), order.getDate(), order.getSandwichShop().getSandwichShopID(),
+                    order.getPerson().getPersonNr(), order.getSession().getSessionNumber());
+        }
+
         if (existing == null) throw new OrderNotFoundException("This order does not exist");
         return existing;
     }

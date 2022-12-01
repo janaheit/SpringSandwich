@@ -37,7 +37,14 @@ public interface OrderJpaRepository extends JpaRepository<Order, Integer> {
     public List<Order> findOrdersByPersonAndDates(@Param("pid") int personId,@Param("sdate") LocalDate startDate,@Param("edate") LocalDate endDate);
 
     @Query(value = "select * from orders where o_sandid = :sandwichId and obread = :breadtype and oremark = :remark and ostatus = :status and oamount = :amount and oprice = :price and odate = :date and o_shop = :shopid and o_pid = :personid and o_sid = :sessionid", nativeQuery = true)
-    Order checkIfOrderExists(@Param("sandwichId") int sandwichId, @Param("breadtype") String breadtype, @Param("remark") String remark, @Param("status") String orderStatus, @Param("amount") int amount, @Param("price") double price, @Param("date") LocalDate date, @Param("shopid") int shopId, @Param("personid") int personId, @Param("sessionid") int sessionId);
+    Order checkIfOrderExists(@Param("sandwichId") Integer sandwichId, @Param("breadtype") String breadtype, @Param("remark") String remark, @Param("status") String orderStatus, @Param("amount") int amount, @Param("price") double price, @Param("date") LocalDate date, @Param("shopid") Integer shopId, @Param("personid") int personId, @Param("sessionid") int sessionId);
+
+
+    @Query(value = "select * from orders where oremark = :remark and ostatus = :status and odate = :date and o_shop = :shopid and o_pid = :personid and o_sid = :sessionid", nativeQuery = true)
+    Order checkIfOrderExists(@Param("remark") String remark, @Param("status") String orderStatus, @Param("date") LocalDate date, @Param("shopid") Integer shopId, @Param("personid") int personId, @Param("sessionid") int sessionId);
+
+    @Query(value = "select * from orders where ostatus = :status and odate = :date and o_shop = :shopid and o_pid = :personid and o_sid = :sessionid", nativeQuery = true)
+    Order checkIfOrderExists(@Param("status") String orderStatus, @Param("date") LocalDate date, @Param("shopid") Integer shopId, @Param("personid") int personId, @Param("sessionid") int sessionId);
 
     @Query(value = "select * from orders where ostatus!=:status", nativeQuery = true)
     List<Order> findAllUnhandledOrders(@Param("status") String status);
