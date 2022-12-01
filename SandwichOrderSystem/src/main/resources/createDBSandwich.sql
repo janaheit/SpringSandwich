@@ -228,6 +228,12 @@ INSERT INTO orders (o_sandid, obread, oremark, ostatus, oamount, oprice, odate, 
 INSERT INTO orders (ostatus, odate, o_shop, o_pid, o_sid, oamount, oprice) VALUES ('UNFILLED', '2022-11-30', 2, 1, 1, 0, 0.0);
 INSERT INTO orders (ostatus, odate, o_shop, o_pid, o_sid, oamount, oprice) VALUES ('UNFILLED', '2022-10-15', 2, 1, 3, 0, 0.0);
 
+-- Adding some historic orders
+INSERT INTO orders (o_sandid, obread, oremark, ostatus, oamount, oprice, odate, o_shop, o_pid, o_sid) VALUES (4, 'GREY', 'All fine', 'HANDELED', 1, 3.5, '2021-11-30', 2, 6, 2);
+INSERT INTO orders (o_sandid, obread, oremark, ostatus, oamount, oprice, odate, o_shop, o_pid, o_sid) VALUES (6, 'GREY', 'All fine', 'HANDELED', 1, 3.5, '2021-11-29', 2, 6, 2);
+INSERT INTO orders (o_sandid, obread, oremark, ostatus, oamount, oprice, odate, o_shop, o_pid, o_sid) VALUES (4, 'GREY', 'All fine', 'HANDELED', 1, 3.5, '2021-11-30', 2, 4, 2);
+INSERT INTO orders (o_sandid, obread, oremark, ostatus, oamount, oprice, odate, o_shop, o_pid, o_sid) VALUES (4, 'GREY', 'All fine', 'HANDELED', 1, 3.5, '2021-11-28', 2, 4, 2);
+
 -- As well as options
 INSERT INTO orderoptions VALUES (1, 'GRILLEDVEGGIES');
 INSERT INTO orderoptions VALUES (1, 'RAUWKOST');

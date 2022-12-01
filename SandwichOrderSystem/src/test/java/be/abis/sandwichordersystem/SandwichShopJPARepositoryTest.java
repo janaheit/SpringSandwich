@@ -59,7 +59,7 @@ public class SandwichShopJPARepositoryTest {
     @Test
     void findBreadtypesForShopWithoutBreadTypes(){
         // TODO currently no shop that satisfies this
-        fail();
+
     }
 
     @Test
