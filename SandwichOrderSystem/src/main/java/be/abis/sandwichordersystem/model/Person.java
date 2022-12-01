@@ -63,6 +63,7 @@ public class Person {
         this.personNr = personNr;
     }
 
+
     // hashcode and equals
     @Override
     public boolean equals(Object o) {

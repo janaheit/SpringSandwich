@@ -91,21 +91,35 @@ public class AbisOrderJPAService implements OrderJPAService {
         }
     }
 
-    // TODO
     @Override
     public Order createOrder(Person person) throws OrderAlreadyExistsException {
         Order thisOrder = new Order(person, this.dayOrder);
+
+        // set session on order
+        Session s;
+        if (person instanceof Student) {
+            s = ((Student) person).getCurrentSession();
+        } else if (person instanceof Instructor){
+            s = ((Instructor) person).getCurrentSession();
+        } else {
+            // TODO Exception??
+            System.out.println("You should not be able to order, you are not an instructor or a student");
+            return null;
+        }
+        thisOrder.setSession(s);
         addOrder(thisOrder);
 
+        /*
         // set session on order
         List<Session> sessionsToday = sessionService.findSessionsToday();
 
-        //TODO get students doesn't exist anymore, so fixed with seperate query, TEST!
         for (Session s:sessionsToday){
             if (sessionService.findAllPersonsFollowingSession(s.getSessionNumber()).contains(person)){
                 thisOrder.setSession(s);
             }
         }
+
+         */
 
         return thisOrder;
     }
