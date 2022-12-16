@@ -72,11 +72,13 @@ public class OrderController {
         return orderService.getTodaysBreadTypes();
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping()
-    public OrderDTO handleOrder(@RequestBody OrderCreationDTO orderCreationDTO) throws PersonNotFoundException, IngredientNotAvailableException, SandwichNotFoundException, OrderAlreadyExistsException {
+    public OrderDTO handleOrder(@RequestBody OrderCreationDTO orderCreationDTO) throws PersonNotFoundException, IngredientNotAvailableException, SandwichNotFoundException, OrderAlreadyExistsException, OrderNotFoundException {
 
-        String fullName = orderCreationDTO.getPersonFullName();
-        Order personOrder = orderService.findTodaysUnfilledOrderByName(fullName);
+        //String fullName = orderCreationDTO.getPersonFullName();
+        //Order personOrder = orderService.findTodaysUnfilledOrderByName(fullName);
+        Order personOrder = orderService.findOrderById(orderCreationDTO.getOrderId());
         OrderDTO orderDTO;
 
         // if noSandwich == true (aka person does not want a sandwich)

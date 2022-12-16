@@ -10,6 +10,7 @@ public class OrderCreationDTO {
     private boolean noSandwich;
     private String personFullName;
     private int sandwichID;
+    private int orderId;
 
     private BreadType breadType;
     private String remark;
@@ -64,6 +65,14 @@ public class OrderCreationDTO {
 
     public void setOptions(List<Options> options) {
         this.options = options;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 }
 
