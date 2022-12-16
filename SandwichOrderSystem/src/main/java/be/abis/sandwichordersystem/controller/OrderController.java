@@ -2,10 +2,14 @@ package be.abis.sandwichordersystem.controller;
 
 import be.abis.sandwichordersystem.dto.OrderCreationDTO;
 import be.abis.sandwichordersystem.dto.OrderDTO;
+import be.abis.sandwichordersystem.dto.SandwichDTO;
+import be.abis.sandwichordersystem.dto.SandwichShopDTO;
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
 import be.abis.sandwichordersystem.exception.*;
 import be.abis.sandwichordersystem.mapper.OrderMapper;
+import be.abis.sandwichordersystem.mapper.SandwichMapper;
+import be.abis.sandwichordersystem.mapper.SandwichShopMapper;
 import be.abis.sandwichordersystem.model.Order;
 import be.abis.sandwichordersystem.model.Person;
 import be.abis.sandwichordersystem.model.Sandwich;
@@ -46,13 +50,14 @@ public class OrderController {
     }
 
     @GetMapping("shop")
-    public SandwichShop getTodaysSandwichShop() throws DayOrderDoesNotExistYet {
-        return orderService.getTodaysSandwichShop();
+    public SandwichShopDTO getTodaysSandwichShop() throws DayOrderDoesNotExistYet {
+        return SandwichShopMapper.toDTO(orderService.getTodaysSandwichShop());
     }
 
     @GetMapping("shop/sandwiches")
-    public List<Sandwich> getTodaysSandwiches() throws DayOrderDoesNotExistYet {
-        return orderService.getTodaysSandwiches();
+    public List<SandwichDTO> getTodaysSandwiches() throws DayOrderDoesNotExistYet {
+        return orderService.getTodaysSandwiches().stream()
+                .map(SandwichMapper::toDTO).collect(Collectors.toList());
     }
 
     @GetMapping("shop/options")
