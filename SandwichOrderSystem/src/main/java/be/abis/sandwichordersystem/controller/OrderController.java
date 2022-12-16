@@ -18,6 +18,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @RestController
 @RequestMapping(value = "/order")
 public class OrderController {
@@ -31,6 +32,7 @@ public class OrderController {
 
     // when a person tries to order, they will get back always a new unfilled order in their name,
     // so that they can order twice
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/unfilled/query")
     public OrderDTO findTodaysUnfilledOrderByName(@RequestParam String name) throws PersonNotFoundException, OrderAlreadyExistsException {
         return OrderMapper.toDTO(orderService.findTodaysUnfilledOrderByName(name));
