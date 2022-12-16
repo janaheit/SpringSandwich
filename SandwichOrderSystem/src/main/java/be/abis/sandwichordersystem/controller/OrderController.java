@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping(value = "/order")
 public class OrderController {
 
@@ -56,6 +57,7 @@ public class OrderController {
         return SandwichShopMapper.toDTO(orderService.getTodaysSandwichShop());
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("shop/sandwiches")
     public List<SandwichDTO> getTodaysSandwiches() throws DayOrderDoesNotExistYet {
         return orderService.getTodaysSandwiches().stream()
