@@ -21,13 +21,14 @@ public class OrderMapper {
         orderDTO.setSessionID(o.getSession().getSessionNumber());
         orderDTO.setSessionName(o.getSession().getCourse().name());
         orderDTO.setDate(o.getDate());
+        orderDTO.setRemark(o.getRemark());
 
-        if (o.getOrderStatus() != OrderStatus.UNFILLED) {
+        if (o.getOrderStatus() != OrderStatus.UNFILLED && o.getOrderStatus() != OrderStatus.NOSANDWICH) {
             orderDTO.setSandwichID(o.getSandwich().getSandwichID());
             orderDTO.setSandwichName(o.getSandwich().getName());
+            orderDTO.setSandwichCategory(o.getSandwich().getCategory());
             orderDTO.setBreadType(o.getBreadType());
             orderDTO.setOptions(o.getOptions());
-            orderDTO.setRemark(o.getRemark());
         }
 
         return orderDTO;

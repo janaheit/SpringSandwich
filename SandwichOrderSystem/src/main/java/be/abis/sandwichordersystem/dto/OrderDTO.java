@@ -20,6 +20,7 @@ public class OrderDTO {
     private String personName;
     private int sandwichID;
     private String sandwichName;
+    private String sandwichCategory;
     private BreadType breadType;
     private String remark;
     private List<Options> options;
@@ -38,6 +39,14 @@ public class OrderDTO {
 
     public void setOrderID(int orderID) {
         this.orderID = orderID;
+    }
+
+    public String getSandwichCategory() {
+        return sandwichCategory;
+    }
+
+    public void setSandwichCategory(String sandwichCategory) {
+        this.sandwichCategory = sandwichCategory;
     }
 
     public int getSandwichShopID() {

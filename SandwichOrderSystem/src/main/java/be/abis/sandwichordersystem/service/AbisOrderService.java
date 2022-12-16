@@ -132,7 +132,7 @@ public class AbisOrderService implements OrderService {
 
     @Override
     public List<Order> findTodaysOrdersForPerson(Person person) {
-        return orderRepository.findOrdersByDate(LocalDate.now()).stream().filter(order -> order.getPerson().equals(person)).collect(Collectors.toList());
+        return orderRepository.findOrdersByDate(LocalDate.now()).stream().filter(order -> order.getPersonFullName().equals(person)).collect(Collectors.toList());
     }
 
     @Override
@@ -159,7 +159,7 @@ public class AbisOrderService implements OrderService {
 
     @Override
     public List<Person> getAllPersonsFromListOfOrders(List<Order> orders) {
-        return orders.stream().map(order -> order.getPerson()).collect(Collectors.toList());
+        return orders.stream().map(order -> order.getPersonFullName()).collect(Collectors.toList());
     }
 
     @Override
@@ -211,14 +211,14 @@ public class AbisOrderService implements OrderService {
 
     @Override
     public Order findTodaysUnfilledOrderByName(String name) throws PersonNotFoundException {
-        List<Order> myOrderList = orderRepository.findOrdersByDate(LocalDate.now()).stream().filter(order -> (order.getPerson().getFirstName() + " " + order.getPerson().getLastName()).equalsIgnoreCase(name)).collect(Collectors.toList());
+        List<Order> myOrderList = orderRepository.findOrdersByDate(LocalDate.now()).stream().filter(order -> (order.getPersonFullName().getFirstName() + " " + order.getPersonFullName().getLastName()).equalsIgnoreCase(name)).collect(Collectors.toList());
         if (myOrderList.size()==0) {
             throw new PersonNotFoundException("This person was not found in a session today");
         } else {
             if (myOrderList.get(myOrderList.size()-1).getOrderStatus()==OrderStatus.UNFILLED) {
                 return myOrderList.get(myOrderList.size()-1);
             } else {
-                return createOrder(myOrderList.get(myOrderList.size()-1).getPerson());
+                return createOrder(myOrderList.get(myOrderList.size()-1).getPersonFullName());
             }
         }
     }
@@ -252,7 +252,7 @@ public class AbisOrderService implements OrderService {
         StringBuilder output = new StringBuilder();
         List<Order> todaysOrders = this.findOrdersByDate(LocalDate.now()).stream()
                 .filter(o -> o.getOrderStatus() == OrderStatus.ORDERED)
-                .sorted(Comparator.comparing(o -> o.getPerson().getFirstName()))
+                .sorted(Comparator.comparing(o -> o.getPersonFullName().getFirstName()))
                 .sorted(Comparator.comparing(o -> o.getSession().getSessionNumber()))
                 .collect(Collectors.toList());
 
@@ -266,7 +266,7 @@ public class AbisOrderService implements OrderService {
             for (Options option : order.getOptions()) {
                 options.append(option.getOption()).append(" ");
             }
-            output.append(String.format("%1$-10s%2$-40s%3$-8s%4$-15s\n",order.getPerson().getFirstName(), order.getSandwich().getName(), order.getBreadType().getBreadType().toUpperCase(), options));
+            output.append(String.format("%1$-10s%2$-40s%3$-8s%4$-15s\n",order.getPersonFullName().getFirstName(), order.getSandwich().getName(), order.getBreadType().getBreadType().toUpperCase(), options));
             if (order.getRemark().length() > 0) {
                 output.append(String.format("%2$-10s%1$-7s\n", order.getRemark().toUpperCase(), ""));
             }
@@ -312,7 +312,7 @@ public class AbisOrderService implements OrderService {
     @Override
     public List<Person> findWhoStillHasToOrderToday() throws PersonNotFoundException {
         try {
-            List<Person> unfilledOrders = orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now()).stream().map(order -> order.getPerson()).distinct().collect(Collectors.toList());
+            List<Person> unfilledOrders = orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED, LocalDate.now(), LocalDate.now()).stream().map(order -> order.getPersonFullName()).distinct().collect(Collectors.toList());
             List<Person> output = new ArrayList<>();
             // Check for double orders
             for (Person p : unfilledOrders) {

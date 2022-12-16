@@ -2,16 +2,14 @@ package be.abis.sandwichordersystem.dto;
 
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
-import be.abis.sandwichordersystem.model.Person;
-import be.abis.sandwichordersystem.model.Sandwich;
 
 import java.util.List;
 
 public class OrderCreationDTO {
 
     private boolean noSandwich;
-    private Person person;
-    private Sandwich sandwich;
+    private String personFullName;
+    private int sandwichID;
 
     private BreadType breadType;
     private String remark;
@@ -28,20 +26,20 @@ public class OrderCreationDTO {
         this.noSandwich = noSandwich;
     }
 
-    public Person getPerson() {
-        return person;
+    public String getPersonFullName() {
+        return personFullName;
     }
 
-    public void setPerson(Person person) {
-        this.person = person;
+    public void setPersonFullName(String name) {
+        this.personFullName = name;
     }
 
-    public Sandwich getSandwich() {
-        return sandwich;
+    public int getSandwichID() {
+        return sandwichID;
     }
 
-    public void setSandwich(Sandwich sandwich) {
-        this.sandwich = sandwich;
+    public void setSandwichID(int sandwichID) {
+        this.sandwichID = sandwichID;
     }
 
     public BreadType getBreadType() {

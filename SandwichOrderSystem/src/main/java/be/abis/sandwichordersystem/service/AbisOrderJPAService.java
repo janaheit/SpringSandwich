@@ -184,7 +184,6 @@ public class AbisOrderJPAService implements OrderJPAService {
     public List<Order> findTodaysOrdersForPerson(Person person) {
         return orderRepository.findOrdersByPersonAndDates(person.getPersonNr(), LocalDate.now(), LocalDate.now());
 
-        //return orderRepository.findOrdersByDate(LocalDate.now()).stream().filter(order -> order.getPerson().equals(person)).collect(Collectors.toList());
     }
 
     @Override

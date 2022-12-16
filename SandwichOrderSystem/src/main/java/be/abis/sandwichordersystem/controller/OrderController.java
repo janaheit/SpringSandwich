@@ -68,14 +68,14 @@ public class OrderController {
     @PostMapping()
     public void handleOrder(@RequestBody OrderCreationDTO orderCreationDTO) throws PersonNotFoundException, IngredientNotAvailableException, SandwichNotFoundException, OrderAlreadyExistsException {
 
-        String fullName = orderCreationDTO.getPerson().getFirstName() + " " + orderCreationDTO.getPerson().getLastName();
+        String fullName = orderCreationDTO.getPersonFullName();
         Order personOrder = orderService.findTodaysUnfilledOrderByName(fullName);
 
         // if noSandwich == true (aka person does not want a sandwich)
         if (orderCreationDTO.getNoSandwich()) {
             orderService.handleOrder(personOrder, orderCreationDTO.getRemark());
         } else { // if noSandwich == false (aka person wants a sandwich)
-            orderService.handleOrder(personOrder, orderCreationDTO.getSandwich().getSandwichID(), orderCreationDTO.getBreadType(),
+            orderService.handleOrder(personOrder, orderCreationDTO.getSandwichID(), orderCreationDTO.getBreadType(),
                     orderCreationDTO.getOptions(), orderCreationDTO.getRemark());
         }
     }
