@@ -33,6 +33,9 @@ public class AbisOrderJPAService implements OrderJPAService {
     OrderJpaRepository orderRepository;
 
     @Autowired
+    PersonService personService;
+
+    @Autowired
     SessionService sessionService;
     @Autowired
     SandwichJPAService sandwichJPAService;
@@ -263,22 +266,26 @@ public class AbisOrderJPAService implements OrderJPAService {
     }
 
     @Override
+    @Transactional
     public Order findTodaysUnfilledOrderByName(String name) throws PersonNotFoundException, OrderAlreadyExistsException, DayOrderDoesNotExistYet {
+            // make sure day order is set
+            if (this.dayOrder == null){
+                throw new DayOrderDoesNotExistYet("Day order is null");
+            }
 
-        // make sure day order is set
-        if (this.dayOrder == null){
-            throw new DayOrderDoesNotExistYet("Day order is null");
-        }
-
-        List<Order> myOrderList = orderRepository.findOrdersByDate(LocalDate.now()).stream()
+        Person myPerson = personService.findPersonByName(name);
+        List<Order> myOrderList = orderRepository.findOrdersByPersonAndDates(myPerson.getPersonNr(), LocalDate.now(), LocalDate.now()).stream()
                 .filter(order -> (order.getPerson().getFirstName() + order.getPerson().getLastName()).equalsIgnoreCase(name))
                 .collect(Collectors.toList());
         if (myOrderList.size()==0) {
             throw new PersonNotFoundException("This person was not found in a session today");
         } else {
-            if (myOrderList.get(myOrderList.size()-1).getOrderStatus()==OrderStatus.UNFILLED) {
-                return myOrderList.get(myOrderList.size()-1);
+            List<Order> myUnfilledOrderList = myOrderList.stream().filter(order -> (order.getOrderStatus() == OrderStatus.UNFILLED)).collect(Collectors.toList());
+            if (myUnfilledOrderList.size()>0) {
+                System.out.println("There was an unfilled order that is returned: " + myUnfilledOrderList.get(myUnfilledOrderList.size()-1).getOrderNum());
+                return myUnfilledOrderList.get(myUnfilledOrderList.size()-1);
             } else {
+                System.out.println("There wasn't an unfiled order, new one is made: " + myOrderList);
                 return createOrder(myOrderList.get(myOrderList.size()-1).getPerson());
             }
         }
