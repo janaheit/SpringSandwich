@@ -33,7 +33,7 @@ public interface OrderJPAService {
     List<Person> getAllPersonsFromListOfOrders(List<Order> orders);
     List<Order> findOrdersByStatusAndSession(OrderStatus status, Session session) throws OrderNotFoundException;
     List<Order> findAllFilledOrdersForToday() throws OrderNotFoundException;
-    List<Order> findAllNoSandwichOrdersForToday() throws OrderNotFoundException;
+    List<Order> findOrdersWithoutSandwichToday() throws OrderNotFoundException;
 
     List<Person> findWhoStillHasToOrderToday() throws PersonNotFoundException;
 

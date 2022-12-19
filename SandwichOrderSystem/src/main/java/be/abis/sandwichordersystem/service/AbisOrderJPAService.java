@@ -297,7 +297,7 @@ public class AbisOrderJPAService implements OrderJPAService {
     }
 
     @Override
-    public List<Order> findAllNoSandwichOrdersForToday() throws OrderNotFoundException {
+    public List<Order> findOrdersWithoutSandwichToday() throws OrderNotFoundException {
         return orderRepository.findOrdersByStatusAndDates(OrderStatus.NOSANDWICH.name(), LocalDate.now(), LocalDate.now());
     }
 
@@ -385,7 +385,9 @@ public class AbisOrderJPAService implements OrderJPAService {
     @Override
     public List<Person> findWhoStillHasToOrderToday() throws PersonNotFoundException {
 
-            List<Person> unfilledOrders = orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED.name(), LocalDate.now(), LocalDate.now()).stream().map(order -> order.getPerson()).distinct().collect(Collectors.toList());
+            List<Person> unfilledOrders = orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED.name(), LocalDate.now(), LocalDate.now())
+                    .stream()
+                    .map(order -> order.getPerson()).distinct().collect(Collectors.toList());
             List<Person> output = new ArrayList<>();
 
             if (unfilledOrders.size() == 0) {
