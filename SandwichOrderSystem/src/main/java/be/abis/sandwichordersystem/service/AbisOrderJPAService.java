@@ -158,6 +158,7 @@ public class AbisOrderJPAService implements OrderJPAService {
         }
         order.setRemark(remark);
         order.setOrderStatus(OrderStatus.ORDERED);
+        order.setAmount(1);
         System.out.println("order handeled");
         orderRepository.updateHandleOrder(order.getOrderNum(), order.getSandwich().getSandwichID(), order.getBreadType().name(), order.getRemark(), order.getOrderStatus().name(), order.getAmount(), order.getPrice(), order.getDate(), order.getSandwichShop().getSandwichShopID(), order.getPerson().getPersonNr(), order.getSession().getSessionNumber());
         //return orderRepository.save(order);
