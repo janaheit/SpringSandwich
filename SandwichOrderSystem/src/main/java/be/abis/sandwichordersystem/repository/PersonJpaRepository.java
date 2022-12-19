@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface PersonJpaRepository extends JpaRepository<Person, Integer> {
 
-    @Query(value = "select * from persons where lower(concat(plname, pfname)) like lower(concat('%', :name, '%'))", nativeQuery = true)
+    @Query(value = "select * from persons where replace(lower(concat(plname, pfname)), ' ', '') like lower(concat('%', :name, '%'))", nativeQuery = true)
     Person findPersonByName(@Param("name") String name);
 
     @Query(value = "select * from persons where lower(concat(plname, pfname)) like lower(concat('%', :name, '%')) and kind = 'i'", nativeQuery = true)

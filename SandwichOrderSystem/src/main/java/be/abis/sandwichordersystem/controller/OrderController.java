@@ -40,8 +40,8 @@ public class OrderController {
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/unfilled/query")
     public OrderDTO findTodaysUnfilledOrderByName(@RequestParam String name) throws PersonNotFoundException, OrderAlreadyExistsException, DayOrderDoesNotExistYet {
-        System.out.println("Unfilled method is called!");
-        return OrderMapper.toDTO(orderService.findTodaysUnfilledOrderByName(name));
+        //System.out.println("Unfilled method is called! " +name);
+        return OrderMapper.toDTO(orderService.findTodaysUnfilledOrderByName(name.replaceAll(" ", "")));
     }
 
     @Transactional
