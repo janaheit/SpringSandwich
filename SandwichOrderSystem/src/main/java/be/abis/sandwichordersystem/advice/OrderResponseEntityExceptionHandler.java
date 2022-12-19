@@ -61,6 +61,15 @@ public class OrderResponseEntityExceptionHandler extends ResponseEntityException
         return new ResponseEntity<ApiError>(ae, responseHeaders, status);
     }
 
+    @ExceptionHandler(DayOrderDoesNotExistYet.class)
+    public ResponseEntity<? extends Object> handleDayOrderDoesNotExistYetException(DayOrderDoesNotExistYet ex, WebRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ApiError ae = new ApiError("Day order does not yet exist!", status.value(), ex.getMessage());
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("content-type", MediaType.APPLICATION_PROBLEM_JSON_VALUE);
+        return new ResponseEntity<ApiError>(ae, responseHeaders, status);
+    }
+
     @ExceptionHandler(NothingToHandleException.class)
     public ResponseEntity<? extends Object> handleNothingToHandleException(NothingToHandleException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;

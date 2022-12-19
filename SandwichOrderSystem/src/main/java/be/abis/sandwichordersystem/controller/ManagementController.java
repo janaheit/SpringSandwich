@@ -17,8 +17,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping(value = "/orders")
 public class ManagementController {
 
@@ -32,10 +32,11 @@ public class ManagementController {
     PersonService personService;
 
     //TODO reimplement with new order service
-    @GetMapping("startup")
-    public void startDay() throws SandwichShopNotFoundException, DayOrderDoesNotExistYet, OrderAlreadyExistsException {
+    @PostMapping("startup")
+    public void startDay(@RequestBody SandwichShopDTO sandwichShopDTO) throws SandwichShopNotFoundException, DayOrderDoesNotExistYet, OrderAlreadyExistsException {
         // set Vleugels as currentSandwichShop
-        orderService.setTodaysSandwichShop(sandwichJPAService.findShopByName("Vleugels"));
+        SandwichShop todayShop = sandwichJPAService.findShopByID(sandwichShopDTO.getId());
+        orderService.setTodaysSandwichShop(todayShop);
         System.out.println("SandwichShop set to: "+ orderService.getTodaysSandwichShop().getName());
         orderService.createOrdersForEveryoneToday();
     }
