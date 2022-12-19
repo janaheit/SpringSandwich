@@ -33,6 +33,7 @@ public interface OrderJPAService {
     List<Person> getAllPersonsFromListOfOrders(List<Order> orders);
     List<Order> findOrdersByStatusAndSession(OrderStatus status, Session session) throws OrderNotFoundException;
     List<Order> findAllFilledOrdersForToday() throws OrderNotFoundException;
+    List<Order> findAllNoSandwichOrdersForToday() throws OrderNotFoundException;
 
     List<Person> findWhoStillHasToOrderToday() throws PersonNotFoundException;
 
@@ -51,7 +52,7 @@ public interface OrderJPAService {
     void setDayOrder(DayOrder dayOrder);
     DayOrder getDayOrder();
 
-    Order findTodaysUnfilledOrderByName(String name) throws PersonNotFoundException, OrderAlreadyExistsException;
+    Order findTodaysUnfilledOrderByName(String name) throws PersonNotFoundException, OrderAlreadyExistsException, DayOrderDoesNotExistYet;
 
     public void setTodaysFilledOrdersToHandeled() throws NothingToHandleException;
     public void deleteAllUnfilledOrdersOfDay(LocalDate date) throws OrderNotFoundException, OperationNotAllowedException;

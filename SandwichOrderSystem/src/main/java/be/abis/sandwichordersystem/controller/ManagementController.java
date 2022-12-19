@@ -50,6 +50,13 @@ public class ManagementController {
         return new ResponseEntity<List<OrderDTO>>(orderList, HttpStatus.OK);
     }
 
+    @GetMapping("today/no-sandwich")
+    public ResponseEntity<? extends Object> findAllNoSandwichOrdersToday() throws OrderNotFoundException {
+        List<OrderDTO> orderList = orderService.findAllNoSandwichOrdersForToday().stream()
+                .map(OrderMapper::toDTO).collect(Collectors.toList());
+        return new ResponseEntity<List<OrderDTO>>(orderList, HttpStatus.OK);
+    }
+
     //TODO reimplement with new order service
     // GET /orders/missing -> get all unfilled orders / who still has to order
     @GetMapping("missing")

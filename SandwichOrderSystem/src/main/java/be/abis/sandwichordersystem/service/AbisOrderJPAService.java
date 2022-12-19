@@ -263,7 +263,13 @@ public class AbisOrderJPAService implements OrderJPAService {
     }
 
     @Override
-    public Order findTodaysUnfilledOrderByName(String name) throws PersonNotFoundException, OrderAlreadyExistsException {
+    public Order findTodaysUnfilledOrderByName(String name) throws PersonNotFoundException, OrderAlreadyExistsException, DayOrderDoesNotExistYet {
+
+        // make sure day order is set
+        if (this.dayOrder == null){
+            throw new DayOrderDoesNotExistYet("Day order is null");
+        }
+
         List<Order> myOrderList = orderRepository.findOrdersByDate(LocalDate.now()).stream()
                 .filter(order -> (order.getPerson().getFirstName() + order.getPerson().getLastName()).equalsIgnoreCase(name))
                 .collect(Collectors.toList());
@@ -281,6 +287,11 @@ public class AbisOrderJPAService implements OrderJPAService {
     @Override
     public List<Order> findAllFilledOrdersForToday() throws OrderNotFoundException {
         return orderRepository.findOrdersByStatusAndDates(OrderStatus.ORDERED.name(), LocalDate.now(), LocalDate.now());
+    }
+
+    @Override
+    public List<Order> findAllNoSandwichOrdersForToday() throws OrderNotFoundException {
+        return orderRepository.findOrdersByStatusAndDates(OrderStatus.NOSANDWICH.name(), LocalDate.now(), LocalDate.now());
     }
 
     // Simple getters and setters
