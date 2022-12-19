@@ -272,7 +272,7 @@ public class OrderServiceTest {
     @Test
     public void findTodaysOrderByNameThrowsException() throws DayOrderDoesNotExistYet {
 
-        assertThrows(PersonNotFoundException.class, () -> cut.findTodaysUnfilledOrderByName("Henkie Penkie"));
+        assertThrows(PersonNotFoundException.class, () -> cut.findTodaysUnfilledOrderByName("HenkiePenkie"));
 
     }
 

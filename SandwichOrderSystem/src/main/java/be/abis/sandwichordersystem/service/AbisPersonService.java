@@ -23,6 +23,7 @@ public class AbisPersonService implements PersonService {
 
     @Override
     public Person findPersonByName(String name) throws PersonNotFoundException {
+        System.out.println("lets go: " +name);
         Person myPerson = personRepository.findPersonByName(name);
         if (myPerson == null) {
             throw new PersonNotFoundException("No person with name: " + name + " found");

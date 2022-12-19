@@ -274,9 +274,9 @@ public class AbisOrderJPAService implements OrderJPAService {
             }
 
         Person myPerson = personService.findPersonByName(name);
-        List<Order> myOrderList = orderRepository.findOrdersByPersonAndDates(myPerson.getPersonNr(), LocalDate.now(), LocalDate.now()).stream()
-                .filter(order -> (order.getPerson().getFirstName() + order.getPerson().getLastName()).equalsIgnoreCase(name))
-                .collect(Collectors.toList());
+        List<Order> myOrderList = orderRepository.findOrdersByPersonAndDates(myPerson.getPersonNr(), LocalDate.now(), LocalDate.now());//.stream()
+                //.filter(order -> (order.getPerson().getFirstName() + order.getPerson().getLastName()).equalsIgnoreCase(name))
+                //.collect(Collectors.toList());
         if (myOrderList.size()==0) {
             throw new PersonNotFoundException("This person was not found in a session today");
         } else {
