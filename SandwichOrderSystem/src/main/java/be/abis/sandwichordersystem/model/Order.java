@@ -39,6 +39,7 @@ public class Order implements Comparable<Order> {
     private String remark;
 
     @ElementCollection
+    @Enumerated(EnumType.STRING)
     @CollectionTable(name = "ORDEROPTIONS", joinColumns = @JoinColumn(name="OO_OID"))
     @Column(name="option")
     private List<Options> options;
@@ -57,7 +58,7 @@ public class Order implements Comparable<Order> {
     @Column(name = "ODATE")
     private LocalDate date;
 
-    @JsonIgnore
+    //@JsonIgnore
     @Column(name = "OPRICE")
     private double price;
 
