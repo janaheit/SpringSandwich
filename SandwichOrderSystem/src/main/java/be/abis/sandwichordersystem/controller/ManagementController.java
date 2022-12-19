@@ -1,15 +1,9 @@
 package be.abis.sandwichordersystem.controller;
 
-import be.abis.sandwichordersystem.dto.OrderDTO;
-import be.abis.sandwichordersystem.dto.PersonDTO;
-import be.abis.sandwichordersystem.dto.SandwichCreationDTO;
-import be.abis.sandwichordersystem.dto.SessionDTO;
+import be.abis.sandwichordersystem.dto.*;
 import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.*;
-import be.abis.sandwichordersystem.mapper.OrderMapper;
-import be.abis.sandwichordersystem.mapper.PersonMapper;
-import be.abis.sandwichordersystem.mapper.SandwichMapper;
-import be.abis.sandwichordersystem.mapper.SessionMapper;
+import be.abis.sandwichordersystem.mapper.*;
 import be.abis.sandwichordersystem.model.*;
 import be.abis.sandwichordersystem.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(value = "/orders")
 public class ManagementController {
@@ -122,8 +117,9 @@ public class ManagementController {
     @GetMapping("shops")
     public ResponseEntity<? extends Object> getAllSandwichShops() {
         // Returns List of Sandwich Shop (with id and name!!! no lists)
-        List<SandwichShop> myList = sandwichJPAService.getSandwichShops();
-        return new ResponseEntity<List<SandwichShop>>(myList, HttpStatus.OK);
+        List<SandwichShopDTO> myList = sandwichJPAService.getSandwichShops().stream()
+                .map(SandwichShopMapper::toDTO).collect(Collectors.toList());
+        return new ResponseEntity<List<SandwichShopDTO>>(myList, HttpStatus.OK);
     }
 
     //POST /orders/shops/{shopID}/sandwiches → add sandwich to sandwichshop
