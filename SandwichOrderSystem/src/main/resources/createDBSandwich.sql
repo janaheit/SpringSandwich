@@ -107,10 +107,15 @@ CREATE TABLE ORDEROPTIONS
 ALTER TABLE PERSONS ADD CONSTRAINT FK_PSESSION FOREIGN KEY(P_SID) REFERENCES SESSIONS;
 ALTER TABLE SESSIONS ADD CONSTRAINT FK_INSTRUCTOR FOREIGN KEY (SINS_PID) REFERENCES PERSONS;
 
-INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Jana', 'Heitkeper', 's');
+INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Jana', 'Heitkemper', 's');
 INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Marcel', 'van Hassel', 's');
+INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Quentin', 'Locht', 's');
+INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Jens', 'Verheyden', 's');
+INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Claudia', 'Negrila', 's');
+INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Esben', 'Six', 's');
+INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Simon', 'Hazevoets', 's');
 INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Sandy', 'Schillebeeckx', 'i');
-INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Peter', 'idk', 'i');
+INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Peter', 'Vanroose', 'i');
 INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Emily', 'Admin', 'a');
 INSERT INTO PERSONS(plname, pfname, kind) VALUES ('Kim', 'Wauters', 's');
 
@@ -119,18 +124,23 @@ INSERT INTO SESSIONS(sstartdate, senddate, s_course) VALUES ('2022-09-05', '2023
 INSERT INTO SESSIONS(sstartdate, senddate, s_course) VALUES ('2022-09-05', '2022-09-12', 'SQL_FUNDAMENTALS');
 
 -- set instructors
-UPDATE PERSONS SET p_sid = 1 WHERE pid = 3;
-UPDATE PERSONS SET p_sid = 2 WHERE pid = 4;
+UPDATE PERSONS SET p_sid = 1 WHERE pid = 8;
+UPDATE PERSONS SET p_sid = 2 WHERE pid = 9;
 
 -- set students
 UPDATE PERSONS SET p_sid = 1 WHERE pid = 1;
+UPDATE PERSONS SET p_sid = 1 WHERE pid = 3;
+UPDATE PERSONS SET p_sid = 1 WHERE pid = 4;
+UPDATE PERSONS SET p_sid = 1 WHERE pid = 5;
 UPDATE PERSONS SET p_sid = 2 WHERE pid = 2;
-UPDATE PERSONS SET p_sid = 3 WHERE pid = 6;
+UPDATE PERSONS SET p_sid = 2 WHERE pid = 6;
+UPDATE PERSONS SET p_sid = 2 WHERE pid = 7;
+UPDATE PERSONS SET p_sid = 3 WHERE pid = 11;
 
 -- Give sessions instructors
-update sessions set sins_pid = 3 where sid = 1;
-update sessions set sins_pid = 4 where sid = 2;
-update sessions set sins_pid = 4 where sid = 3;
+update sessions set sins_pid = 8 where sid = 1;
+update sessions set sins_pid = 9 where sid = 2;
+update sessions set sins_pid = 9 where sid = 3;
 
 -- make sandwichshop
 INSERT INTO SANDWICHSHOPS(shopname) VALUES ('TestShop');
