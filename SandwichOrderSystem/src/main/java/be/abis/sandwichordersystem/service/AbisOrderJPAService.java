@@ -359,13 +359,10 @@ public class AbisOrderJPAService implements OrderJPAService {
 
     @Transactional
     @Override
-    public void setTodaysFilledOrdersToHandeled() throws NothingToHandleException {
+    public void setTodaysFilledOrdersToHandeled() {
 
         List<Order> myOrderList = orderRepository.findOrdersByStatusAndDates(OrderStatus.ORDERED.name(), LocalDate.now(), LocalDate.now());
         System.out.println(myOrderList);
-        if (myOrderList.size() == 0) {
-            throw new NothingToHandleException("No orrtheders were found that could be handled today");
-        }
 
         for (Order order : myOrderList) {
             order.setOrderStatus(OrderStatus.HANDELED);
@@ -387,16 +384,12 @@ public class AbisOrderJPAService implements OrderJPAService {
     }
 
     @Override
-    public List<Person> findWhoStillHasToOrderToday() throws PersonNotFoundException {
+    public List<Person> findWhoStillHasToOrderToday() {
 
             List<Person> unfilledOrders = orderRepository.findOrdersByStatusAndDates(OrderStatus.UNFILLED.name(), LocalDate.now(), LocalDate.now())
                     .stream()
                     .map(order -> order.getPerson()).distinct().collect(Collectors.toList());
             List<Person> output = new ArrayList<>();
-
-            if (unfilledOrders.size() == 0) {
-                throw new PersonNotFoundException("No Persons found that still have to order today!");
-            }
 
             // Check for double orders
             for (Person p : unfilledOrders) {

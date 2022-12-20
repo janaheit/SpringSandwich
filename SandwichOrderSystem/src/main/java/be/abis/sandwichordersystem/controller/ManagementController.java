@@ -50,6 +50,17 @@ public class ManagementController {
         return new ResponseEntity<List<OrderDTO>>(orderList, HttpStatus.OK);
     }
 
+    @GetMapping("shop")
+    public ResponseEntity<? extends Object> getTodaysShopWithoutError() {
+        SandwichShopDTO shop;
+        try {
+            shop = SandwichShopMapper.toDTO(orderService.getTodaysSandwichShop());
+        } catch (DayOrderDoesNotExistYet e) {
+            shop = null;
+        }
+        return new ResponseEntity<SandwichShopDTO>(shop, HttpStatus.OK);
+    }
+
     @GetMapping("today/no-sandwich")
     public ResponseEntity<? extends Object> findWhoOrderedNoSandwichToday() throws OrderNotFoundException {
         List<OrderDTO> orderList = orderService.findOrdersWithoutSandwichToday().stream()
@@ -60,7 +71,7 @@ public class ManagementController {
     //TODO reimplement with new order service
     // GET /orders/missing -> get all unfilled orders / who still has to order
     @GetMapping("missing")
-    public ResponseEntity<? extends Object> findWhoStillHasToOrder() throws PersonNotFoundException {
+    public ResponseEntity<? extends Object> findWhoStillHasToOrder() {
         List<PersonDTO> personList = orderService.findWhoStillHasToOrderToday().stream()
                 .map(PersonMapper::toDTO).collect(Collectors.toList());
         return new ResponseEntity<List<PersonDTO>>(personList, HttpStatus.OK);
@@ -113,7 +124,7 @@ public class ManagementController {
 
     // POST /orders/close → close all orders // when you ordered
     @PostMapping("close")
-    public ResponseEntity<? extends Object> closeOrdersOfDay() throws IOException, NothingToHandleException, OrderNotFoundException, OperationNotAllowedException {
+    public ResponseEntity<? extends Object> closeOrdersOfDay() throws OrderNotFoundException, OperationNotAllowedException {
         //orderService.generateOrderFile();
         orderService.setTodaysFilledOrdersToHandeled();
         // Also deletes the noSandwich orders.
