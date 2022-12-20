@@ -114,13 +114,21 @@ public class ManagementController {
     // POST /orders/close → close all orders // when you ordered
     @PostMapping("close")
     public ResponseEntity<? extends Object> closeOrdersOfDay() throws IOException, NothingToHandleException, OrderNotFoundException, OperationNotAllowedException {
-        orderService.generateOrderFile();
+        //orderService.generateOrderFile();
         orderService.setTodaysFilledOrdersToHandeled();
         // Also deletes the noSandwich orders.
         orderService.deleteAllUnfilledOrdersOfDay(LocalDate.now());
         orderService.setDayOrder(null);
         MessageDTO myMessage = new MessageDTO();
         myMessage.setMessage("All Good!");
+        return new ResponseEntity<MessageDTO>(myMessage, HttpStatus.OK);
+    }
+
+    @PostMapping("print")
+    public ResponseEntity<? extends Object> orderFile() throws IOException {
+        String filename = orderService.generateOrderFile();
+        MessageDTO myMessage = new MessageDTO();
+        myMessage.setMessage(filename);
         return new ResponseEntity<MessageDTO>(myMessage, HttpStatus.OK);
     }
 

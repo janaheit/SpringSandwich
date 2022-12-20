@@ -37,7 +37,7 @@ public interface OrderJPAService {
 
     List<Person> findWhoStillHasToOrderToday() throws PersonNotFoundException;
 
-    void generateOrderFile() throws IOException;
+    String generateOrderFile() throws IOException;
 
     void setTodaysSandwichShop(SandwichShop sandwichShop);
 
