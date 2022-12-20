@@ -358,15 +358,16 @@ public class AbisOrderJPAService implements OrderJPAService {
     @Override
     public void setTodaysFilledOrdersToHandeled() throws NothingToHandleException {
 
-            List<Order> myOrderList = orderRepository.findOrdersByStatusAndDates(OrderStatus.ORDERED.name(), LocalDate.now(), LocalDate.now());
-            if (myOrderList.size() == 0) {
-                throw new NothingToHandleException("No orders were found that could be handled today");
-            }
+        List<Order> myOrderList = orderRepository.findOrdersByStatusAndDates(OrderStatus.ORDERED.name(), LocalDate.now(), LocalDate.now());
+        System.out.println(myOrderList);
+        if (myOrderList.size() == 0) {
+            throw new NothingToHandleException("No orrtheders were found that could be handled today");
+        }
 
-            for (Order order : myOrderList) {
-                order.setOrderStatus(OrderStatus.HANDELED);
-                orderRepository.save(order);
-            }
+        for (Order order : myOrderList) {
+            order.setOrderStatus(OrderStatus.HANDELED);
+            orderRepository.save(order);
+        }
     }
 
     @Override

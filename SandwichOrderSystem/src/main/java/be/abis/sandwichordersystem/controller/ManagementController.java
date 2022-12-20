@@ -114,7 +114,7 @@ public class ManagementController {
     // POST /orders/close → close all orders // when you ordered
     @PostMapping("close")
     public ResponseEntity<? extends Object> closeOrdersOfDay() throws IOException, NothingToHandleException, OrderNotFoundException, OperationNotAllowedException {
-        orderService.generateOrderFile();
+        //orderService.generateOrderFile();
         orderService.setTodaysFilledOrdersToHandeled();
         // Also deletes the noSandwich orders.
         orderService.deleteAllUnfilledOrdersOfDay(LocalDate.now());
