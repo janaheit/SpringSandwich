@@ -90,7 +90,7 @@ public class OrderController {
             return orderDTO;
         } else { // if noSandwich == false (aka person wants a sandwich)
             orderDTO = OrderMapper.toDTO(orderService.handleOrder(personOrder, orderCreationDTO.getSandwichID(), orderCreationDTO.getBreadType(),
-                    orderCreationDTO.getOptions(), orderCreationDTO.getRemark()));
+                    orderCreationDTO.getOptions(), orderCreationDTO.getRemark(), orderCreationDTO.getAmount()));
             return orderDTO;
         }
     }

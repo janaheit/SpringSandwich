@@ -141,7 +141,7 @@ public class AbisOrderJPAService implements OrderJPAService {
 
     @Override
     @Transactional
-    public Order handleOrder(Order order, int sandwichID, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException {
+    public Order handleOrder(Order order, int sandwichID, BreadType breadType, List<Options> options, String remark, int amount) throws IngredientNotAvailableException, SandwichNotFoundException {
         SandwichShop mySandwichShop = order.getDayOrder().getCurrentSandwichShop();
         System.out.println("started handle order");
 
@@ -161,7 +161,7 @@ public class AbisOrderJPAService implements OrderJPAService {
         }
         order.setRemark(remark);
         order.setOrderStatus(OrderStatus.ORDERED);
-        order.setAmount(1);
+        order.setAmount(amount);
         System.out.println("order handeled");
         orderRepository.updateHandleOrder(order.getOrderNum(), order.getSandwich().getSandwichID(), order.getBreadType().name(), order.getRemark(), order.getOrderStatus().name(), order.getAmount(), order.getPrice(), order.getDate(), order.getSandwichShop().getSandwichShopID(), order.getPerson().getPersonNr(), order.getSession().getSessionNumber());
         //return orderRepository.save(order);

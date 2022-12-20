@@ -29,6 +29,7 @@ public class OrderDTO {
     private int sandwichShopID;
     private String sandwichShopName;
     private LocalDate date;
+    private int amount;
 
     public OrderDTO() {
     }
@@ -151,5 +152,13 @@ public class OrderDTO {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }

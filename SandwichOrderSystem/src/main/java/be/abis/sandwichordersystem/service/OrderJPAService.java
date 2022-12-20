@@ -20,7 +20,7 @@ public interface OrderJPAService {
     Order createOrder(Person person) throws OrderAlreadyExistsException;
 
     Order handleOrder(Order order, String remark);
-    Order handleOrder(Order order, int sandwichID, BreadType breadType, List<Options> options, String remark) throws IngredientNotAvailableException, SandwichNotFoundException;
+    Order handleOrder(Order order, int sandwichID, BreadType breadType, List<Options> options, String remark, int amount) throws IngredientNotAvailableException, SandwichNotFoundException;
 
     Order findOrderById(int id) throws OrderNotFoundException;
     List<Order> findOrdersByDate(LocalDate date);

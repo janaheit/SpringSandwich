@@ -22,6 +22,7 @@ public class OrderMapper {
         orderDTO.setSessionName(o.getSession().getCourse().name());
         orderDTO.setDate(o.getDate());
         orderDTO.setRemark(o.getRemark());
+        orderDTO.setAmount(o.getAmount());
 
         if (o.getOrderStatus() != OrderStatus.UNFILLED && o.getOrderStatus() != OrderStatus.NOSANDWICH) {
             orderDTO.setSandwichID(o.getSandwich().getSandwichID());
