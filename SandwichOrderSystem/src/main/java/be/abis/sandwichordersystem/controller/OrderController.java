@@ -6,6 +6,7 @@ import be.abis.sandwichordersystem.dto.SandwichDTO;
 import be.abis.sandwichordersystem.dto.SandwichShopDTO;
 import be.abis.sandwichordersystem.enums.BreadType;
 import be.abis.sandwichordersystem.enums.Options;
+import be.abis.sandwichordersystem.enums.OrderStatus;
 import be.abis.sandwichordersystem.exception.*;
 import be.abis.sandwichordersystem.mapper.OrderMapper;
 import be.abis.sandwichordersystem.mapper.SandwichMapper;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,9 +47,19 @@ public class OrderController {
     }
 
     @Transactional
+    @GetMapping("/history/query")
+    public List<OrderDTO> findTOrdersOfLastTwoMonthsByName(@RequestParam String name) throws OrderNotFoundException, PersonNotFoundException {
+        Person p = personService.findPersonByName(name.replaceAll(" ", ""));
+        return orderService.findOrdersForPersonAndDates(p, LocalDate.now().minusMonths(2), LocalDate.now()).stream()
+                .filter(order -> order.getOrderStatus() == OrderStatus.HANDELED)
+                .map(OrderMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     @GetMapping("/filled/query")
     public List<OrderDTO> findTodaysFilledOrdersByName(@RequestParam String name) throws OrderNotFoundException, PersonNotFoundException {
-        Person p = personService.findPersonByName(name);
+        Person p = personService.findPersonByName(name.replaceAll(" ", ""));
         return orderService.findTodaysFilledOrdersForPerson(p).stream()
                 .map(OrderMapper::toDTO)
                 .collect(Collectors.toList());
