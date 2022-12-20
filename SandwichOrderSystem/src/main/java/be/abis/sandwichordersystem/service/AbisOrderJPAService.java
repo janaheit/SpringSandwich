@@ -220,13 +220,14 @@ public class AbisOrderJPAService implements OrderJPAService {
     }
 
     @Override
-    public void generateOrderFile() throws IOException {
+    public String generateOrderFile() throws IOException {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd");
-        String filename = filePath + dayOrder.getDate().format(fmt) + ".txt";
+        String filename = filePath + LocalDate.now().format(fmt) + ".txt";
 
         PrintWriter out = new PrintWriter(new FileWriter(filename));
         out.print(todaysOrdersForShop());
         out.close();
+        return filename;
     }
 
     @Override
@@ -324,10 +325,12 @@ public class AbisOrderJPAService implements OrderJPAService {
     public String todaysOrdersForShop() {
         StringBuilder output = new StringBuilder();
         List<Order> todaysOrders = this.findOrdersByDate(LocalDate.now()).stream()
-                .filter(o -> o.getOrderStatus() == OrderStatus.ORDERED)
+                .filter(o -> o.getOrderStatus() == OrderStatus.HANDELED)
                 .sorted(Comparator.comparing(o -> o.getPerson().getFirstName()))
                 .sorted(Comparator.comparing(o -> o.getSession().getSessionNumber()))
                 .collect(Collectors.toList());
+
+        System.out.println(todaysOrders);
 
         String currentSession = "";
         for (Order order : todaysOrders) {
@@ -340,7 +343,7 @@ public class AbisOrderJPAService implements OrderJPAService {
                 options.append(option.getOption()).append(" ");
             }
             output.append(String.format("%1$-10s%2$-40s%3$-8s%4$-15s\n",order.getPerson().getFirstName(), order.getSandwich().getName(), order.getBreadType().getBreadType().toUpperCase(), options));
-            if (order.getRemark().length() > 0) {
+            if (order.getRemark() != null) {
                 output.append(String.format("%2$-10s%1$-7s\n", order.getRemark().toUpperCase(), ""));
             }
         }

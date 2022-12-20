@@ -124,6 +124,14 @@ public class ManagementController {
         return new ResponseEntity<MessageDTO>(myMessage, HttpStatus.OK);
     }
 
+    @PostMapping("print")
+    public ResponseEntity<? extends Object> orderFile() throws IOException {
+        String filename = orderService.generateOrderFile();
+        MessageDTO myMessage = new MessageDTO();
+        myMessage.setMessage(filename);
+        return new ResponseEntity<MessageDTO>(myMessage, HttpStatus.OK);
+    }
+
     // GET /orders/shops → get all sandwich shops
     @GetMapping("shops")
     public ResponseEntity<? extends Object> getAllSandwichShops() {
