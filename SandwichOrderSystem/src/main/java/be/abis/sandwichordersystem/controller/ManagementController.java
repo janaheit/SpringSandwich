@@ -118,6 +118,7 @@ public class ManagementController {
         orderService.setTodaysFilledOrdersToHandeled();
         // Also deletes the noSandwich orders.
         orderService.deleteAllUnfilledOrdersOfDay(LocalDate.now());
+        orderService.setDayOrder(null);
         return new ResponseEntity<String>("all Good", HttpStatus.OK);
     }
 
