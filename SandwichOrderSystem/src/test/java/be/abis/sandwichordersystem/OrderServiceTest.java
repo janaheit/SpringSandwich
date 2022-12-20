@@ -152,7 +152,7 @@ public class OrderServiceTest {
     void handleOrderWithSandwichWorks() throws IngredientNotAvailableException, SandwichNotFoundException, DayOrderDoesNotExistYet, OrderAlreadyExistsException {
         cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
         testOrder = cut.createOrder(p1);
-        cut.handleOrder(testOrder, 3, BreadType.GREY, sandwichService.getOptionsForShop(2), "handleOrderWithSandwichWorks JUNIT test");
+        cut.handleOrder(testOrder, 3, BreadType.GREY, sandwichService.getOptionsForShop(2), "handleOrderWithSandwichWorks JUNIT test", 1);
         assertEquals(OrderStatus.ORDERED, orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0).getOrderStatus());
     }
 
@@ -162,7 +162,7 @@ public class OrderServiceTest {
         cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
         testOrder = cut.createOrder(p1);
 
-        assertThrows(SandwichNotFoundException.class, () -> cut.handleOrder(testOrder, 51, BreadType.GREY, sandwichService.getOptionsForShop(2), "handleOrderWithSandwichWorks JUNIT test"));
+        assertThrows(SandwichNotFoundException.class, () -> cut.handleOrder(testOrder, 51, BreadType.GREY, sandwichService.getOptionsForShop(2), "handleOrderWithSandwichWorks JUNIT test", 1));
     }
 
     @Test
@@ -170,7 +170,7 @@ public class OrderServiceTest {
     void handleOrderWithSandwichThrowsExceptionWithUnavailableOptions() throws DayOrderDoesNotExistYet, OrderAlreadyExistsException {
         cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
         testOrder = cut.createOrder(p1);
-        assertThrows(IngredientNotAvailableException.class, () -> cut.handleOrder(testOrder, 5, BreadType.GREY, sandwichService.getOptionsForShop(3), ""));
+        assertThrows(IngredientNotAvailableException.class, () -> cut.handleOrder(testOrder, 5, BreadType.GREY, sandwichService.getOptionsForShop(3), "", 1));
     }
 
     @Test
@@ -282,7 +282,7 @@ public class OrderServiceTest {
     public void findTodaysOrderByNameMakesSecondOrder() throws PersonNotFoundException, DayOrderDoesNotExistYet, OrderAlreadyExistsException, SandwichNotFoundException, IngredientNotAvailableException {
         cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
         testOrder = cut.createOrder(p1);
-        cut.handleOrder(testOrder, 3, BreadType.GREY, sandwichService.getOptionsForShop(2), "findTodaysOrderByName JUNIT test");
+        cut.handleOrder(testOrder, 3, BreadType.GREY, sandwichService.getOptionsForShop(2), "findTodaysOrderByName JUNIT test", 1);
 
         assertTrue(cut.findTodaysUnfilledOrderByName(p1.getFirstName()+p1.getLastName()).getOrderStatus().equals(OrderStatus.UNFILLED));
 
@@ -294,7 +294,7 @@ public class OrderServiceTest {
     public void findClosedOrdersByDatesWorks() throws OrderNotFoundException, OrderAlreadyExistsException, SandwichNotFoundException, IngredientNotAvailableException {
         cut.setTodaysSandwichShop(sandwichService.getSandwichShops().get(1));
         testOrder = cut.createOrder(p1);
-        cut.handleOrder(testOrder, 3, BreadType.GREY, sandwichService.getOptionsForShop(2), "findClosedOrdersByDates JUNIT test");
+        cut.handleOrder(testOrder, 3, BreadType.GREY, sandwichService.getOptionsForShop(2), "findClosedOrdersByDates JUNIT test", 1);
         testOrder.setOrderStatus(OrderStatus.HANDELED);
         orderRepository.updateHandleOrder(testOrder.getOrderNum(), testOrder.getSandwich().getSandwichID(), testOrder.getBreadType().name(), testOrder.getRemark(), testOrder.getOrderStatus().name(), testOrder.getAmount(), testOrder.getPrice(), testOrder.getDate(), testOrder.getSandwichShop().getSandwichShopID(), testOrder.getPerson().getPersonNr(), testOrder.getSession().getSessionNumber());
 
@@ -311,7 +311,7 @@ public class OrderServiceTest {
         cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
         cut.createOrdersForEveryoneToday();
 
-        cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0), 3, BreadType.GREY, sandwichService.getOptionsForShop(2), "findClosedOrdersByDates JUNIT test");
+        cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0), 3, BreadType.GREY, sandwichService.getOptionsForShop(2), "findClosedOrdersByDates JUNIT test", 1);
 
         cut.setTodaysFilledOrdersToHandeled();
         List<Order> myOrderList = cut.findTodaysOrdersForPerson(p1);
@@ -370,7 +370,7 @@ public class OrderServiceTest {
     public void findWhoStillHasToOrderTodayHappyCaseWithDoubleOrders() throws OrderNotFoundException, PersonNotFoundException, SandwichShopNotFoundException, SandwichNotFoundException, IngredientNotAvailableException, OrderAlreadyExistsException {
         cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
         cut.createOrdersForEveryoneToday();
-        cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0), 7, BreadType.GREY, new ArrayList<Options>(), "All good");
+        cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0), 7, BreadType.GREY, new ArrayList<Options>(), "All good", 1);
         cut.createOrder(p1);
 
 
@@ -396,7 +396,7 @@ public class OrderServiceTest {
         cut.setTodaysSandwichShop(sandwichShopRepository.findShopById(2));
         cut.createOrdersForEveryoneToday();
 
-        Order myOrder = cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0), 3, BreadType.GREY, sandwichService.getOptionsForShop(2), "findAllFilledOrdersForToday JUNIT test");
+        Order myOrder = cut.handleOrder(orderRepository.findOrdersByPersonAndDates(p1.getPersonNr(), LocalDate.now(), LocalDate.now()).get(0), 3, BreadType.GREY, sandwichService.getOptionsForShop(2), "findAllFilledOrdersForToday JUNIT test", 1);
 
         List<Order> myOrderList = cut.findAllFilledOrdersForToday();
 

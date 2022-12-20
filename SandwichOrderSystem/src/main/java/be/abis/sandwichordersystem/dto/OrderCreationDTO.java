@@ -11,6 +11,7 @@ public class OrderCreationDTO {
     private String personFullName;
     private int sandwichID;
     private int orderId;
+    private int amount;
 
     private BreadType breadType;
     private String remark;
@@ -73,6 +74,14 @@ public class OrderCreationDTO {
 
     public void setOrderId(int orderId) {
         this.orderId = orderId;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }
 
