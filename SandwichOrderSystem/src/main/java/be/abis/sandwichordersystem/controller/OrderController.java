@@ -56,11 +56,16 @@ public class OrderController {
                 .collect(Collectors.toList());
     }
 
+    @DeleteMapping("/delete/query")
+    public void deleteOrderById(@RequestParam int id) throws OrderNotFoundException {
+        orderService.deleteOrderByID(id);
+    }
+
     @Transactional
     @GetMapping("/filled/query")
     public List<OrderDTO> findTodaysFilledOrdersByName(@RequestParam String name) throws OrderNotFoundException, PersonNotFoundException {
         Person p = personService.findPersonByName(name.replaceAll(" ", ""));
-        return orderService.findTodaysFilledOrdersForPerson(p).stream()
+        return orderService.findTodaysFilledOrdersForPerson(p).stream().filter(order -> order.getOrderStatus() != OrderStatus.NOSANDWICH)
                 .map(OrderMapper::toDTO)
                 .collect(Collectors.toList());
     }
@@ -86,6 +91,7 @@ public class OrderController {
     public List<BreadType> getTodaysBreadTypes() throws DayOrderDoesNotExistYet {
         return orderService.getTodaysBreadTypes();
     }
+
 
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping()
