@@ -191,6 +191,11 @@ public class AbisOrderJPAService implements OrderJPAService {
     }
 
     @Override
+    public List<Order> findOrdersForPersonAndDates(Person person, LocalDate startDate, LocalDate endDate) {
+        return orderRepository.findOrdersByPersonAndDates(person.getPersonNr(), startDate, endDate);
+    }
+
+    @Override
     public List<Order> findAllUnhandeledOrders() {
         // takes in the HANDELED status and in the repository it queries on NOT handled
         return orderRepository.findAllUnhandledOrders(OrderStatus.HANDELED.name());

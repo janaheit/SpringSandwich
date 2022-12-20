@@ -61,5 +61,7 @@ public interface OrderJPAService {
 
     Order findOrder(Order order) throws OrderNotFoundException;
 
+    List<Order> findOrdersForPersonAndDates(Person person, LocalDate startDate, LocalDate endDate);
+
 
 }
