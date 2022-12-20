@@ -119,7 +119,9 @@ public class ManagementController {
         // Also deletes the noSandwich orders.
         orderService.deleteAllUnfilledOrdersOfDay(LocalDate.now());
         orderService.setDayOrder(null);
-        return new ResponseEntity<String>("all Good", HttpStatus.OK);
+        MessageDTO myMessage = new MessageDTO();
+        myMessage.setMessage("All Good!");
+        return new ResponseEntity<MessageDTO>(myMessage, HttpStatus.OK);
     }
 
     // GET /orders/shops → get all sandwich shops
